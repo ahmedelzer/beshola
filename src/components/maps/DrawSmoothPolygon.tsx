@@ -7,6 +7,7 @@ import { ScrollView } from "react-native";
 import { initCompanyRows } from "../company-components/tabsData";
 import SheetCard from "../../kitchensink-components/compare/SheetCard";
 import MapDrawer from "./MapDrawer";
+import DrawerComponent from "./DrawerComponent";
 
 const PolygonMapEmbed = ({
   location = {},
@@ -18,29 +19,20 @@ const PolygonMapEmbed = ({
   onLocationChange,
   setNewPolygon,
 }) => {
+
   const webRef = useRef(null);
   const iframeRef = useRef(null);
   const locationRef = useRef(JSON.stringify(location));
-  const [areaID, setAreaID] = useState("");
-  const [openSheet, setOpenSheet] = useState(false);
-  const drawerComponent = openSheet && (
-    <div
-      style={{
-        position: "absolute",
-        top: 0,
-        right: 0,
-        height: "100%",
-        width: "25%",
-        background: "white",
-        zIndex: 1000,
-        overflowY: "auto", // ✅ scroll here
-        overflowX: "hidden",
-        boxShadow: "0 0 10px rgba(0,0,0,0.2)",
-      }}
-    >
-      <MapDrawer onClose={() => setOpenSheet(false)} />
-    </div>
+  const [polygonObj, setPolygonObj] = useState({});
+  const [openDrawer, setOpenDrawer] = useState(false);
+
+  const drawerComponent = openDrawer && (
+<DrawerComponent polygonObj={polygonObj} openDrawer={openDrawer} setOpenDrawer={setOpenDrawer}/>
   );
+    useEffect(()=>{
+      if(Object.keys(polygonObj).length > 0)
+   { setOpenDrawer(true)}
+  },[polygonObj])
   // Build query params to pass all values via URL
   const params = new URLSearchParams({
     location: locationRef.current,
@@ -52,7 +44,12 @@ const PolygonMapEmbed = ({
   });
 
   const url = `${host}/displayMap?${params.toString()}`;
-
+  const switchFun= (data)=>windowMessageSwitch(
+              data,
+              onLocationChange,
+              setNewPolygon,
+              setPolygonObj,
+            );
   // ✅ React Native (Mobile)
   if (Platform.OS !== "web") {
     return (
@@ -67,12 +64,7 @@ const PolygonMapEmbed = ({
           onMessage={async (event) => {
             const data = JSON.parse(event.nativeEvent.data);
 
-            windowMessageSwitch(
-              data,
-              onLocationChange,
-              setNewPolygon,
-              setOpenSheet,
-            );
+           switchFun(data)
           }}
         />
 
@@ -90,12 +82,8 @@ const PolygonMapEmbed = ({
       try {
         const data =
           typeof event.data === "string" ? JSON.parse(event.data) : event.data;
-        windowMessageSwitch(
-          data,
-          onLocationChange,
-          setNewPolygon,
-          setOpenSheet,
-        );
+           switchFun(data)
+
       } catch (error) {
         console.log("Invalid message received:", error);
       }
@@ -109,31 +97,33 @@ const PolygonMapEmbed = ({
   }, [onLocationChange, setNewPolygon]);
 
   return (
-    <div
-      style={{
-        width: "100%",
-        height: "400px",
-        position: "relative",
-        overflow: "hidden",
-      }}
-    >
-      <iframe
-        ref={iframeRef}
-        src={url}
-        title="Polygon Map"
-        scrolling="no"
-        style={{
-          width: "100%",
-          height: "100%",
-          border: "none",
-          position: "absolute",
-          top: 0,
-          left: 0,
-          overflow: "hidden",
-        }}
-      />
-      {drawerComponent}
-    </div>
+<div
+  style={{
+    width: "100%",
+    height: "400px",
+    position: "relative",
+    overflow: "hidden",
+  }}
+>
+  <iframe
+    ref={iframeRef}
+    src={url}
+    title="Polygon Map"
+    scrolling="no"
+    style={{
+      width: "100%",
+      height: "100%",
+      border: "none",
+      position: "absolute",
+      top: 0,
+      left: 0,
+      zIndex: 1,
+    }}
+  />
+
+
+    {drawerComponent}
+</div>
   );
 };
 

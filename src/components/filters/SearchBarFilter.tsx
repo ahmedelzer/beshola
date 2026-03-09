@@ -6,7 +6,7 @@ const SearchBarFilter = ({ schema, setRow, row }: any) => {
   const navigation = useNavigation();
   // console.log(schema, "schema from search bar filter");
   const searchFilter = schema?.dashboardFormSchemaParameters?.find(
-    (item: any) => item?.isIDField && item?.parameterType === "collapse"
+    (item: any) => item?.isIDField && item?.parameterType === "collapse",
   );
   return (
     <Menu

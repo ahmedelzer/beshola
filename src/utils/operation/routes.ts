@@ -7,14 +7,15 @@ export function selectedRoutes(userGust) {
     { routePath: "Home" },
     { routePath: "Search" },
     { routePath: "Requests" },
+    { routePath: "MyAssets" },
     { routePath: "Profile" },
   ];
-  console.log("====================================");
-  console.log(localization.tabs);
-  console.log("====================================");
   // Create new mapped tabs with routePath added
   const tabs =
-    localization.tabs?.map((tab) => {
+    [
+      ...localization.tabs,
+      { name: "MyAssets", routePath: "MyAssets", icon: "" },
+    ]?.map((tab) => {
       if (tab.icon === "home") {
         return { ...tab, routePath: "Home" };
       } else if (tab.icon === "menu") {
@@ -28,11 +29,17 @@ export function selectedRoutes(userGust) {
     }) ?? [];
 
   const routesForGuests = routes.filter(
-    (item) => item.routePath !== "Profile" && item.routePath !== "Requests",
+    (item) =>
+      item.routePath !== "Profile" &&
+      item.routePath !== "Requests" &&
+      item.routePath !== "MyAssets",
   );
 
   const tabsForGuests = tabs.filter(
-    (item) => item.routePath !== "Profile" && item.routePath !== "Requests",
+    (item) =>
+      item.routePath !== "Profile" &&
+      item.routePath !== "Requests" &&
+      item.routePath !== "MyAssets",
   );
 
   return userGust

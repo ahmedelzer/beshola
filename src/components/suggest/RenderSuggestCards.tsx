@@ -15,7 +15,7 @@ export function RenderSuggestCards({
 }) {
   const chunkArray = (arr, size) => {
     return Array.from({ length: Math.ceil(arr.length / size) }, (_, i) =>
-      arr.slice(i * size, i * size + size)
+      arr.slice(i * size, i * size + size),
     );
   };
   const { cartState, cartReducerDispatch, cartFieldsType } = useCart();
@@ -35,7 +35,7 @@ export function RenderSuggestCards({
                 item,
                 cartState.rows,
                 SuggestCardSchema,
-                suggestFieldsType
+                suggestFieldsType,
               )}
             />
           ))}

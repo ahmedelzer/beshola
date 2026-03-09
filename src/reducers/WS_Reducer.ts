@@ -9,7 +9,7 @@ export const wsSlice = createSlice({
     addInstance(state, action) {
       // Remove existing instance with the same key to prevent duplicates
       state.wsInstances = state.wsInstances.filter(
-        (ins) => ins.key !== action.payload.key
+        (ins) => ins.key !== action.payload.key,
       );
       state.wsInstances.push(action.payload);
     },
@@ -43,7 +43,7 @@ export const wsSlice = createSlice({
       const wsInstance = state.wsInstances.find((ins) => ins.key === key);
       if (wsInstance && Array.isArray(wsInstance.handlingMessages)) {
         wsInstance.handlingMessages = wsInstance.handlingMessages.filter(
-          (fn) => fn !== handlingMessage
+          (fn) => fn !== handlingMessage,
         );
       }
     },

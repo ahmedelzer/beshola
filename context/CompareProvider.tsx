@@ -38,9 +38,7 @@ export const CompareProvider: React.FC<{ children: ReactNode }> = ({
 
   const handleCompareToggle = (item: any, fieldsType: any) => {
     const id = item?.[fieldsType.idField];
-    console.log("====================================");
-    console.log(id, item, "handleCompareToggle");
-    console.log("====================================");
+
     if (!id) return;
 
     setCompareItems((prev) => {

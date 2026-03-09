@@ -64,9 +64,7 @@ export default function MenuFilter({ onFilterDone }) {
   // Handle form submission
   const onSubmit = (data) => {
     const formattedFilters = buildFilterRow(data);
-    console.log("====================================");
-    console.log(data, formattedFilters, "data");
-    console.log("====================================");
+
     onFilterDone({ ...filterRow, ...formattedFilters });
     dispatch(updateFilters({ ...filterRow, ...formattedFilters })); // Update Redux state with submitted data
   };

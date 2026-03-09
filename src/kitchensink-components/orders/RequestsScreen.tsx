@@ -53,7 +53,7 @@ export default function RequestsScreen({}) {
   const [col, setCol] = useState({});
   const [state, reducerDispatch] = useReducer(
     reducer,
-    initialState(VIRTUAL_PAGE_SIZE, orderState.schema[0].idField)
+    initialState(VIRTUAL_PAGE_SIZE, orderState.schema[0].idField),
   );
   const [currentSkip, setCurrentSkip] = useState(1);
   const dataSourceAPI = (query, skip, take) => {
@@ -68,7 +68,7 @@ export default function RequestsScreen({}) {
   const getAction =
     orderState.actions &&
     orderState.actions.find(
-      (action) => action.dashboardFormActionMethodType === "Get"
+      (action) => action.dashboardFormActionMethodType === "Get",
     );
 
   const { rows, skip, totalCount, loading } = state;
@@ -94,7 +94,7 @@ export default function RequestsScreen({}) {
     ConnectToWS(
       setWSMessageOrders,
       setWS_Connected,
-      cartFieldsType.dataSourceName
+      cartFieldsType.dataSourceName,
     )
       .then(() => console.log("🔌 WebSocket setup done"))
       .catch((e) => {

@@ -32,7 +32,7 @@ export default function OrderCardDetils({ order, ordersFieldsType, idField }) {
     parseFloat(order[ordersFieldsType.creditField.parameterField]) || 0;
   const usingPoints =
     covertPointsToCredits(
-      parseFloat(order[ordersFieldsType.pointsField.parameterField])
+      parseFloat(order[ordersFieldsType.pointsField.parameterField]),
     ) || 0;
   const requiredAmount = order[ordersFieldsType.netPayAmount.parameterField];
   const paymentMethodsFieldsType = {
@@ -43,7 +43,7 @@ export default function OrderCardDetils({ order, ordersFieldsType, idField }) {
   //get items
   const [state, reducerDispatch] = useReducer(
     reducer,
-    initialState(VIRTUAL_PAGE_SIZE, idField)
+    initialState(VIRTUAL_PAGE_SIZE, idField),
   );
   const [currentSkip, setCurrentSkip] = useState(1);
   const dataSourceAPI = (query, skip, take) => {
@@ -59,7 +59,7 @@ export default function OrderCardDetils({ order, ordersFieldsType, idField }) {
   const getAction =
     OrderItemsSchemaActions &&
     OrderItemsSchemaActions.find(
-      (action) => action.dashboardFormActionMethodType === "Get"
+      (action) => action.dashboardFormActionMethodType === "Get",
     );
 
   const { rows, skip, totalCount, loading } = state;

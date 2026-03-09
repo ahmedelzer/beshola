@@ -21,12 +21,12 @@ export default function UserPanel({ menuMode }) {
   const getAction =
     PersonInfoSchemaActions &&
     PersonInfoSchemaActions.find(
-      (action) => action.dashboardFormActionMethodType.toLowerCase() === "get"
+      (action) => action.dashboardFormActionMethodType.toLowerCase() === "get",
     );
   const putAction =
     PersonInfoSchemaActions &&
     PersonInfoSchemaActions.find(
-      (action) => action.dashboardFormActionMethodType.toLowerCase() === "put"
+      (action) => action.dashboardFormActionMethodType.toLowerCase() === "put",
     );
   useEffect(() => {
     const fetch = async () => {
@@ -34,7 +34,7 @@ export default function UserPanel({ menuMode }) {
         try {
           const { data } = await fetchData(
             `/${getAction.routeAdderss}`,
-            getAction.projectProxyRoute
+            getAction.projectProxyRoute,
           );
 
           setProfileInfo(data);
@@ -81,7 +81,7 @@ export default function UserPanel({ menuMode }) {
         onPress: signOut,
       },
     ],
-    [signOut, user, localization]
+    [signOut, user, localization],
   );
 
   const renderMenuItem = ({ item }) => (

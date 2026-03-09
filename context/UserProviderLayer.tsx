@@ -22,24 +22,24 @@ const UserProviderLayer = (
   {
     // selectedLocation,
     // selectedNode,
-  }
+  },
 ) => {
   const {
     status: { isConnected: isOnline },
   } = useNetwork();
   const reduxSelectedLocation = useSelector(
-    (state: any) => state.location?.selectedLocation
+    (state: any) => state.location?.selectedLocation,
   );
   const reduxSelectedNode = useSelector(
-    (state: any) => state.location?.selectedNode
+    (state: any) => state.location?.selectedNode,
   );
   const [selectedLocation, setSelectedLocation] = useState(
-    reduxSelectedLocation || null
+    reduxSelectedLocation || null,
   );
   const [selectedNode, setSelectedNode] = useState(reduxSelectedNode || null);
   const [cartState, cartReducerDispatch] = useReducer(
     reducer,
-    initialState(4000, CartSchema.idField)
+    initialState(4000, CartSchema.idField),
   );
   const [cart_WS_Connected, setCartWS_Connected] = useState(false);
   const [cart_WSsetMessage, setCartWSsetMessage] = useState(null);
@@ -74,7 +74,7 @@ const UserProviderLayer = (
     ConnectToWS(
       setCartWSsetMessage,
       setCartWS_Connected,
-      cartFieldsType.dataSourceName
+      cartFieldsType.dataSourceName,
     )
       .then(() => console.log("🔌 Cart WebSocket connected"))
       .catch((e) => {
@@ -124,7 +124,7 @@ const UserProviderLayer = (
   const getCustomerCartAction =
     CartSchemaActions &&
     CartSchemaActions.find(
-      (action) => action.dashboardFormActionMethodType === "Get"
+      (action) => action.dashboardFormActionMethodType === "Get",
     );
 
   // useEffect(() => {

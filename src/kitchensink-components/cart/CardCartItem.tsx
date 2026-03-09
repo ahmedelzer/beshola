@@ -34,13 +34,13 @@ export default function CardCartItem({ fieldsType, schemaActions, item }) {
   const delAction =
     schemaActions &&
     schemaActions.find(
-      (action) => action.dashboardFormActionMethodType === "Delete"
+      (action) => action.dashboardFormActionMethodType === "Delete",
     );
   const fieldName = fieldsType.note;
   const putAction =
     schemaActions &&
     schemaActions.find(
-      (action) => action.dashboardFormActionMethodType === `${fieldName}:Put`
+      (action) => action.dashboardFormActionMethodType === `${fieldName}:Put`,
     );
   const onSubmitFun = async (value) => {
     const customerCartItemID = item[fieldsType.idField];
@@ -61,14 +61,14 @@ export default function CardCartItem({ fieldsType, schemaActions, item }) {
       item[fieldsType.idField],
       true,
       delAction,
-      fieldsType.proxyRoute
+      fieldsType.proxyRoute,
     );
     if (req) {
       setNotifications([{ mess: notify.cardCartRemoved }]);
       setModalOpen(false);
       const idField = fieldsType.idField;
       const removeFromCart = cartState.rows.filter(
-        (removeItem) => removeItem[idField] !== item[idField]
+        (removeItem) => removeItem[idField] !== item[idField],
       );
       cartReducerDispatch({
         type: "WS_OPE_ROW",

@@ -33,18 +33,18 @@ import CompareScreen from "../kitchensink-components/compare/CompareScreen";
 const MenuFilter = lazy(() => import("../components/filters/MenuFilter"));
 const CartPage = lazy(() => import("../kitchensink-components/cart/CartPage"));
 const CheckoutScreen = lazy(
-  () => import("../kitchensink-components/cart/CheckoutScreen")
+  () => import("../kitchensink-components/cart/CheckoutScreen"),
 );
 const NotificationScreen = lazy(
-  () => import("../components/notification/NotificationScreen")
+  () => import("../components/notification/NotificationScreen"),
 );
 const SignIn = lazy(() => import("../kitchensink-components/auth/signin"));
 const SignUp = lazy(() => import("../kitchensink-components/auth/signup"));
 const ForgotPassword = lazy(
-  () => import("../kitchensink-components/auth/forgot-password")
+  () => import("../kitchensink-components/auth/forgot-password"),
 );
 const VerifyScreen = lazy(
-  () => import("../kitchensink-components/auth/verfiy")
+  () => import("../kitchensink-components/auth/verfiy"),
 );
 const PrivacyPolicy = lazy(() => import("../components/privacy/PrivacyPolicy"));
 
@@ -367,7 +367,7 @@ const AppNavigator = () => {
   const navigation = useNavigation();
   const redirect = useSelector((state) => state.redirect);
   const [windowWidth, setWindowWidth] = useState(
-    Dimensions.get("window").width
+    Dimensions.get("window").width,
   );
 
   useEffect(() => {
@@ -394,7 +394,7 @@ const AppNavigator = () => {
             "",
             "info",
             "outline",
-            isRTL() ? "top left" : "top right"
+            isRTL() ? "top left" : "top right",
           );
         }
 

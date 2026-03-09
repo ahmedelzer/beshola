@@ -24,7 +24,7 @@ export function getWSInstance(baseUrl, url, onMessageCallback) {
     instance.url !== url;
 
   // -------------------------
-  // Create or Recreate Instance 
+  // Create or Recreate Instance
   // -------------------------
   if (isClosed) {
     if (instance && instance.url !== url) {
@@ -44,11 +44,11 @@ export function getWSInstance(baseUrl, url, onMessageCallback) {
       addInstance({
         key: baseUrl,
         url,
-        ws: wsInstance,             // ALWAYS store WSclass
+        ws: wsInstance, // ALWAYS store WSclass
         handlingMessages:
           typeof onMessageCallback === "function" ? [onMessageCallback] : [],
         connected: true,
-      })
+      }),
     );
 
     return { instance: wsInstance, removeHandler };
@@ -74,7 +74,7 @@ export function getWSInstance(baseUrl, url, onMessageCallback) {
         addInstanceStateHandlingMessage({
           key: baseUrl,
           handlingMessage: onMessageCallback,
-        })
+        }),
       );
 
       return { instance: instance.ws, removeHandler };

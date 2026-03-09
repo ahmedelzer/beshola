@@ -9,7 +9,7 @@ export default async function LoadData(
   updateRows,
   dispatch,
   abortController = false,
-  reRequest = false
+  reRequest = false,
 ) {
   const { requestedSkip, take, lastQuery, loading } = state;
   // const { signOut } = useAuth();

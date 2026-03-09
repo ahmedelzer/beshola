@@ -46,7 +46,7 @@ export const RenderCell = ({
                   schemas={schemas}
                   // setIsModalVisible={setIsModalVisible}
                 />
-              )
+              ),
             );
           }}
           style={{ backgroundColor: theme.accentHover }}

@@ -32,7 +32,7 @@ export class WSMessageHandler {
         this.fieldsType.idField,
         this.fieldsType.dataSourceName,
         this.rows,
-        this.totalCount
+        this.totalCount,
       );
       //console.log("ws_updatedRows",ws_updatedRows);
       //console.log("✅ ws_updatedRows", ws_updatedRows);

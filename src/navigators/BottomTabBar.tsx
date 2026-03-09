@@ -31,7 +31,7 @@ const Tab = createBottomTabNavigator<RootStackParamList>();
 const BottomBarTabs: FC = () => {
   const { userGust, setUser } = useAuth();
   const [windowWidth, setWindowWidth] = useState(
-    Dimensions.get("window").width
+    Dimensions.get("window").width,
   );
   // const homeIcon = ({ color }: { focused: boolean; color: string }) => (
   //   <Icon as={Home} size="lg" color={color} />

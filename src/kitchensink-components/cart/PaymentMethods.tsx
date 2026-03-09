@@ -43,7 +43,7 @@ export default function PaymentMethods({ paymentMethods, isLoading, row }) {
   const postAction =
     paymentMethodsState?.actions &&
     paymentMethodsState?.actions?.find(
-      (action) => action.dashboardFormActionMethodType === "Post"
+      (action) => action.dashboardFormActionMethodType === "Post",
     );
 
   const maxHeight = 150; // Adjust based on content size
@@ -59,7 +59,7 @@ export default function PaymentMethods({ paymentMethods, isLoading, row }) {
           await dispatch(
             updatePayment({
               paymentRow: paymentMethods[0],
-            })
+            }),
           );
           // }
         } catch (error) {
@@ -97,7 +97,7 @@ export default function PaymentMethods({ paymentMethods, isLoading, row }) {
   // }, []);
   const OnChange = async (methodID) => {
     const method = paymentMethods.find(
-      (method) => method[paymentMethodsFieldsType.idField] === methodID
+      (method) => method[paymentMethodsFieldsType.idField] === methodID,
     );
     if (paymentMethods.length > 0) {
       setLoading(true);
@@ -115,7 +115,7 @@ export default function PaymentMethods({ paymentMethods, isLoading, row }) {
       await dispatch(
         updatePayment({
           paymentRow: method,
-        })
+        }),
       );
       // }
       setLoading(false);

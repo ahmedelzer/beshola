@@ -9,7 +9,7 @@ const PrivacyPolicy = ({ route }) => {
   const localization = useSelector((state) => state.localization.localization);
   const fetch = useFetch(
     "/Language/GetProjectLocalization/ENG_US/BrandingMartE-ShopTerms%26Conditions",
-    "BrandingMartLanguage"
+    "BrandingMartLanguage",
   );
   // helper to render links/emails
   const renderTextWithLinks = (text) => {

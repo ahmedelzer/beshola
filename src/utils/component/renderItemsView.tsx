@@ -9,6 +9,7 @@ import { SetResponsiveContainer } from "../component/SetResponsiveContainer";
 import { GetCard } from "../operation/GetCard";
 import { requestLocationPermission } from "./requestLocationPermission";
 import RequestsScreen from "../../kitchensink-components/orders/RequestsScreen";
+import AssetsForm from "../../components/addAsset/AssetsForm";
 const RenderItemsView = ({ routePath }: any) => {
   const { menuItemsState } = useSchemas();
   console.log("====================================");
@@ -44,7 +45,7 @@ const RenderItemsView = ({ routePath }: any) => {
       return SetResponsiveContainer(
         <SearchView />,
 
-        true
+        true,
       );
     case "Home":
       return SetResponsiveContainer(<HomePage />, true);
@@ -52,6 +53,8 @@ const RenderItemsView = ({ routePath }: any) => {
       return SetResponsiveContainer(<MobileProfilePage />, true);
     case "Requests":
       return SetResponsiveContainer(<RequestsScreen />, true);
+    case "MyAssets":
+      return SetResponsiveContainer(<AssetsForm />, true);
     default:
       return <HomePage />;
   }

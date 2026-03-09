@@ -27,12 +27,12 @@ export const SearchTabs = ({}: any) => {
   const menuItems = useSelector((state) => state.menuItem.menuItem);
   const idField = menuCategoriesState.schema.idField;
   const display = menuCategoriesState.schema.dashboardFormSchemaParameters.find(
-    (pram) => pram.parameterType === "tabDisplay"
+    (pram) => pram.parameterType === "tabDisplay",
   ).parameterField;
   const localization = useSelector((state) => state.localization.localization);
   const [state, reducerDispatch] = useReducer(
     reducer,
-    initialState(VIRTUAL_PAGE_SIZE, menuCategoriesState.schema.idField)
+    initialState(VIRTUAL_PAGE_SIZE, menuCategoriesState.schema.idField),
   );
   const [currentSkip, setCurrentSkip] = useState(1);
   const dataSourceAPI = (query, skip, take) => {
@@ -47,7 +47,7 @@ export const SearchTabs = ({}: any) => {
   const getAction =
     menuCategoriesState.actions &&
     menuCategoriesState.actions.find(
-      (action) => action.dashboardFormActionMethodType === "Get"
+      (action) => action.dashboardFormActionMethodType === "Get",
     );
 
   const { rows, skip, totalCount, loading } = state;
@@ -59,7 +59,7 @@ export const SearchTabs = ({}: any) => {
       getAction,
       cache,
       updateRows(reducerDispatch, cache, state),
-      reducerDispatch
+      reducerDispatch,
     );
   }, [currentSkip]);
   const handleScroll = (event) => {

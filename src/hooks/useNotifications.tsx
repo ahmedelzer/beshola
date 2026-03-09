@@ -21,14 +21,14 @@ const useNotifications = () => {
           JSON.stringify({
             command: "subscribe",
             identifier: `{"channel":"AppNotificationsChannel","data": {"subdomain_name":"scc"}}`,
-          })
+          }),
         );
         setTimeout(() => {
           sendMessage(
             JSON.stringify({
               command: "subscribe",
               identifier: `{"channel":"MessageNotificationsChannel","data": {"subdomain_name":"scc"}}`,
-            })
+            }),
           );
         }, 300);
       },
@@ -37,14 +37,14 @@ const useNotifications = () => {
           JSON.stringify({
             command: "unsubscribe",
             identifier: `{"channel":"AppNotificationsChannel","data": {"subdomain_name":"scc"}}`,
-          })
+          }),
         );
         setTimeout(() => {
           sendMessage(
             JSON.stringify({
               command: "unsubscribe",
               identifier: `{"channel":"MessageNotificationsChannel","data": {"subdomain_name":"scc"}}`,
-            })
+            }),
           );
         }, 300);
       },
@@ -59,7 +59,6 @@ const useNotifications = () => {
     if (lastMessage?.data) {
       const { message, type } = JSON.parse(lastMessage.data) as Message;
       message && setNotification([...message]);
-
     }
   }, [lastMessage?.data]);
 

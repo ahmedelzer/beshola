@@ -9,7 +9,7 @@ export async function ConnectToWS(
   setWS_Connected,
   dataSourceName,
   row = {},
-  wS_SchemaAction = defWSSchemaAction
+  wS_SchemaAction = defWSSchemaAction,
 ) {
   const token = await GetToken();
 
@@ -21,7 +21,7 @@ export async function ConnectToWS(
   const buildUrl = buildApiUrl(
     wS_SchemaAction,
     { ...row, token },
-    websocketBaseURI + "/" + wS_SchemaAction.projectProxyRoute
+    websocketBaseURI + "/" + wS_SchemaAction.projectProxyRoute,
   );
 
   // ----------------------------

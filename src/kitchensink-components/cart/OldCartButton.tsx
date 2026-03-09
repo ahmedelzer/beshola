@@ -28,7 +28,7 @@ const OldCartButton = ({
           return state;
       }
     },
-    { rows: [], isLoading: true }
+    { rows: [], isLoading: true },
   );
 
   // Load data function

@@ -21,7 +21,7 @@ export function GetInputComponent(type) {
       return TextParameter;
     case "select":
       return SelectParameter;
-    case "checkbox":
+    case "checkBox":
       return CheckBoxParameter;
     case "datetime":
     case "date":

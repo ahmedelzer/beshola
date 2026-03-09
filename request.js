@@ -15,6 +15,8 @@ import { store } from "./src/store/reduxStore";
 //export const domainURL = "41.196.0.25";
 export const domainURL = "ihs-solutions.com";
 export const baseURL = "https://" + domainURL;
+export const defaultProjectProxyRouteWithoutBaseURL = `Centralization`;
+
 export const defaultCentralizationProxyRoute =
   "https://" + domainURL + "/Centralization/api";
 export const defaultProjectProxyRoute = `${baseURL}/BrandingMart/api/`;

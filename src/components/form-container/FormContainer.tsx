@@ -61,8 +61,8 @@ function FormContainer({
     .filter(([key]) => !expectedFields.includes(key)) // key not found in schema
     .map(([_, message]) => message); // get message(s)
   const actionField = tableSchema?.dashboardFormSchemaParameters?.find(
-    (e: any) => e.isEnable,
-  ).parameterField;
+    (e: any) => e?.isEnable,
+  )?.parameterField;
   // Show toast on global errors
   // Show the first global error as toast
 
@@ -116,6 +116,7 @@ function FormContainer({
       return row[param.parameterField];
     }
   }
+
   return (
     <ScrollView ref={scrollViewRef} showsVerticalScrollIndicator={false}>
       <SetComponentsPlatforms

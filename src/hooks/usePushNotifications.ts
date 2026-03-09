@@ -77,13 +77,11 @@ export const usePushNotifications = (): PushNotificationState => {
       });
 
     responseListener.current =
-      Notifications.addNotificationResponseReceivedListener((response) => {
-
-      });
+      Notifications.addNotificationResponseReceivedListener((response) => {});
 
     return () => {
       Notifications.removeNotificationSubscription(
-        notificationListener.current!
+        notificationListener.current!,
       );
 
       Notifications.removeNotificationSubscription(responseListener.current!);

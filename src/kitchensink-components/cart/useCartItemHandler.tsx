@@ -9,7 +9,7 @@ export const useCartItemHandler = (item, fieldsType) => {
   const [loading, setLoading] = useState(false);
 
   const haveOnCart = cart.find(
-    (value) => value[fieldsType.idField] === item[fieldsType.idField]
+    (value) => value[fieldsType.idField] === item[fieldsType.idField],
   );
   const quantity = haveOnCart?.[fieldsType.cardAction] || 0;
 
@@ -21,10 +21,10 @@ export const useCartItemHandler = (item, fieldsType) => {
         dispatch,
         fieldsType,
         schemaActions,
-        quantity + quantityChange
+        quantity + quantityChange,
       );
     },
-    [item, dispatch, fieldsType, schemaActions, quantity]
+    [item, dispatch, fieldsType, schemaActions, quantity],
   );
 
   return { quantity, updateCart, loading };

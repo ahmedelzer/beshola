@@ -15,6 +15,7 @@ import WebNavigator from "./AppNavigator";
 import * as Linking from "expo-linking";
 import AppNavigator from "./AppNavigator";
 import { CompareProvider } from "../../context/CompareProvider";
+import AssetsForm from "../components/addAsset/AssetsForm";
 // types
 export type RootStackParamList = {
   Home: undefined;
@@ -48,6 +49,7 @@ const linking = {
       CompareScreen: "compare",
       NotificationScreen: "notifications",
       CheckoutScreen: "checkout",
+      MyAssets: "MyAssets",
       DetailsProductScreen: "property/:id", // if using dynamic products
     },
   },

@@ -4,7 +4,7 @@ export function getItemPackage(
   item = {},
   cartItems = [],
   nodeMenuItemsSchema = {},
-  fieldsType = {}
+  fieldsType = {},
 ) {
   const idField = nodeMenuItemsSchema?.idField;
 

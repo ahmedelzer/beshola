@@ -47,7 +47,7 @@ export const menuItemSlice = createSlice({
     },
     updateQuantity: (state, action) => {
       const itemPresent = state.menuItem.find(
-        (item) => item.id === action.payload.id
+        (item) => item.id === action.payload.id,
       );
       if (itemPresent) {
         itemPresent.quantity += +action.payload.addQuantity;
@@ -76,7 +76,7 @@ export const menuItemSlice = createSlice({
         state.favoriteItems.push(...action.payload.items);
       } else if (action.payload.ope === "delete") {
         const deleteIds = new Set(
-          action.payload.items.map((item) => item[fieldsType.idField])
+          action.payload.items.map((item) => item[fieldsType.idField]),
         );
         for (let i = state.favoriteItems.length - 1; i >= 0; i--) {
           if (deleteIds.has(state.favoriteItems[i][fieldsType.idField])) {

@@ -13,7 +13,7 @@ export default function AddressLocationCollapsible() {
 
   const selectedTab = useSelector((state) => state.location.selectedTab);
   const selectedLocation = useSelector(
-    (state) => state.location.selectedLocation
+    (state) => state.location.selectedLocation,
   );
 
   return (

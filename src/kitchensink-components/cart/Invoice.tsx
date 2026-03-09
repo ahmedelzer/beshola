@@ -16,24 +16,24 @@ export default function Invoice({ cartRows, row }) {
   const fieldsType = useSelector((state) => state.menuItem.fieldsType);
   const selectedTab = useSelector((state) => state.location.selectedTab);
   const selectedLocation = useSelector(
-    (state) => state.location.selectedLocation
+    (state) => state.location.selectedLocation,
   );
   const [selectedMethod, setSelectedMethod] = useState("card");
 
   const creditField = getField(
     CreditsSchema.dashboardFormSchemaParameters,
     "credit",
-    false
+    false,
   );
 
   const pointsField = getField(
     CreditsSchema.dashboardFormSchemaParameters,
     "points",
-    false
+    false,
   );
   const displayLookupParam =
     AddressLocationSchema.dashboardFormSchemaParameters.find(
-      (pram) => pram.parameterType == "displayLookup"
+      (pram) => pram.parameterType == "displayLookup",
     );
   // Helper: Get formatted address
   const getAddress = () => {

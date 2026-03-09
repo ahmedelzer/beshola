@@ -39,7 +39,7 @@ export default function Checkout({
   const fieldsType = GetFieldsItemTypes(checkoutState.schema);
   const selectedTab = useSelector((state) => state.location.selectedTab);
   const selectedLocation = useSelector(
-    (state) => state.location.selectedLocation
+    (state) => state.location.selectedLocation,
   );
   const { selectedNode } = useShopNode();
   const orderStatus = useSelector((state) => state.location.orderStatus);
@@ -53,21 +53,21 @@ export default function Checkout({
   const creditField = getField(
     checkoutState.schema.dashboardFormSchemaParameters,
     "inputWithLabel",
-    false
+    false,
   );
 
   const pointsField = getField(
     checkoutState.schema.dashboardFormSchemaParameters,
     "additionalInputWithLabel",
-    false
+    false,
   );
   const displayLookupParamAddress =
     checkoutState.schema.dashboardFormSchemaParameters.find(
-      (pram) => pram.parameterType == "displayAddress"
+      (pram) => pram.parameterType == "displayAddress",
     );
   const displayLookupParamNode =
     checkoutState.schema.dashboardFormSchemaParameters.find(
-      (pram) => pram.parameterType == "displayNode"
+      (pram) => pram.parameterType == "displayNode",
     )?.parameterField;
   const params = checkoutState.schema?.dashboardFormSchemaParameters ?? [];
   const cartInfoFieldsType = {
@@ -145,7 +145,7 @@ export default function Checkout({
       postAction,
       proxyRoute,
       null,
-      row
+      row,
     );
 
     setResult(res);
@@ -350,7 +350,7 @@ export default function Checkout({
                     }
                   } catch {
                     console.warn(
-                      "Unable to access iframe URL due to cross-origin."
+                      "Unable to access iframe URL due to cross-origin.",
                     );
                   }
                 }}

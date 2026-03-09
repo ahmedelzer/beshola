@@ -106,7 +106,6 @@ const SignUpWithLeftBackground = () => {
     ...signupState.schema,
     dashboardFormSchemaParameters: allParams.slice(2),
   };
-  console.log(errors, "errors");
   // showErrorToast("Login Failed", "Username or password is incorrect.");
   return (
     <VStack

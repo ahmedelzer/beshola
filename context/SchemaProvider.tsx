@@ -58,16 +58,16 @@ export const SchemaProvider = ({ children }) => {
     // Build reverse map from the other language if available
     const reverseTranslations = otherTranslations
       ? Object.fromEntries(
-          Object.entries(otherTranslations).map(([key, val]) => [val, key])
+          Object.entries(otherTranslations).map(([key, val]) => [val, key]),
         )
       : Object.fromEntries(
-          Object.entries(translations).map(([key, val]) => [val, key])
+          Object.entries(translations).map(([key, val]) => [val, key]),
         );
 
     console.log("🌐 currentLang:", currentLang);
     console.log(
       "🗺️ reverseTranslations sample:",
-      Object.entries(reverseTranslations).slice(0, 5)
+      Object.entries(reverseTranslations).slice(0, 5),
     );
 
     const localizedSchemas = {};
@@ -79,7 +79,7 @@ export const SchemaProvider = ({ children }) => {
           schema: localizeSchema(
             item.schema,
             translations,
-            reverseTranslations
+            reverseTranslations,
           ),
         };
       } else {
@@ -134,18 +134,18 @@ export const SchemaProvider = ({ children }) => {
   const [fastWayState, setFastWayState] = useState(schemas.fastWay);
   const [filterState, setFilterState] = useState(schemas.filter);
   const [menuCategoriesState, setMenuCategoriesState] = useState(
-    schemas.menuCategories
+    schemas.menuCategories,
   );
   const [menuItemsState, setMenuItemsState] = useState(schemas.menuItems);
   const [recommendedState, setRecommendedState] = useState(schemas.recommended);
   const [paymentMethodsState, setPaymentMethodsState] = useState(
-    schemas.paymentMethods
+    schemas.paymentMethods,
   );
   const [paymentOptionsState, setPaymentOptionsState] = useState(
-    schemas.OtherPaymentOptions
+    schemas.OtherPaymentOptions,
   );
   const [scratchVoucherCardState, setScratchVoucherCardState] = useState(
-    schemas.scratchVoucherCard
+    schemas.scratchVoucherCard,
   );
   const [suggestCardState, setSuggestCardState] = useState(schemas.suggestCard);
   const [searchBarState, setSearchBarState] = useState(schemas.searchBar);
@@ -158,14 +158,14 @@ export const SchemaProvider = ({ children }) => {
   const [contactState, setContactState] = useState(schemas.contact);
   const [forgetState, setForgetState] = useState(schemas.forget);
   const [forgetVerifyState, setForgetVerifyState] = useState(
-    schemas.forgetVerify
+    schemas.forgetVerify,
   );
 
   const [addressLocationState, setAddressLocationState] = useState(
-    schemas.addressLocation
+    schemas.addressLocation,
   );
   const [nearestBranchesState, setNearestBranchesState] = useState(
-    schemas.nearestBranches
+    schemas.nearestBranches,
   );
 
   const [collapseState, setCollapseState] = useState(schemas.collapse);
@@ -176,10 +176,10 @@ export const SchemaProvider = ({ children }) => {
   const [rateState, setRateState] = useState(schemas.rate);
   const [reviewsState, setReviewState] = useState(schemas.review);
   const [customerSaleInvoicesState, setCustomerSaleInvoicesState] = useState(
-    schemas.customerSaleInvoices
+    schemas.customerSaleInvoices,
   );
   const [shopSaleInvoiceItemState, setShopSaleInvoiceItemState] = useState(
-    schemas.shopSaleInvoiceItem
+    schemas.shopSaleInvoiceItem,
   );
   const [tabsState, setTabsState] = useState(schemas.tabs);
   const [securityState, setSecurityState] = useState(schemas.security);
@@ -187,7 +187,7 @@ export const SchemaProvider = ({ children }) => {
 
   const [languageState, setLanguageState] = useState(schemas.language);
   const [localizationState, setLocalizationState] = useState(
-    schemas.localization
+    schemas.localization,
   );
 
   // const menuItemsPages = [

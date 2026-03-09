@@ -8,7 +8,7 @@ import HomeCarouselWeb from "./main-content/HomeCarousel.web";
 import AddressLocationCollapsible from "../utils/component/AddressLocationCollapsible";
 import { theme } from "../Theme";
 import SuggestCardContainer from "../components/suggest/SuggestCardContainer";
-import SuggestCardSchemaActions from "../Schemas/MenuSchema/SuggestCardSchemaActions.json";
+import AssetsSchemaActions from "../Schemas/MenuSchema/AssetsSchemaActions.json";
 import { useSchemas } from "../../context/SchemaProvider";
 import { useSelector } from "react-redux";
 import { PolygonForm } from "../components/maps/PolygonForm";
@@ -30,7 +30,7 @@ const Explorepage = () => {
               <SuggestCardContainer
                 row={{ onlyDiscountItems: true }}
                 suggestContainerType={0}
-                schemaActions={SuggestCardSchemaActions}
+                schemaActions={AssetsSchemaActions}
                 shownNodeMenuItemIDs={[]}
                 header={localization.Hum_screens.home.discountItems}
               />
@@ -38,7 +38,7 @@ const Explorepage = () => {
             <View className="flex-col">
               <SuggestCardContainer
                 suggestContainerType={0}
-                schemaActions={SuggestCardSchemaActions}
+                schemaActions={AssetsSchemaActions}
                 shownNodeMenuItemIDs={[]}
                 header={localization.Hum_screens.home.suggestItems}
               />

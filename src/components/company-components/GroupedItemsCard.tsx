@@ -124,7 +124,7 @@ const GroupedItemsCard = ({ items }) => {
       selected: true, // Default selected
       size: "Medium", // Default size
       extraToppings: [],
-    }))
+    })),
   );
   useEffect(() => {
     if (items.length > 0) {
@@ -134,7 +134,7 @@ const GroupedItemsCard = ({ items }) => {
           selected: true,
           size: "Medium",
           extraToppings: [],
-        }))
+        })),
       );
     }
   }, [items]);
@@ -142,16 +142,16 @@ const GroupedItemsCard = ({ items }) => {
   const toggleItemSelection = (itemId) => {
     setSelectedItems((prev) =>
       prev.map((item) =>
-        item.id === itemId ? { ...item, selected: !item.selected } : item
-      )
+        item.id === itemId ? { ...item, selected: !item.selected } : item,
+      ),
     );
   };
 
   const handleSizeChange = (itemId, newSize) => {
     setSelectedItems((prev) =>
       prev.map((item) =>
-        item.id === itemId ? { ...item, size: newSize } : item
-      )
+        item.id === itemId ? { ...item, size: newSize } : item,
+      ),
     );
   };
 
@@ -165,8 +165,8 @@ const GroupedItemsCard = ({ items }) => {
                 ? item.extraToppings.filter((t) => t !== topping)
                 : [...item.extraToppings, topping],
             }
-          : item
-      )
+          : item,
+      ),
     );
   };
 
@@ -174,7 +174,7 @@ const GroupedItemsCard = ({ items }) => {
     .filter((item) => item.selected)
     .reduce(
       (sum, item) => sum + item.price + item.extraToppings.length * 1.5,
-      0
+      0,
     );
 
   return (

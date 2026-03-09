@@ -68,8 +68,8 @@ const CompanyCardView = ({
       setSelectedItems(
         selectedItems.filter(
           (selectedItem) =>
-            selectedItem[fieldsType.idField] !== selected[fieldsType.idField]
-        )
+            selectedItem[fieldsType.idField] !== selected[fieldsType.idField],
+        ),
       );
     } else {
       setSelectedItems((prev) => [...prev, item]);

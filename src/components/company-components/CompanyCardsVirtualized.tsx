@@ -87,7 +87,7 @@ const CompanyCardsFlatList: React.FC<CompanyCardsFlatListProps> = ({
                   rowItem,
                   cartState.rows,
                   menuItemsState.schema,
-                  fieldsType
+                  fieldsType,
                 )}
                 schemaActions={menuItemsState.actions}
                 setSelectedItems={setSelectedItems}
@@ -107,7 +107,7 @@ const CompanyCardsFlatList: React.FC<CompanyCardsFlatListProps> = ({
                     opacity: 0,
                   }}
                 />
-              )
+              ),
             )}
         </View>
       );
@@ -120,7 +120,7 @@ const CompanyCardsFlatList: React.FC<CompanyCardsFlatListProps> = ({
     viewableItems.forEach((vi: any) => {
       if (vi.item.type === "row") {
         ids.push(
-          ...vi.item.items.map((rowItem: any) => rowItem[fieldsType.idField])
+          ...vi.item.items.map((rowItem: any) => rowItem[fieldsType.idField]),
         );
       }
     });

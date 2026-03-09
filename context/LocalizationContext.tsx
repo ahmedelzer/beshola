@@ -12,11 +12,13 @@ import {
   setLocalization,
   updateCurrentLanguage,
 } from "../src/reducers/localizationReducer";
-import { I18nManager, Text, View } from "react-native";
-import { styles } from "../src/components/splash/styles";
+import RNRestart from "react-native-restart";
+import { I18nManager, StyleSheet, Text, View } from "react-native";
+
 import LoadingScreen from "../src/kitchensink-components/loading/LoadingScreen";
 import { Image } from "react-native";
 import { Platform } from "react-native";
+import { moderateScale, scale } from "react-native-size-matters";
 // Define context type
 interface LocalizationContextType {
   languageRow: object;
@@ -35,20 +37,20 @@ export const LocalizationProvider: React.FC<{ children: React.ReactNode }> = ({
   const dispatch = useDispatch();
   const [_continue, setContinue] = useState<boolean>(true); //be false
   const localizationStorage = useSelector(
-    (state) => state.localization.localization
+    (state) => state.localization.localization,
   );
   const languageRow = useSelector((state) => state.localization.languageRow);
   const langCode = (navigator.language || "en").split("-")[0];
   const prams = schemaLanguages.dashboardFormSchemaParameters;
 
   const languageName = prams.find(
-    (p) => p.parameterType === "Language"
+    (p) => p.parameterType === "Language",
   ).parameterField;
   const direction = prams.find(
-    (p) => p.parameterType === "Direction"
+    (p) => p.parameterType === "Direction",
   ).parameterField;
   const getLocalizationAction = LocalizationSchemaActions?.find(
-    (action) => action.dashboardFormActionMethodType === "Get"
+    (action) => action.dashboardFormActionMethodType === "Get",
   );
 
   const currentLang =
@@ -61,20 +63,23 @@ export const LocalizationProvider: React.FC<{ children: React.ReactNode }> = ({
       dispatch(setLanguageRow({ ...languageRow, [direction]: currentDir }));
     }
     if (Platform.OS === "web") {
-      window.document.dir = currentDir ? "rtl" : "ltr";
+      document.documentElement.dir = currentDir ? "rtl" : "ltr";
     } else {
-      I18nManager.forceRTL(currentDir);
+      if (I18nManager.isRTL !== currentDir) {
+        I18nManager.forceRTL(currentDir);
+
+        // App reload required
+        // RNRestart.restart();
+      }
     }
   }, []);
   const { data: localization, error } = useFetch(
     currentLang
       ? `/${getLocalizationAction?.routeAdderss}/${currentLang}/BrandingMartE-Shop`
       : null,
-    schemaLanguages.projectProxyRoute
+    schemaLanguages.projectProxyRoute,
   );
-  console.log("====================================");
-  console.log(localization, error, "localization");
-  console.log("====================================");
+
   useEffect(() => {
     if (!localization) return;
 
@@ -85,7 +90,7 @@ export const LocalizationProvider: React.FC<{ children: React.ReactNode }> = ({
     const merged = DeepMerge(staticLocalization, dataObject);
 
     dispatch(
-      setLocalization(typeof merged === "string" ? JSON.parse(merged) : merged)
+      setLocalization(typeof merged === "string" ? JSON.parse(merged) : merged),
     );
   }, [localization, dispatch]);
   const [showLogo, setShowLogo] = useState(true);
@@ -116,21 +121,58 @@ export const LocalizationProvider: React.FC<{ children: React.ReactNode }> = ({
         setIsEndFinishing,
       }}
     >
-      {children}
       {/* {_continue ? children : null} */}
+      {children}
       {/* Overlay */}
-      {/* {showLogo && (
+      {showLogo && (
         <View style={styles.loadScreenOverlay}>
-          <LoadingScreen />
-          <View className="flex-row justify-center items-center gap-4">
+          {/* Center Logo */}
+          <Image
+            source={require("../assets/icon.png")}
+            style={{
+              width: scale(160),
+              height: moderateScale(140),
+              resizeMode: "contain",
+            }}
+          />
+
+          {/* Bottom IHS Logo */}
+          <View style={styles.bottomLogoContainer}>
             <Image
-              source={require("../assets/display/IHS-logo.webp")} // adjust your logo path
-              style={{ width: 80, height: 80, borderRadius: 40 }}
+              source={require("../assets/display/IHS-logo.jpg")}
+              style={styles.ihsLogo}
               resizeMode="contain"
             />
           </View>
         </View>
-      )} */}
+      )}
     </LocalizationContext.Provider>
   );
 };
+const styles = StyleSheet.create({
+  loadScreenOverlay: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#fff",
+    zIndex: 999,
+  },
+
+  bottomLogoContainer: {
+    position: "absolute",
+    bottom: 30, // distance from bottom
+    left: 0,
+    right: 0,
+    alignItems: "center",
+  },
+
+  ihsLogo: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+  },
+});

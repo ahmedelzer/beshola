@@ -15,7 +15,7 @@ export const initializeLocalization = createAsyncThunk(
       const savedLanguageID = await AsyncStorage.getItem("languageID");
       const marge = DeepMerge(
         staticLocalization,
-        JSON.parse(savedLocalization)
+        JSON.parse(savedLocalization),
       );
       // Apply RTL setting if needed
       if (savedDirection !== null) {
@@ -36,7 +36,7 @@ export const initializeLocalization = createAsyncThunk(
     } catch (err) {
       return thunkAPI.rejectWithValue(err);
     }
-  }
+  },
 );
 
 const localizationSlice = createSlice({

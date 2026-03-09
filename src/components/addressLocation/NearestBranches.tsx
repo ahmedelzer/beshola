@@ -20,7 +20,7 @@ export default function NearestBranches() {
   const { nearestBranchesState } = useSchemas();
 
   const selectedLocation = useSelector(
-    (state) => state.location.selectedLocation
+    (state) => state.location.selectedLocation,
   );
   const node = useSelector(selectSelectedNode);
   const selectedTab = useSelector((state) => state.location.selectedTab);
@@ -30,29 +30,29 @@ export default function NearestBranches() {
   const idField = nearestBranchesState.schema.idField;
   const displayLookupParam =
     nearestBranchesState.schema.dashboardFormSchemaParameters.find(
-      (pram) => pram.parameterType == "displayLookup"
+      (pram) => pram.parameterType == "displayLookup",
     );
   const nodeLatitudePoint =
     nearestBranchesState.schema.dashboardFormSchemaParameters.find(
-      (pram) => pram.parameterType == "nodeLatitudePoint"
+      (pram) => pram.parameterType == "nodeLatitudePoint",
     )?.parameterField;
   const nodeLongitudePoint =
     nearestBranchesState.schema.dashboardFormSchemaParameters.find(
-      (pram) => pram.parameterType == "nodeLongitudePoint"
+      (pram) => pram.parameterType == "nodeLongitudePoint",
     )?.parameterField;
   const activeNode =
     nearestBranchesState.schema.dashboardFormSchemaParameters.find(
-      (pram) => pram.parameterType == "active"
+      (pram) => pram.parameterType == "active",
     )?.parameterField;
   const tagAddress =
     nearestBranchesState.schema.dashboardFormSchemaParameters.find(
-      (pram) => pram.parameterType == "addressLocation"
+      (pram) => pram.parameterType == "addressLocation",
     );
   const localization = useSelector((state) => state.localization.localization);
   const { selectedNode, setSelectedNode } = useShopNode();
   const [state, reducerDispatch] = useReducer(
     reducer,
-    initialState(10, nearestBranchesState.schema.idField)
+    initialState(10, nearestBranchesState.schema.idField),
   );
   const [currentSkip, setCurrentSkip] = useState(1);
   const dataSourceAPI = (query, skip, take) => {
@@ -68,7 +68,7 @@ export default function NearestBranches() {
   const getAction =
     nearestBranchesState.actions &&
     nearestBranchesState.actions.find(
-      (action) => action.dashboardFormActionMethodType === "Get"
+      (action) => action.dashboardFormActionMethodType === "Get",
     );
 
   const { rows, skip, totalCount, loading } = state;

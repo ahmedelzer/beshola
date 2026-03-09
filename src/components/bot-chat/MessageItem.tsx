@@ -128,7 +128,7 @@ const MessageItem = ({
                 });
 
                 setSelectedItems(
-                  first3.map((it) => it.menuItemID || it.id || Math.random())
+                  first3.map((it) => it.menuItemID || it.id || Math.random()),
                 );
               }, 3000);
             }}
@@ -178,8 +178,8 @@ const MessageItem = ({
             ? "flex-end"
             : "flex-start"
           : isRTL()
-          ? "flex-start"
-          : "flex-end",
+            ? "flex-start"
+            : "flex-end",
         backgroundColor: item.fromBot ? theme.border : theme.accent,
         paddingVertical: 8,
         paddingHorizontal: 14,

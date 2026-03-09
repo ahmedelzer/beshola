@@ -50,5 +50,5 @@ const startBackgroundService = async () => {
 
 AppRegistry.registerHeadlessTask(
   "WebSocketBackgroundTask",
-  () => startBackgroundService
+  () => startBackgroundService,
 );

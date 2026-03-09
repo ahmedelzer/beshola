@@ -13,7 +13,6 @@ export default function DataCellRender({
 }) {
   // Determine the key to use for input mapping
   const inputKey = data.parameterType;
-
   const InputComponentClass = GetInputComponent(inputKey);
   // Optionally instantiate the class (if needed)
   return (

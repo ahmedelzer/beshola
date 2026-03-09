@@ -1,7 +1,7 @@
 {
   "dashboardFormSchemaID": "270f513b-1788-4c01-879e-4526c990f899",
   "schemaType": "Service",
-  "idField": "assetID",
+  "idField": "onlineAssetID",
   "dashboardFormSchemaInfoDTOView": {
     "dashboardFormSchemaID": "66a8b526-4e63-49b9-ad10-b5112f6646f4",
     "schemaHeader": "Menu Item",
@@ -11,9 +11,15 @@
   "dashboardFormSchemaParameters": [
     {
       "parameterType": "assetID",
-      "parameterField": "assetID",
+      "parameterField": "onlineAssetID",
       "parameterTitel": "Asset ID",
       "isIDField": true,
+      "isEnable": true,
+      "lookupID": null,
+      "lookupReturnField": null,
+      "lookupDisplayField": null,
+      "isFilterOperation": true,
+      "dashboardFormSchemaParameterDependencies": [],
       "indexNumber": 1
     },
     {
@@ -21,6 +27,12 @@
       "parameterField": "productID",
       "parameterTitel": "Product ID",
       "isIDField": false,
+      "isEnable": true,
+      "lookupID": null,
+      "lookupReturnField": null,
+      "lookupDisplayField": null,
+      "isFilterOperation": true,
+      "dashboardFormSchemaParameterDependencies": [],
       "indexNumber": 2
     },
     {
@@ -28,6 +40,12 @@
       "parameterField": "assetSerialNumber",
       "parameterTitel": "Serial Number",
       "isIDField": false,
+      "isEnable": true,
+      "lookupID": null,
+      "lookupReturnField": null,
+      "lookupDisplayField": null,
+      "isFilterOperation": true,
+      "dashboardFormSchemaParameterDependencies": [],
       "indexNumber": 3
     },
     {
@@ -35,6 +53,12 @@
       "parameterField": "accountName",
       "parameterTitel": "Account Name",
       "isIDField": false,
+      "isEnable": true,
+      "lookupID": null,
+      "lookupReturnField": null,
+      "lookupDisplayField": null,
+      "isFilterOperation": true,
+      "dashboardFormSchemaParameterDependencies": [],
       "indexNumber": 4
     },
     {
@@ -42,6 +66,12 @@
       "parameterField": "companyName",
       "parameterTitel": "Company Name",
       "isIDField": false,
+      "isEnable": true,
+      "lookupID": null,
+      "lookupReturnField": null,
+      "lookupDisplayField": null,
+      "isFilterOperation": true,
+      "dashboardFormSchemaParameterDependencies": [],
       "indexNumber": 5
     },
     {
@@ -49,6 +79,12 @@
       "parameterField": "companyLogo",
       "parameterTitel": "Company Logo",
       "isIDField": false,
+      "isEnable": true,
+      "lookupID": null,
+      "lookupReturnField": null,
+      "lookupDisplayField": null,
+      "isFilterOperation": true,
+      "dashboardFormSchemaParameterDependencies": [],
       "indexNumber": 6
     },
     {
@@ -56,6 +92,12 @@
       "parameterField": "isActive",
       "parameterTitel": "Active",
       "isIDField": false,
+      "isEnable": true,
+      "lookupID": null,
+      "lookupReturnField": null,
+      "lookupDisplayField": null,
+      "isFilterOperation": true,
+      "dashboardFormSchemaParameterDependencies": [],
       "indexNumber": 7
     },
     {
@@ -63,6 +105,12 @@
       "parameterField": "city",
       "parameterTitel": "City",
       "isIDField": false,
+      "isEnable": true,
+      "lookupID": null,
+      "lookupReturnField": null,
+      "lookupDisplayField": null,
+      "isFilterOperation": true,
+      "dashboardFormSchemaParameterDependencies": [],
       "indexNumber": 8
     },
     {
@@ -70,6 +118,12 @@
       "parameterField": "address",
       "parameterTitel": "Address",
       "isIDField": false,
+      "isEnable": true,
+      "lookupID": null,
+      "lookupReturnField": null,
+      "lookupDisplayField": null,
+      "isFilterOperation": true,
+      "dashboardFormSchemaParameterDependencies": [],
       "indexNumber": 9
     },
     {
@@ -77,6 +131,12 @@
       "parameterField": "streetName",
       "parameterTitel": "Street Name",
       "isIDField": false,
+      "isEnable": true,
+      "lookupID": null,
+      "lookupReturnField": null,
+      "lookupDisplayField": null,
+      "isFilterOperation": true,
+      "dashboardFormSchemaParameterDependencies": [],
       "indexNumber": 10
     },
     {
@@ -84,6 +144,12 @@
       "parameterField": "zoneName",
       "parameterTitel": "Zone",
       "isIDField": false,
+      "isEnable": true,
+      "lookupID": null,
+      "lookupReturnField": null,
+      "lookupDisplayField": null,
+      "isFilterOperation": true,
+      "dashboardFormSchemaParameterDependencies": [],
       "indexNumber": 11
     },
     {
@@ -91,6 +157,12 @@
       "parameterField": "buildNumber",
       "parameterTitel": "Building Number",
       "isIDField": false,
+      "isEnable": true,
+      "lookupID": null,
+      "lookupReturnField": null,
+      "lookupDisplayField": null,
+      "isFilterOperation": true,
+      "dashboardFormSchemaParameterDependencies": [],
       "indexNumber": 12
     },
     {
@@ -98,6 +170,12 @@
       "parameterField": "floorNumber",
       "parameterTitel": "Floor",
       "isIDField": false,
+      "isEnable": true,
+      "lookupID": null,
+      "lookupReturnField": null,
+      "lookupDisplayField": null,
+      "isFilterOperation": true,
+      "dashboardFormSchemaParameterDependencies": [],
       "indexNumber": 13
     },
     {
@@ -105,6 +183,12 @@
       "parameterField": "partitionNumber",
       "parameterTitel": "Partition",
       "isIDField": false,
+      "isEnable": true,
+      "lookupID": null,
+      "lookupReturnField": null,
+      "lookupDisplayField": null,
+      "isFilterOperation": true,
+      "dashboardFormSchemaParameterDependencies": [],
       "indexNumber": 14
     },
     {
@@ -112,6 +196,12 @@
       "parameterField": "flagMark",
       "parameterTitel": "Landmark",
       "isIDField": false,
+      "isEnable": true,
+      "lookupID": null,
+      "lookupReturnField": null,
+      "lookupDisplayField": null,
+      "isFilterOperation": true,
+      "dashboardFormSchemaParameterDependencies": [],
       "indexNumber": 15
     },
     {
@@ -119,6 +209,12 @@
       "parameterField": "locationLatitudePoint",
       "parameterTitel": "Latitude",
       "isIDField": false,
+      "isEnable": true,
+      "lookupID": null,
+      "lookupReturnField": null,
+      "lookupDisplayField": null,
+      "isFilterOperation": true,
+      "dashboardFormSchemaParameterDependencies": [],
       "indexNumber": 16
     },
     {
@@ -126,6 +222,12 @@
       "parameterField": "locationLongitudePoint",
       "parameterTitel": "Longitude",
       "isIDField": false,
+      "isEnable": true,
+      "lookupID": null,
+      "lookupReturnField": null,
+      "lookupDisplayField": null,
+      "isFilterOperation": true,
+      "dashboardFormSchemaParameterDependencies": [],
       "indexNumber": 17
     },
     {
@@ -133,6 +235,12 @@
       "parameterField": "attributes",
       "parameterTitel": "Attributes",
       "isIDField": false,
+      "isEnable": true,
+      "lookupID": null,
+      "lookupReturnField": null,
+      "lookupDisplayField": null,
+      "isFilterOperation": true,
+      "dashboardFormSchemaParameterDependencies": [],
       "indexNumber": 18
     },
     {
@@ -140,6 +248,12 @@
       "parameterField": "serviceName",
       "parameterTitel": "Service",
       "isIDField": false,
+      "isEnable": true,
+      "lookupID": null,
+      "lookupReturnField": null,
+      "lookupDisplayField": null,
+      "isFilterOperation": true,
+      "dashboardFormSchemaParameterDependencies": [],
       "indexNumber": 19
     },
     {
@@ -147,6 +261,12 @@
       "parameterField": "serviceDescription",
       "parameterTitel": "Service Description",
       "isIDField": false,
+      "isEnable": true,
+      "lookupID": null,
+      "lookupReturnField": null,
+      "lookupDisplayField": null,
+      "isFilterOperation": true,
+      "dashboardFormSchemaParameterDependencies": [],
       "indexNumber": 20
     },
     {
@@ -154,7 +274,26 @@
       "parameterField": "createdOn",
       "parameterTitel": "Created On",
       "isIDField": false,
+      "isEnable": true,
+      "lookupID": null,
+      "lookupReturnField": null,
+      "lookupDisplayField": null,
+      "isFilterOperation": true,
+      "dashboardFormSchemaParameterDependencies": [],
       "indexNumber": 21
+    },
+    {
+      "parameterType": "displayFile",
+      "parameterField": "displayFile",
+      "parameterTitel": "Display File",
+      "isIDField": false,
+      "isEnable": true,
+      "lookupID": null,
+      "lookupReturnField": null,
+      "lookupDisplayField": null,
+      "isFilterOperation": true,
+      "dashboardFormSchemaParameterDependencies": [],
+      "indexNumber": 22
     }
   ],
   "projectProxyRoute": "BrandingMartAssets",

@@ -42,7 +42,7 @@ export const productSlice = createSlice({
     },
     updateQuantity: (state, action) => {
       const itemPresent = state.product.find(
-        (item) => item.id === action.payload.id
+        (item) => item.id === action.payload.id,
       );
       if (itemPresent) {
         itemPresent.quantity += +action.payload.addQuantity;

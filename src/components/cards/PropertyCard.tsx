@@ -39,7 +39,7 @@ const PropertyCard = () => {
               <Text key={index} className="text-blue-600 text-sm mr-2">
                 {item}
               </Text>
-            )
+            ),
           )}
         </View>
 

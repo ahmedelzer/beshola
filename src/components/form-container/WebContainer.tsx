@@ -23,9 +23,9 @@ export const WebContainer = ({
                 !column.isIDField &&
                 column.isEnable &&
                 !avoidColsTypes.find(
-                  (columnType) => column.parameterType === columnType
+                  (columnType) => column.parameterType === columnType,
                 ) &&
-                !column.parameterType.startsWith("hidden")
+                !column.parameterType.startsWith("hidden"),
             )
             .map((param: any) => (
               <Col

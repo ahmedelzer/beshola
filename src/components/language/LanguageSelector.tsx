@@ -28,16 +28,16 @@ const LanguageSelector = () => {
   const dispatch = useDispatch();
   const languageRow = useSelector((state) => state.localization.languageRow);
   const currentLanguage = useSelector(
-    (state) => state.localization.currentLanguage
+    (state) => state.localization.currentLanguage,
   );
 
   const prams = schemaLanguages.dashboardFormSchemaParameters;
 
   const languageName = prams.find(
-    (p) => p.parameterType === "Language"
+    (p) => p.parameterType === "Language",
   ).parameterField;
   const direction = prams.find(
-    (p) => p.parameterType === "Direction"
+    (p) => p.parameterType === "Direction",
   ).parameterField;
 
   const dataSourceAPI = (query) =>
@@ -49,7 +49,7 @@ const LanguageSelector = () => {
     });
 
   const getLanguageAction = LanguageSchemaActions?.find(
-    (action) => action.dashboardFormActionMethodType === "Get"
+    (action) => action.dashboardFormActionMethodType === "Get",
   );
 
   const query = dataSourceAPI(getLanguageAction);
@@ -62,7 +62,7 @@ const LanguageSelector = () => {
       data?.dataSource?.length > 0
     ) {
       const language = data?.dataSource?.find(
-        (lang) => lang[languageName] === currentLanguage
+        (lang) => lang[languageName] === currentLanguage,
       );
       dispatch(setLanguageRow(language)); // Redux action handles storage
       if (Platform.OS === "web") {
@@ -133,7 +133,7 @@ const LanguageSelector = () => {
         mapData={data?.dataSource}
         onValueChange={(shortName) => {
           const lang = data?.dataSource?.find(
-            (item) => item[languageName] === shortName
+            (item) => item[languageName] === shortName,
           );
           changeLanguage(lang);
         }}

@@ -8,9 +8,9 @@ export function WSOperation(
   idField,
   dataSourceName,
   rows,
-  totalCount = 0
+  totalCount = 0,
 ) {
- // const message = JSON.parse(messageString);
+  // const message = JSON.parse(messageString);
   const payload = keysToLowerFirstChar(message[dataSourceName]);
 
   const handlers = {
@@ -39,7 +39,7 @@ export function WSOperation(
     Update: () => {
       const updatedRows = Array.isArray(rows)
         ? rows.map((row) =>
-            row[idField] === payload[idField] ? { ...row, ...payload } : row
+            row[idField] === payload[idField] ? { ...row, ...payload } : row,
           )
         : [];
       return {
@@ -49,7 +49,7 @@ export function WSOperation(
     },
     Delete: () => {
       const newRows = rows.filter(
-        (row) => row[idField] !== message[dataSourceName]
+        (row) => row[idField] !== message[dataSourceName],
       );
 
       return { rows: newRows, totalCount: TotalCount(totalCount, message.ope) };

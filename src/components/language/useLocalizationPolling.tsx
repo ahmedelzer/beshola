@@ -18,13 +18,13 @@ const useLocalizationPolling = () => {
   const prams = schemaLanguages.dashboardFormSchemaParameters;
 
   const languageName = prams.find(
-    (p) => p.parameterType === "Language"
+    (p) => p.parameterType === "Language",
   ).parameterField;
   const direction = prams.find(
-    (p) => p.parameterType === "Direction"
+    (p) => p.parameterType === "Direction",
   ).parameterField;
   const getLocalizationAction = LocalizationSchemaActions?.find(
-    (action) => action.dashboardFormActionMethodType === "Get"
+    (action) => action.dashboardFormActionMethodType === "Get",
   );
 
   const currentLang =
@@ -41,7 +41,7 @@ const useLocalizationPolling = () => {
     currentLang
       ? `/${getLocalizationAction?.routeAdderss}/${currentLang}/BrandingMartE-Shop`
       : null,
-    schemaLanguages.projectProxyRoute
+    schemaLanguages.projectProxyRoute,
   );
 
   useEffect(() => {
@@ -54,7 +54,7 @@ const useLocalizationPolling = () => {
     const merged = DeepMerge(staticLocalization, dataObject);
 
     dispatch(
-      setLocalization(typeof merged === "string" ? JSON.parse(merged) : merged)
+      setLocalization(typeof merged === "string" ? JSON.parse(merged) : merged),
     );
   }, [localization, dispatch]);
 };

@@ -29,20 +29,20 @@ export default function OrderCard({ order, schemas }) {
   const [isOpenAlert, setIsOpenAlert] = useState(false);
   const { setNotifications } = useAuth();
   const selectedNode = useSelector(
-    (state) => state.location.selectedNodePickup
+    (state) => state.location.selectedNodePickup,
   );
   const selectedTab = useSelector((state) => state.location.selectedTab);
   const notify = localization.Hum_screens.orders.notify;
   const displayLookupParamAddress =
     AddressLocationSchema.dashboardFormSchemaParameters.find(
-      (pram) => pram.parameterType == "displayLookup"
+      (pram) => pram.parameterType == "displayLookup",
     );
   const displayLookupParamNode =
     NearestBranches.dashboardFormSchemaParameters.find(
-      (pram) => pram.parameterType == "displayLookup"
+      (pram) => pram.parameterType == "displayLookup",
     );
   const selectedLocation = useSelector(
-    (state) => state.location.selectedLocation
+    (state) => state.location.selectedLocation,
   );
   const getAddress = () => {
     if (selectedTab === 0)
@@ -63,12 +63,12 @@ export default function OrderCard({ order, schemas }) {
     invoiceItemsTaxAmount: getField(
       parametersSecondSchema,
       "invoiceItemsTaxAmount",
-      false
+      false,
     ),
     invoiceTaxAmount: getField(
       parametersSecondSchema,
       "invoiceTaxAmount",
-      false
+      false,
     ),
     totalFeesAmount: getField(parametersSecondSchema, "totalFeesAmount", false),
     feesAmount: getField(parametersSecondSchema, "feesAmount", false),
@@ -76,23 +76,23 @@ export default function OrderCard({ order, schemas }) {
     invoiceItemsDiscountAmount: getField(
       parametersSecondSchema,
       "invoiceItemsDiscountAmount",
-      false
+      false,
     ),
     invoiceDiscountAmount: getField(
       parametersSecondSchema,
       "invoiceDiscountAmount",
-      false
+      false,
     ),
     totalDiscountAmount: getField(
       parametersSecondSchema,
       "totalDiscountAmount",
-      false
+      false,
     ),
     totalTaxAmount: getField(parametersSecondSchema, "totalTaxAmount", false),
     totalShipmentsNeeded: getField(
       parametersSecondSchema,
       "totalShipmentsNeeded",
-      false
+      false,
     ),
     shipmentFees: getField(parametersSecondSchema, "shipmentFees", false),
     otherFees: getField(parametersSecondSchema, "otherFees", false),
@@ -123,7 +123,7 @@ export default function OrderCard({ order, schemas }) {
   const delAction =
     orderState.actions &&
     orderState.actions.find(
-      (action) => action.dashboardFormActionMethodType === "Delete"
+      (action) => action.dashboardFormActionMethodType === "Delete",
     );
   const removeCard = async () => {
     const req = true; //!only need edit delAction
@@ -192,7 +192,7 @@ export default function OrderCard({ order, schemas }) {
           />
           <Text style={styles.date} className="text-ls font-semibold">
             {setdateTime(
-              order[ordersFieldsType?.requestedDatetime?.parameterField]
+              order[ordersFieldsType?.requestedDatetime?.parameterField],
             )}
           </Text>
 

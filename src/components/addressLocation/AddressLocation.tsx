@@ -14,7 +14,7 @@ export default function AddressLocation() {
   const { userGust } = useAuth();
   const [state, reducerDispatch] = useReducer(
     reducer,
-    initialState(10, addressLocationState.schema.idField)
+    initialState(10, addressLocationState.schema.idField),
   );
 
   const [currentSkip, setCurrentSkip] = useState(1);
@@ -30,7 +30,7 @@ export default function AddressLocation() {
   const getAction =
     addressLocationState.actions &&
     addressLocationState.actions?.find(
-      (action) => action.dashboardFormActionMethodType === "Get"
+      (action) => action.dashboardFormActionMethodType === "Get",
     );
 
   const { rows, skip, totalCount, loading } = state;

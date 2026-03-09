@@ -132,12 +132,12 @@ export default function CompareCards() {
                         : "text-text"
                     }`}
                   >
-                    {f.format ? f.format(item[f.key]) : item[f.key] ?? "-"}
+                    {f.format ? f.format(item[f.key]) : (item[f.key] ?? "-")}
                   </Text>
                 </View>
               ))}
             </View>
-          )
+          ),
         )}
 
         {/* ADD NEW ITEM COLUMN */}

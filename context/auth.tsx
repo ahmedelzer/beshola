@@ -63,7 +63,7 @@ function AuthProvider(props) {
             "",
             notification.status || "success",
             "outline",
-            isRTL() ? "top left" : "top right"
+            isRTL() ? "top left" : "top right",
           );
         }
       });
@@ -140,11 +140,11 @@ function AuthProvider(props) {
 
   function CheckPortalMenuItem(menuItemID) {
     const usersGroupDashboardMenuItemsJson = JSON.parse(
-      user?.UsersGroupDashboardMenuItems
+      user?.UsersGroupDashboardMenuItems,
     );
 
     const menuItemIDFind = usersGroupDashboardMenuItemsJson?.find(
-      (item) => item.DashboardItemID === menuItemID
+      (item) => item.DashboardItemID === menuItemID,
     );
     if (!menuItemIDFind || menuItemID === "home") {
       signOut();

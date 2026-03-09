@@ -32,7 +32,7 @@ export const cartSlice = createSlice({
       const fieldsType = action.payload.fieldsType;
       const idField = fieldsType.idField;
       const itemPresent = state.cart.find(
-        (cartItem) => cartItem[idField] === item[idField]
+        (cartItem) => cartItem[idField] === item[idField],
       );
 
       // if (itemPresent) {
@@ -58,12 +58,12 @@ export const cartSlice = createSlice({
       const fieldsType = action.payload.fieldsType;
       const idField = fieldsType.idField;
       const itemPresent = state.cart.find(
-        (cartItem) => cartItem[idField] === item[idField]
+        (cartItem) => cartItem[idField] === item[idField],
       );
 
       // if (itemPresent) {
       const removeFromCart = state.cart.filter(
-        (removeItem) => removeItem[idField] !== item[idField]
+        (removeItem) => removeItem[idField] !== item[idField],
       );
       state.cart = removeFromCart;
       console.log("====================================");
@@ -83,7 +83,7 @@ export const cartSlice = createSlice({
       if (action.payload.type == "delete") {
         const noteIdToDelete = action.payload.value;
         state.notes = state.notes.filter(
-          (note) => note.value !== noteIdToDelete
+          (note) => note.value !== noteIdToDelete,
         );
       }
     },

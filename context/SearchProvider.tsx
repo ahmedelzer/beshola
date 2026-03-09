@@ -1,100 +1,105 @@
-// WSContext.tsx
+// SearchContext.tsx
 import React, {
   createContext,
-  useCallback,
   useContext,
   useEffect,
-  useLayoutEffect,
   useReducer,
   useRef,
   useState,
 } from "react";
+
 import reducer from "../src/components/Pagination/reducer";
 import {
   initialState,
   OFF_SET_SCROLL,
   VIRTUAL_PAGE_SIZE,
 } from "../src/components/Pagination/initialState";
-import { getField } from "../src/utils/operation/getField";
+
 import { ConnectToWS } from "../src/utils/WS/ConnectToWS";
 import { useNetwork } from "./NetworkContext";
 import { useWS } from "./WSProvider";
 import { WSMessageHandler } from "../src/utils/WS/handleWSMessage";
+
 import { buildApiUrl } from "../components/hooks/APIsFunctions/BuildApiUrl";
 import { useSelector } from "react-redux";
+
 import { prepareLoad } from "../src/utils/operation/loadHelpers";
 import { createRowCache } from "../src/components/Pagination/createRowCache";
-import AssetsSchema from "../src/Schemas/MenuSchema/AssetsSchema.json";
-import FavoriteMenuItemsSchema from "../src/Schemas/MenuSchema/FavoriteMenuItemsSchema.json";
-import AssetsSchemaActions from "../src/Schemas/MenuSchema/AssetsSchemaActions.json";
-import { useNavigation } from "@react-navigation/native";
 import { getRemoteRows } from "../src/components/Pagination/getRemoteRows";
-import ActionBar from "../src/components/cards/ActionBar";
-import { SetResponsiveContainer } from "../src/utils/component/SetResponsiveContainer";
-import HeaderParent from "../src/components/header/HeaderParent";
+
+import AssetsSchema from "../src/Schemas/MenuSchema/AssetsSchema.json";
+import AssetsSchemaActions from "../src/Schemas/MenuSchema/AssetsSchemaActions.json";
+
 import { useShopNode } from "./ShopNodeProvider";
-// Create context
+
 export const SearchContext = createContext(null);
 
-// Context provider component
 export const SearchProvider = ({ children }) => {
   const [menuItemRow, setMenuItemRow] = useState({});
-  const [reRequest, setReRequest] = useState(false);
-  const languageRow = useSelector((state) => state.localization.languageRow);
-  const { _wsMessageMenuItem, setWSMessageMenuItem } = useWS();
   const [WS_Connected, setWS_Connected] = useState(false);
   const previousRowRef = useRef({});
+  const previousControllerRef = useRef(null);
+
+  const { _wsMessageMenuItem, setWSMessageMenuItem } = useWS();
 
   const fieldsType = useSelector((state: any) => state.menuItem.fieldsType);
-  const reduxSelectedLocation = useSelector(
-    (state: any) => state.location?.selectedLocation,
-  );
-  const reduxSelectedNode = useSelector(
-    (state: any) => state.location?.selectedNode,
-  );
 
-  const [selectedLocation, setSelectedLocation] = useState(
-    reduxSelectedLocation || null,
-  );
-  //const [selectedNode, setSelectedNode] = useState(reduxSelectedNode || null);
-  // const selectedNode = selectSelectedNode(store.getState());
-  // Add this ref:
-  const previousControllerRef = useRef(null);
+  const { selectedNode } = useShopNode();
+  const selectedNodeRef = useRef(selectedNode);
+
   const [state, reducerDispatch] = useReducer(
     reducer,
     initialState(VIRTUAL_PAGE_SIZE, AssetsSchema.idField),
   );
-  const [currentSkip, setCurrentSkip] = useState(1);
-  const dataSourceAPI = (query, skip, take) => {
-    return buildApiUrl(query, {
-      pageIndex: skip + 1,
-      pageSize: take,
-      ...menuItemRow,
-    });
-  };
+
+  const [currentSkip, setCurrentSkip] = useState(0);
+
+  const { rows, totalCount, loading } = state;
+
+  const {
+    status: { isConnected: isOnline },
+  } = useNetwork();
+
   const cache = createRowCache(VIRTUAL_PAGE_SIZE);
+
   const getAction =
     AssetsSchemaActions &&
     AssetsSchemaActions.find(
       (action) => action.dashboardFormActionMethodType === "Get",
     );
 
-  const { rows, skip, totalCount, loading } = state;
-  const {
-    status: { isConnected: isOnline },
-  } = useNetwork();
-  const { selectedNode, setSelectedNode } = useShopNode();
-  const selectedNodeRef = useRef(selectedNode);
+  const dataSourceAPI = (query, skip, take) => {
+    const pageIndex = Math.floor(skip / take) + 1;
+
+    return buildApiUrl(query, {
+      pageIndex,
+      pageSize: take,
+      ...menuItemRow,
+    });
+  };
+
+  /**
+   * Reset when selected node changes
+   */
   useEffect(() => {
-    // if (!selectedNode) return;
     if (selectedNodeRef.current !== selectedNode) {
       selectedNodeRef.current = selectedNode;
+
       reducerDispatch({
         type: "RESET_SERVICE_LIST",
         payload: { lastQuery: "" },
       });
+
+      setCurrentSkip((prev) => prev + 1);
     }
+  }, [selectedNode]);
+
+  /**
+   * Load data
+   */
+  useEffect(() => {
     const controller = new AbortController();
+
     prepareLoad({
       state,
       dataSourceAPI,
@@ -103,35 +108,43 @@ export const SearchProvider = ({ children }) => {
       reducerDispatch,
       abortController: controller,
     });
-    setReRequest(false);
-    previousControllerRef.current = controller;
-    return () => controller.abort();
-    // Call LoadData with the controller
-  }, [menuItemRow, selectedNode, currentSkip]);
 
+    previousControllerRef.current = controller;
+
+    return () => controller.abort();
+  }, [menuItemRow, currentSkip]);
+
+  /**
+   * Reset websocket when node changes
+   */
   useEffect(() => {
-    if (!selectedNode) return;
     setWS_Connected(false);
   }, [selectedNode]);
-  // 🌐 Setup WebSocket connection on mount or WS_Connected change
+
+  /**
+   * Setup websocket
+   */
   useEffect(() => {
     if (WS_Connected) return;
 
     let cleanup;
+
     ConnectToWS(
       setWSMessageMenuItem,
       setWS_Connected,
       fieldsType.dataSourceName,
     )
-      .then(() => console.log("🔌 WebSocket setup done"))
-      .catch((e) => {});
+      .then(() => console.log("🔌 WebSocket connected"))
+      .catch(() => {});
+
     return () => {
-      if (cleanup) cleanup(); // Clean up when component unmounts or deps change
-      console.log("🧹 Cleaned up WebSocket handler");
+      if (cleanup) cleanup();
     };
   }, [WS_Connected]);
 
-  // 🧠 Reducer callback to update rows
+  /**
+   * Websocket update rows
+   */
   const callbackReducerUpdate = async (ws_updatedRows) => {
     await reducerDispatch({
       type: "WS_OPE_ROW",
@@ -142,32 +155,40 @@ export const SearchProvider = ({ children }) => {
     });
   };
 
-  // 📨 React to WebSocket messages only when valid
+  /**
+   * Handle websocket message
+   */
   useEffect(() => {
     if (!_wsMessageMenuItem) return;
-    const _handleWSMessage = new WSMessageHandler({
+
+    const handler = new WSMessageHandler({
       _WSsetMessage: _wsMessageMenuItem,
       fieldsType,
       rows,
       totalCount,
       callbackReducerUpdate,
     });
-    _handleWSMessage.process();
-    //setWSMessageMenuItem(_wsMessageMenuItem);
+
+    handler.process();
   }, [_wsMessageMenuItem]);
+
+  /**
+   * Detect filter change
+   */
   useEffect(() => {
     if (!menuItemRow) return;
+
     if (JSON.stringify(previousRowRef.current) === JSON.stringify(menuItemRow))
       return;
 
     const prevRow = previousRowRef.current || {};
+
     const changedProps = Object.keys(menuItemRow).filter(
       (key) => menuItemRow[key] !== prevRow[key],
     );
 
     const changedKey = changedProps.length === 1 ? changedProps[0] : null;
 
-    // Abort previous request only if same key changed
     if (
       changedKey &&
       previousControllerRef.current &&
@@ -176,13 +197,26 @@ export const SearchProvider = ({ children }) => {
       previousControllerRef.current.abort();
     }
 
-    // Save current row for next comparison
     previousRowRef.current = menuItemRow;
 
-    // Reset list and pagination
     reducerDispatch({ type: "RESET_SERVICE_LIST" });
-    setCurrentSkip(1);
+    setCurrentSkip(0);
   }, [menuItemRow]);
+
+  /**
+   * Load more rows
+   */
+  const onLoadMore = () => {
+    if (loading || rows.length >= totalCount) return;
+
+    getRemoteRows(currentSkip, VIRTUAL_PAGE_SIZE, reducerDispatch);
+
+    setCurrentSkip((prev) => prev + VIRTUAL_PAGE_SIZE);
+  };
+
+  /**
+   * Scroll pagination
+   */
   const handleScroll = (event) => {
     const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
 
@@ -190,37 +224,18 @@ export const SearchProvider = ({ children }) => {
       layoutMeasurement.height + contentOffset.y >=
       contentSize.height - OFF_SET_SCROLL;
 
-    if (isScrolledToBottom && rows.length < totalCount && !loading) {
-      getRemoteRows(currentSkip, VIRTUAL_PAGE_SIZE * 2, reducerDispatch); //todo change dispatch by reducerDispatch
-      setCurrentSkip(currentSkip + 1);
-    }
+    if (!isScrolledToBottom || loading || rows.length >= totalCount) return;
+
+    const remaining = totalCount - rows.length;
+    if (remaining <= 0) return;
+
+    const take = Math.min(VIRTUAL_PAGE_SIZE * 2, remaining);
+
+    getRemoteRows(rows.length, take, reducerDispatch);
+
+    setCurrentSkip((prev) => prev + take);
   };
-  // const loadData = useCallback(() => {
-  //   console.log("dataSourceAPI",menuItemRow,selectedNode);
-  //   prepareLoad({
-  //     state: state,
-  //     dataSourceAPI: dataSourceAPI,
-  //     getAction: getAction,
-  //     cache: createRowCache(4000),
-  //     reducerDispatch: reducerDispatch,
-  //     abortController: false,
-  //     reRequest: true,
-  //   });
-  // }, [dataSourceAPI, getAction, reducerDispatch, state, selectedNode]);
-  // useEffect(() => {
-  //   if (isOnline) {
-  //     resetAndReload(); // Reload only when back online
-  //   }
-  // }, [ selectedNode]);
-  // const resetAndReload = useCallback(() => {
-  // reducerDispatch({
-  //   type: "RESET_SERVICE_LIST",
-  //   payload: { lastQuery: "" },
-  // });
-  //   setTimeout(() => {
-  //     loadData();
-  //   }, 0);
-  // }, [loadData]);
+
   return (
     <SearchContext.Provider
       value={{
@@ -229,6 +244,7 @@ export const SearchProvider = ({ children }) => {
         state,
         reducerDispatch,
         handleScroll,
+        onLoadMore,
       }}
     >
       {children}
@@ -236,5 +252,4 @@ export const SearchProvider = ({ children }) => {
   );
 };
 
-// Custom hook to consume the context
 export const useSearch = () => useContext(SearchContext);

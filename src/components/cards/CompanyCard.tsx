@@ -24,8 +24,11 @@ import StarsIcons from "../../utils/component/StarsIcons";
 import { isRTL } from "../../utils/operation/isRTL";
 import PropertyCardButtonsActions from "./PropertyCardButtonsActions";
 import ExpandableText from "../../utils/component/ExpandableText";
+import Attributes from "../../components/cards/Attributes";
 import { ScreenWidth } from "../shared";
 import { GetMediaUrl } from "../../utils/operation/GetMediaUrl";
+import AddressComponent from "./AddressComponent";
+import { addAlpha } from "../../utils/operation/addAlpha";
 
 interface CompanyCardProps {
   itemPackage: any;
@@ -58,11 +61,8 @@ const CompanyCard: React.FC<CompanyCardProps> = ({
       // navigate to details if needed
     }
   };
-  const attributesText = item[fieldsType.attributes]
-    ?.map((att) => att)
-    .join(" • "); // join with bullet or comma
+  const defaultImage = require("../../../assets/display/adaptive-icon.png");
   const isWeb = Platform.OS === "web";
-
   return (
     <View className="mb-3">
       {/* Top Buttons */}
@@ -77,8 +77,15 @@ const CompanyCard: React.FC<CompanyCardProps> = ({
        */}
       <Card
         className={`items-center rounded-xl overflow-hidden border relative ${
-          selected ? "border-2 border-green-500 bg-green-100" : "bg-dark_card"
+          selected ? "border-2 border-green-500" : ""
         } !rounded-none`}
+        style={{
+          // Using your theme accent with 30% opacity as requested
+          backgroundColor: selected
+            ? "rgba(34, 197, 94, 0.1)"
+            : addAlpha(theme.accentHover, 0.15),
+          borderColor: selected ? "#22c55e" : addAlpha(theme.accentHover, 0.5),
+        }}
       >
         <View className="w-full flex flex-col">
           {/* Image + Info Section */}
@@ -117,19 +124,24 @@ const CompanyCard: React.FC<CompanyCardProps> = ({
                   {/* Company Name + Verified + Stars */}
                   {fieldsType.companyName && item[fieldsType.companyName] && (
                     <View>
-                      {fieldsType.companyLogo &&
-                        item[fieldsType.companyLogo] && (
-                          <Image
-                            source={{
-                              uri: GetMediaUrl(
-                                item[fieldsType.companyLogo],
-                                "publicImage",
-                              ),
-                            }}
-                            className="w-10 h-10 rounded-full mr-2"
-                            resizeMode="cover"
-                          />
-                        )}
+                      {
+                        <Image
+                          source={
+                            item[fieldsType.companyLogo]
+                              ? {
+                                  uri: GetMediaUrl(
+                                    item[fieldsType.companyLogo],
+                                    "publicImage",
+                                  ),
+                                }
+                              : "" // Fallback to local asset if URI is null/undefined
+                          }
+                          // Optional: helps on iOS while the remote image is downloading
+                          // defaultSource={defaultImagePath}
+                          className="w-10 h-10 rounded-full mr-2"
+                          resizeMode="cover"
+                        />
+                      }
                       <Text
                         numberOfLines={2}
                         key={`${item[fieldsType.idField]}-${
@@ -164,10 +176,7 @@ const CompanyCard: React.FC<CompanyCardProps> = ({
 
                   {/* Property Info */}
                   {fieldsType.attributes && item[fieldsType.attributes] && (
-                    <ExpandableText
-                      text={attributesText}
-                      className="text-body text-sm mb-1 ps-4"
-                    />
+                    <Attributes attributes={item[fieldsType.attributes]} />
                   )}
                 </View>
               </VStack>
@@ -175,44 +184,41 @@ const CompanyCard: React.FC<CompanyCardProps> = ({
           </View>
 
           {/* Bottom Actions */}
-          <View className="flex-row justify-between items-center mt-2 px-2">
-            {" "}
-            {fieldsType.address && item[fieldsType.address] && (
-              <TouchableOpacity
-                className="bg-accentHover px-3 py-1 rounded-full shadow flex-row items-center"
-                onPress={() =>
-                  console.log("Redirect to map:", item[fieldsType.address])
-                }
-              >
-                <MaterialCommunityIcons
-                  name="map-marker-outline"
-                  size={18}
-                  color={theme.body}
-                />
-                <Text className="text-body text-sm font-semibold ml-1">
-                  <ExpandableText
-                    text={item[fieldsType.address]}
-                    initLimit={20}
-                  />
-                </Text>
-              </TouchableOpacity>
-            )}
-            <View className="flex-row items-center">
+          <View className="flex-row items-center mt-2 px-2 w-full">
+            {/* Address Section - 40% */}
+            <View style={{ width: "50%" }} className="pr-1">
+              {fieldsType.address && item[fieldsType.address] && (
+                /* Pass the address string to your component. 
+       The component calculates its own 'glass' width inside this 50% space.
+    */
+                <AddressComponent addressText={item[fieldsType.address]} />
+              )}
+            </View>
+
+            {/* Viewers Section - 40% */}
+            <View
+              style={{ width: "35%" }}
+              className="flex-row items-center justify-center px-1"
+            >
               <MaterialCommunityIcons
                 name="eye-outline"
                 size={18}
                 color={theme.accent}
               />
-              <Text className="text-body text-xs ml-1">
-                {item.viewers} viewing now
+              <Text className="text-body text-xs ml-1" numberOfLines={1}>
+                {item.viewers} viewing
               </Text>
             </View>
-            <TouchableOpacity
-              className="bg-body p-2 rounded-xl"
-              onPress={() => console.log("Contact icon pressed")}
-            >
-              <AntDesign name="wechat" size={24} color={theme.accent} />{" "}
-            </TouchableOpacity>
+
+            {/* Chat Section - 20% */}
+            <View style={{ width: "10%" }} className="items-end">
+              <TouchableOpacity
+                className="bg-body p-2 rounded-xl"
+                onPress={() => console.log("Contact icon pressed")}
+              >
+                <AntDesign name="wechat" size={22} color={theme.accent} />
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </Card>

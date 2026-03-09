@@ -38,7 +38,7 @@ const AddToCartSecondaryButton = ({
               fieldsType,
               setLoading,
               schemaActions,
-              setNotifications
+              setNotifications,
             );
           }}
           className="mt-2 px-2 py-1 rounded-lg bg-accent items-center justify-center flex flex-row"
@@ -60,7 +60,7 @@ const AddToCartSecondaryButton = ({
               fieldsType,
               setLoading,
               schemaActions,
-              setNotifications
+              setNotifications,
             );
           }}
           className="mt-2 px-2 py-1 rounded-lg bg-accent items-center justify-center flex flex-row"
@@ -94,7 +94,7 @@ const AddToCartPrimaryButton = ({
       itemPackage[fieldsType.cardAction] &&
         itemPackage[fieldsType.cardAction] > 0
         ? true
-        : false
+        : false,
     );
     useEffect(() => {
       setIsAdded(itemPackage[fieldsType.cardAction] > 0 ? true : false);
@@ -108,7 +108,7 @@ const AddToCartPrimaryButton = ({
             fieldsType,
             setLoading,
             schemaActions,
-            setNotifications
+            setNotifications,
           );
           setIsAdded(true);
         }}
@@ -153,7 +153,7 @@ const AddToCartPrimaryButton = ({
                       fieldsType,
                       setLoading,
                       schemaActions,
-                      setNotifications
+                      setNotifications,
                     );
                   }}
                   disabled={loading}
@@ -176,7 +176,7 @@ const AddToCartPrimaryButton = ({
                       fieldsType,
                       setLoading,
                       schemaActions,
-                      setNotifications
+                      setNotifications,
                     );
                   }}
                   disabled={
@@ -204,7 +204,7 @@ const AddToCartPrimaryButton = ({
                 fieldsType,
                 setLoading,
                 schemaActions,
-                setNotifications
+                setNotifications,
               );
             }}
             disabled={!user || loading}

@@ -44,7 +44,7 @@ const PropertyCardDetails: React.FC<PropertyCardDetailsProps> = ({
   const [selectedImage, setSelectedImage] = useState(testImages[0]);
   const imageSize = getResponsiveImageSize(0.3, { min: 80, max: 100 });
   const localization = useSelector(
-    (state: any) => state.localization.localization
+    (state: any) => state.localization.localization,
   );
   const price = item?.[fieldsType.price];
   const priceAfterDiscount = item?.[fieldsType.priceAfterDiscount];

@@ -42,7 +42,7 @@ const RequestCard: React.FC<RequestCardProps> = ({
     .join(" • "); // join with bullet or comma
   const imageSize = getResponsiveImageSize(0.3, { min: 80, max: 100 });
   const localization = useSelector(
-    (state: any) => state.localization.localization
+    (state: any) => state.localization.localization,
   );
   const isWeb = Platform.OS === "web";
 

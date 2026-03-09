@@ -26,7 +26,7 @@ const DetailsScreen = ({ route }) => {
   const fieldsType = useSelector((state) => state.menuItem.fieldsType);
 
   const item = initCompanyRows.find(
-    (item) => item[fieldsType.idField] === route.params.id
+    (item) => item[fieldsType.idField] === route.params.id,
   );
 
   const { menuItemsState } = useSchemas();

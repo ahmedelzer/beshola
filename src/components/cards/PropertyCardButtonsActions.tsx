@@ -22,7 +22,7 @@ export default function PropertyCardButtonsActions({
   const itemId = item?.[fieldsType.idField];
 
   const isCompareItem = compareItems.some(
-    (compareItem: any) => compareItem?.[fieldsType.idField] === itemId
+    (compareItem: any) => compareItem?.[fieldsType.idField] === itemId,
   );
 
   // ================= SHARE =================
@@ -40,7 +40,7 @@ export default function PropertyCardButtonsActions({
           : {
               message: `Check this property:\n${url}`,
               url,
-            }
+            },
       );
     } catch (error) {
       console.error("Share error:", error);

@@ -9,7 +9,7 @@ export async function UpdateCart(
   fieldsType,
   setLoading,
   schemaActions,
-  setNotifications
+  setNotifications,
 ) {
   const orderStatus = store.getState().location.orderStatus;
   const localization = store.getState().localization.localization;
@@ -48,7 +48,7 @@ export async function UpdateCart(
       setLoading,
       fieldsType,
       schemaActions,
-      newQuantity
+      newQuantity,
     );
   } catch (error) {
     console.error("Error updating cart:", error);
