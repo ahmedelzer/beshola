@@ -34,7 +34,7 @@ const PopupModal = ({
   isFormModal = true,
   footer = null,
   row = {},
-  size,
+  size = null,
   children,
 }) => {
   const localization = useSelector((state) => state.localization.localization);

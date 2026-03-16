@@ -41,7 +41,7 @@ export default function CardPriceDiscount({
       </View>
       {downPayment > 0 && (
         <Text style={styles.downPayment}>
-          {downPayment.toFixed(2)} {currencyShortName}
+         {localization.menu.downPayment||"Down Payment"} {downPayment.toFixed(2)} {currencyShortName}
         </Text>
       )}
     </View>
@@ -57,13 +57,13 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   discountedPrice: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: "bold",
     marginRight: 8, // spacing between prices when discount exists
     textAlign: "center",
   },
   originalPrice: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: "bold",
     color: theme.error,
     textDecorationLine: "line-through",
@@ -72,8 +72,7 @@ const styles = StyleSheet.create({
   downPayment: {
     fontSize: 10,
     fontWeight: "bold",
-    color: theme.text,
-    textDecorationLine: "line-through",
+    color: theme.accentHover,
     textAlign: "center",
   },
 });

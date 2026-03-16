@@ -1,6 +1,6 @@
 import { Controller, useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
-import React, { useEffect, useMemo, useReducer, useState } from "react";
+import React, { useEffect, useMemo, useReducer, useRef, useState } from "react";
 import { View } from "react-native";
 import useFetch from "../../../../components/hooks/APIsFunctions/useFetch";
 import GetSchemaActionsUrl from "../../../../components/hooks/DashboardAPIs/GetSchemaActionsUrl";
@@ -60,8 +60,8 @@ function LookupParameter({
     );
   }, [getAction, dataSourceAPI]);
 
-  const [selectedRow, setSelectedRow] = useState(null);
 
+  
   // ✅ Auto-select the first row when rows load
   // useEffect(() => {
   //   if (!selectedRow && state.rows?.length > 0) {
@@ -70,21 +70,28 @@ function LookupParameter({
 
   //   }
   // }, [state.rows]);
-  /*
-  useEffect(() => {
-   console.log("selectedRow",selectedRow)
-   props.setRowDetails(selectedRow);
-  }, [selectedRow]);
-*/
+  const selectedRow = useRef({});
+
+useEffect(() => {
+  if (Object.keys(selectedRow.current).length === 0 && state.rows?.length > 0) {
+    selectedRow.current = state.rows[0];
+  }
+
+  console.log("selectedRow", selectedRow.current, state.rows);
+}, [state.rows]);
+
   const localization = useSelector((state) => state.localization.localization);
   return (
-    <SelectParameter
-      control={control}
+    <View  key={`${fieldName}-${selectedRow?.[lookupReturnField] || "none"}`}>
+<SelectParameter
+  
+     onValueChange={(selectedItem) => props?.setwatch(selectedItem)}
       fieldName={fieldName}
       values={state.rows || []}
       lookupReturnField={lookupReturnField}
       lookupDisplayField={lookupDisplayField}
-      value={selectedRow?.[lookupReturnField]}
+      value={selectedRow}
+      selectTheFirst ={true}
       // onValueChange={(val) => {
       //   console.log("val", val);
 
@@ -95,6 +102,8 @@ function LookupParameter({
       placeholder={localization?.inputs?.select?.placeholder || "Select"}
       {...props}
     />
+    </View>
+    
   );
 }
 

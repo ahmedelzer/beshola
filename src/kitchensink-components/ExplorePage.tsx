@@ -16,6 +16,7 @@ import { PolygonForm } from "../components/maps/PolygonForm";
 import DynamicTreeSchema from "../utils/component/DynamicTreeSchema";
 import PolygonMapEmbed from "../components/maps/DrawSmoothPolygon";
 import DynamicRangeSchema from "../utils/component/DynamicRangeComponent";
+import AdditionalInfoScreen from "./auth/signup/AddtionInfo";
 
 const Explorepage = () => {
   const { os } = useDeviceInfo();
@@ -54,6 +55,7 @@ const Explorepage = () => {
             </View>
           </VStack>
         </Box>
+        <AdditionalInfoScreen />
       </ScrollView>
     </>
   );

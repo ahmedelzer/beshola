@@ -58,7 +58,7 @@ export default function PropertyCardButtonsActions({
     <View
       className={containerClassName}
       style={{
-        backgroundColor: addAlpha(theme.text, 0.15),
+        backgroundColor: theme.accent,
         borderColor: theme.border,
         justifyContent: "flex-end",
       }}
@@ -79,7 +79,7 @@ export default function PropertyCardButtonsActions({
         <Text
           className="text-[10px] font-semibold"
           style={{
-            color: isCompareItem ? theme.dark_card : theme.dark_card,
+            color: isCompareItem ? theme.body : theme.body,
           }}
         >
           +Compare
@@ -89,18 +89,18 @@ export default function PropertyCardButtonsActions({
       {/* ================= SHARE ================= */}
       <TouchableOpacity
         className="p-2 rounded-full shadow"
-        style={{ backgroundColor: addAlpha(theme.surface,.15)}}
+        style={{ backgroundColor: addAlpha(theme.body,.15)}}
         onPress={handleShare}
       >
-        <Feather name="share-2" size={16} color={theme.dark_card} />
+        <Feather name="share-2" size={16} color={theme.body} />
       </TouchableOpacity>
 
       {/* ================= FAVORITE ================= */}
       <TouchableOpacity
         className="p-2 rounded-full shadow"
-        style={{ backgroundColor: addAlpha(theme.surface,.15) }}
+        style={{ backgroundColor: addAlpha(theme.body,.15) }}
       >
-        <Feather name="heart" size={16} color={theme.dark_card} />
+        <Feather name="heart" size={16} color={theme.body} />
       </TouchableOpacity>
     </View>
   );

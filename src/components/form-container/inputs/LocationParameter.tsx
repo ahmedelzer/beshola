@@ -116,7 +116,6 @@ export default function LocationParameter({ ...props }) {
           // subSchemas={props.subSchemas}
           // findServerContainer={findServerContainer}
           clickAction={clickAction}
-          setClickAction={setClickAction}
           setNewPolygon={setNewPolygon}
         />
         {/* )} */}

@@ -10,6 +10,7 @@ import { useNavigation } from "@react-navigation/native";
 import CompanyCardView from "../company-components/CompanyCardView";
 import SkeletonMenuCardWeb from "../skeletonLoading/SkeletonMenuCardWeb";
 import AddAsset from "./AddAsset";
+import OwnAssetCard from "../cards/OwnAssetCard";
 const AssetsForm = () => {
   const { menuItemsState } = useSchemas();
 
@@ -22,7 +23,6 @@ const AssetsForm = () => {
 
   return (
     <View className="flex-1 bg-background">
-
       {/* Scrollable content */}
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -31,12 +31,6 @@ const AssetsForm = () => {
         className="flex-1"
         contentContainerStyle={{ paddingBottom: 120 }}
       >
-        <View className="my-5 flex-row justify-between items-center bg-surface p-3 rounded-2xl shadow-sm border border-outline-20">
-          <View className="flex-1">
-            <SearchTabs />
-          </View>
-        </View>
-
         <CompanyCardsFlatList
           rows={rows}
           fieldsType={fieldsType}
@@ -44,7 +38,7 @@ const AssetsForm = () => {
           menuItemsState={menuItemsState}
           selectedItems={selectedItems}
           setSelectedItems={setSelectedItems}
-          CardComponent={CompanyCardView}
+          CardComponent={OwnAssetCard}
         />
 
         <RenderLoadingItems
@@ -59,7 +53,6 @@ const AssetsForm = () => {
       <View className="absolute bottom-0 left-0 right-0 bg-surface p-3 rounded-2xl mb-2 shadow-sm border border-outline-20">
         <AddAsset />
       </View>
-
     </View>
   );
 };

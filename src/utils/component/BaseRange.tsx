@@ -16,10 +16,6 @@ import { defaultProjectProxyRouteWithoutBaseURL } from "../../../request";
 const BaseRange = ({ schema }) => {
   const {
     control,
-    handleSubmit,
-    setError,
-    clearErrors,
-    watch,
     setValue,
 
     formState: { errors },
@@ -28,6 +24,7 @@ const BaseRange = ({ schema }) => {
   const [apiValues, setApiValues] = useState({});
   const [activeTab, setActiveTab] = useState(0);
   const [lastQuery, setLastQuery] = useState(null);
+  const [watch, setwatch] = useState({});
   const localization = useSelector((state) => state.localization.localization);
 
   const selectParam = schema.dashboardFormSchemaParameters.find(
@@ -72,17 +69,14 @@ const BaseRange = ({ schema }) => {
     run();
   }, [getAction, rowDetails]);
   useEffect(() => {
-    const subscription = watch((formValues) => {
+    
       // Clean object is optional if you want to remove empty/undefined values
-      const cleanedValues = cleanObject(formValues);
-      console.log("====================================");
-      console.log(cleanedValues, formValues, "formValues");
-      console.log("====================================");
-      setRowDetails(() => cleanedValues);
+      
+      setRowDetails(() => watch);
       // setRootRow({ ...rootRow, ...cleanedValues });
-    });
+ 
 
-    return () => subscription.unsubscribe();
+   
   }, [watch]);
 
   // Current selected parameter metadata
@@ -99,6 +93,7 @@ const BaseRange = ({ schema }) => {
             lookupReturnField={selectParam.lookupReturnField}
             value={""}
             control={control}
+            setwatch={setwatch}
             selectParam={selectParam}
             setValue={setValue}
             rowDetails={{}}

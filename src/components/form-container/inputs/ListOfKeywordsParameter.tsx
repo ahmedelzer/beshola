@@ -8,6 +8,7 @@ import { addAlpha } from "../../../utils/operation/addAlpha";
 import { theme } from "../../../Theme";
 
 function ListOfKeywordsParameter({
+ 
   values = [],
   parentID = "parentID",
   fieldName = "",
@@ -16,56 +17,47 @@ function ListOfKeywordsParameter({
   col = 1,
   filtersMap = new Map(), // default to an empty Map
   setParentRow = () => {},
-  control,
 }) {
   // const { filtersMap } = useSearch();
+ 
+const current = filtersMap.get(parentID) || [];
 
-  const current = filtersMap.get(parentID) || [];
+const [options, setOptions] = useState(
+  values.filter(e => !current.includes(e))
+);
+const [watch, setwatch] = useState({});
 
-  const [options, setOptions] = useState(
-    values.filter((e) => !current.includes(e)),
-  );
+  // watch select changes
+  useEffect(() => {
+    
 
-  // const { control, watch, reset, setValue } = useForm({});
+const value = values.find(e=>e?.[lookupReturnField] === watch?.[lookupReturnField])
+      const returned = value?.[lookupReturnField];
+      const selected = value?.[lookupDisplayField];
+    
+      if (!selected) return;
 
-  // // watch select changes
-  // useEffect(() => {
-  //   const subscription = watch((formValues) => {
-  //     const cleanedValues = cleanObject(formValues);
+      // add keyword
+       const current = filtersMap.get(parentID) || [];
+       if (!current.some(e => e[lookupReturnField] === value[lookupReturnField])) {
 
-  //     const value = values.find(
-  //       (e) => e?.[lookupReturnField] === cleanedValues?.[lookupReturnField],
-  //     );
-  //     const returned = value?.[lookupReturnField];
-  //     const selected = value?.[lookupDisplayField];
+  filtersMap.set(parentID, [...current, value]);
+}
+      setParentRow((prev) => {
+        if (prev.includes(returned)) return prev;
+        return [...prev, returned];
+      });
 
-  //     if (!selected) return;
+      // remove from select options
+      if (!value) return; // make sure value exists
 
-  //     // add keyword
-  //     const current = filtersMap.get(parentID) || [];
-  //     if (
-  //       !current.some((e) => e[lookupReturnField] === value[lookupReturnField])
-  //     ) {
-  //       console.log("current", current);
-  //       filtersMap.set(parentID, [...current, value]);
-  //     }
-  //     console.log("====================================");
-  //     console.log(returned, value, "value");
-  //     console.log("====================================");
-  //     setParentRow((prev) => {
-  //       if (prev.includes(returned)) return prev;
-  //       return [...prev, returned];
-  //     });
 
-  //     // remove from select options
-  //     if (!value) return; // make sure value exists
+      // reset select
+    //  reset({ attributeValue: "" });
+   
 
-  //     // reset select
-  //     reset({ attributeValue: "" });
-  //   });
 
-  //   return () => subscription.unsubscribe();
-  // }, [watch]);
+  }, [watch]);
 
   const removeKeyword = (index) => {
     const current = filtersMap.get(parentID) || [];
@@ -74,6 +66,8 @@ function ListOfKeywordsParameter({
     filtersMap.set(parentID, newKeywords);
 
     setParentRow((prev) => prev.filter((_, i) => i !== index));
+
+
   };
 
   return (
@@ -81,11 +75,10 @@ function ListOfKeywordsParameter({
       <SelectParameter
         values={options}
         fieldName={lookupReturnField}
-        control={control}
+         onValueChange={(selectedItem) => setwatch(selectedItem)}
         lookupDisplayField={lookupDisplayField}
         lookupReturnField={lookupReturnField}
         value={""}
-        // setValue={setValue}
       />
 
       {/* Keywords */}
@@ -99,7 +92,7 @@ function ListOfKeywordsParameter({
       >
         {(filtersMap.get(parentID) || []).map((item, index) => (
           <View
-            key={item?.[lookupReturnField]}
+          key={item?.[lookupReturnField]}
             //key={index}
             style={{
               flexDirection: "row",
@@ -110,9 +103,7 @@ function ListOfKeywordsParameter({
               borderRadius: 8,
             }}
           >
-            <Text style={{ marginRight: 6, color: theme.body }}>
-              {item[lookupDisplayField]}
-            </Text>
+            <Text style={{ marginRight: 6,color : theme.body, }}>{item[lookupDisplayField]}</Text>
 
             <Pressable onPress={() => removeKeyword(index)}>
               <Text style={{ color: theme.body, fontWeight: "bold" }}>×</Text>

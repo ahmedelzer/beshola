@@ -15,6 +15,7 @@ import {
   ImageParameterWithPanelActions,
   DynamicTreeSchema,
   DynamicRangeComponent,
+  ListOfKeywordsParameter,
 } from "./index";
 export function GetInputComponent(type) {
   switch (type) {
@@ -56,6 +57,8 @@ export function GetInputComponent(type) {
     case "inputWithLabel":
     case "additionalInputWithLabel":
       return InputWithLabel;
+    case "listOfKeywords":
+      return ListOfKeywordsParameter;
     case "otp":
       return OtpParameter;
     case "phoneNumber":

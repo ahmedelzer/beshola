@@ -1,13 +1,15 @@
-import React, { useState } from "react";
-import { View, TouchableOpacity } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { getDynamicWidth } from "../../utils/operation/getDynamicWidth";
-import ExpandableText from "../../utils/component/ExpandableText";
-import { addAlpha } from "../../utils/operation/addAlpha";
+import React, { useState } from "react";
+import { TouchableOpacity, View } from "react-native";
 import { theme } from "../../Theme";
+import ExpandableText from "../../utils/component/ExpandableText";
+import PopupModal from "../../utils/component/PopupModal";
+import { getDynamicWidth } from "../../utils/operation/getDynamicWidth";
+import PolygonMapEmbed from "../maps/DrawSmoothPolygon";
 
-const AddressComponent = ({ addressText }) => {
+const AddressComponent = ({ addressText, item, fieldsType }) => {
   const [labelWidth, setLabelWidth] = useState(0);
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const dynamicWidth = getDynamicWidth(addressText);
 
   // Logic: Calculate how many characters fit in the current labelWidth.
@@ -15,6 +17,7 @@ const AddressComponent = ({ addressText }) => {
   // Assuming a character width of approx 7-8 pixels for 'text-xs'.
   const availableTextSpace = Math.max(0, labelWidth - 36);
   const calculatedLimit = Math.floor(availableTextSpace / 7.5);
+  const onPress = () => {};
 
   return (
     <View
@@ -23,7 +26,35 @@ const AddressComponent = ({ addressText }) => {
       }}
       style={{ width: dynamicWidth, maxWidth: "100%", flexShrink: 1 }}
     >
+      <PopupModal
+        isOpen={isModalVisible}
+        onClose={() => {
+          setIsModalVisible(false);
+        }}
+        // onSubmit={async () => {
+        //   handleSubmit(onSubmit);
+        // }}
+        isFormModal={false}
+        headerTitle={addressText}
+        row={{}}
+      >
+        <PolygonMapEmbed
+          location={{
+            [fieldsType.latitude]: item[fieldsType.latitude],
+            [fieldsType.longitude]: item[fieldsType.latitude],
+          }}
+          fields={fieldsType.parameters}
+          onLocationChange={() => {}}
+          setNewPolygon={() => {}}
+        />
+      </PopupModal>
       <TouchableOpacity
+        onPress={() => {
+          console.log("====================================");
+          console.log("pressing");
+          console.log("====================================");
+          setIsModalVisible(true);
+        }}
         activeOpacity={0.8}
         style={{
           backgroundColor: theme.accentHover,
@@ -41,7 +72,7 @@ const AddressComponent = ({ addressText }) => {
         <MaterialCommunityIcons
           name="map-marker-outline"
           size={14}
-          color={theme.secondary}
+          color={theme.accent}
         />
 
         <View style={{ flex: 1, marginLeft: 4 }}>

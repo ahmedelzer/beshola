@@ -4,7 +4,7 @@ import React, {
   useContext,
   useEffect,
   useReducer,
-  useState,
+  useState
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { buildApiUrl } from "../components/hooks/APIsFunctions/BuildApiUrl";
@@ -187,28 +187,28 @@ export const PreparingApp: React.FC<{ children: ReactNode }> = ({
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedLocation, nodeGetAction, isOnline]);
-  //load currecy
-  // useEffect(() => {
+  //load currecy 
+  useEffect(() => {
 
-  //   const fetchData = async () => {
-  //     try {
-  //       // wait for prepareLoad to finish
-  //       await prepareLoad({
-  //         state: nodeState,
-  //         dataSourceAPI: nodeDataSourceAPI,
-  //         getAction: currencyTypesGetAction,
-  //         cache: nodeCache,
-  //         reducerDispatch: nodeReducerDispatch,
-  //       });
-  //       // now safely check rows
-  //     } catch (err) {
-  //       console.error("Error in prepareLoad:", err);
-  //     }
-  //   };
+    const fetchData = async () => {
+      try {
+        // wait for prepareLoad to finish
+        await prepareLoad({
+          state: nodeState,
+          dataSourceAPI: nodeDataSourceAPI,
+          getAction: currencyTypesGetAction,
+          cache: nodeCache,
+          reducerDispatch: nodeReducerDispatch,
+        });
+        // now safely check rows
+      } catch (err) {
+        console.error("Error in prepareLoad:", err);
+      }
+    };
 
-  //   fetchData();
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [currencyTypesGetAction, isOnline]);
+    fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currencyTypesGetAction, isOnline]);
 
   useEffect(() => {
     if (nodeState.rows.length > 0 && Object.keys(selectedNode).length <= 0) {

@@ -33,9 +33,10 @@ export default function SuggestCardContainer({
   row = {},
   schemaActions,
   suggestContainerType = 1,
-  shownNodeMenuItemIDs,
+  shownNodeMenuItemIDs = [],
   header = "",
 }) {
+
   const { status, isOnline } = useNetwork();
   const [WS_Connected, setWS_Connected] = useState(false);
   const [currentSkip, setCurrentSkip] = useState(1);
@@ -136,13 +137,13 @@ export default function SuggestCardContainer({
 
   // 🧠 Reducer callback to update rows
   const callbackReducerUpdate = async (ws_updatedRows) => {
-    await suggestReducerDispatch({
-      type: "WS_OPE_ROW",
-      payload: {
-        rows: ws_updatedRows.rows,
-        totalCount: ws_updatedRows.totalCount,
-      },
-    });
+    // await suggestReducerDispatch({
+    //   type: "WS_OPE_ROW",
+    //   payload: {
+    //     rows: ws_updatedRows?.rows,
+    //     totalCount: ws_updatedRows?.totalCount,
+    //   },
+    // });
   };
 
   // 📨 React to WebSocket messages only when valid

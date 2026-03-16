@@ -24,7 +24,7 @@ import StarsIcons from "../../utils/component/StarsIcons";
 import { isRTL } from "../../utils/operation/isRTL";
 import PropertyCardButtonsActions from "./PropertyCardButtonsActions";
 import ExpandableText from "../../utils/component/ExpandableText";
-import Attributes from "../../components/cards/Attributes";
+import Attributes from "./Attributes";
 import { ScreenWidth } from "../shared";
 import { GetMediaUrl } from "../../utils/operation/GetMediaUrl";
 import AddressComponent from "./AddressComponent";
@@ -37,7 +37,7 @@ interface CompanyCardProps {
   schemaActions: any;
 }
 
-const CompanyCard: React.FC<CompanyCardProps> = ({
+const OwnAssetCard: React.FC<CompanyCardProps> = ({
   itemPackage,
   selectedItems = [],
   setSelectedItems,
@@ -49,7 +49,7 @@ const CompanyCard: React.FC<CompanyCardProps> = ({
 
   const { control, handleSubmit, formState, setValue, watch } = useForm();
 
-  const imageSize = getResponsiveImageSize(0.3, { min: 80, max: 100 });
+  const imageSize = getResponsiveImageSize(0.2, { min: 30, max: 80 });
   const localization = useSelector(
     (state: any) => state.localization.localization,
   );
@@ -65,16 +65,7 @@ const CompanyCard: React.FC<CompanyCardProps> = ({
   const isWeb = Platform.OS === "web";
   return (
     <View className="mb-3">
-      {/* Top Buttons */}
-      <PropertyCardButtonsActions
-        item={item}
-        fieldsType={fieldsType}
-        widthBorder={true}
-      />
-
       {/* Main Card */}
-      {/*
-       */}
       <Card
         className={`items-center rounded-xl overflow-hidden border relative ${
           selected ? "border-2 border-green-500" : ""
@@ -87,83 +78,16 @@ const CompanyCard: React.FC<CompanyCardProps> = ({
           borderColor: selected ? theme.accentHover : addAlpha(theme.body, 0.5),
         }}
       >
-        <View className="w-full flex flex-col">
-          {/* Image + Info Section */}
-          <View
-            style={!isWeb ? { flexDirection: "row", width: "100%" } : undefined}
-            className={isWeb ? "grid grid-cols-2 w-full" : undefined}
-          >
-            {/* Image */}
-            <View
-              style={!isWeb ? { width: "50%" } : undefined}
-              className="w-full flex flex-col relative"
-            >
-              <MemoizedImageCard
-                item={item}
-                fieldsType={fieldsType}
-                imageSize={imageSize}
-                schemaActions={schemaActions}
-              />
-            </View>
-
-            {/* Content */}
-            <View
-              style={
-                !isWeb
-                  ? { width: "50%", justifyContent: "space-between" }
-                  : undefined
-              }
-              className="w-full flex flex-col justify-between ps-2"
-            >
-              <VStack className="space-y-2 w-full">
-                {/* Row 1: Account Info */}
-                <View className="flex-row w-full items-center">
-                  {/* Verified Icon with fixed width */}
-                  <View style={{ width: 20, alignItems: "center" }}>
-                    {true && (
-                      <MaterialCommunityIcons
-                        name="check-decagram"
-                        size={18}
-                        color={theme.accentHover}
-                      />
-                    )}
-                  </View>
-
-                  {/* Company Info: takes the rest of the space */}
-                  <View className="flex-1 items-start ml-2">
-                    {fieldsType.companyName && item[fieldsType.companyName] && (
-                      <Text
-                        numberOfLines={2}
-                        key={`${item[fieldsType.idField]}-${fieldsType.companyName}-${item[fieldsType.companyName]}`}
-                        className="text-lg font-bold"
-                        style={{ color: theme.secondary }}
-                      >
-                        {item.companyName}
-                      </Text>
-                    )}
-
-                    {/* Stars */}
-                    <View className="flex-row items-center mt-1">
-                      <StarsIcons
-                        value={parseFloat(item[fieldsType.rate] || 5)}
-                        size={14}
-                      />
-                    </View>
-                  </View>
-                </View>
-
-                {/* Row 2: Attributes (full width) */}
-                {fieldsType.attributes && item[fieldsType.attributes] && (
-                  <View className="w-full">
-                    <Attributes attributes={item[fieldsType.attributes]} />
-                  </View>
-                )}
-              </VStack>
-            </View>
+        <View className="flex-row items-center mt-2 px-2 w-full">
+          <View className="flex flex-col relative w-1/4">
+            <MemoizedImageCard
+              item={item}
+              fieldsType={fieldsType}
+              imageSize={imageSize}
+              schemaActions={schemaActions}
+            />
           </View>
-
-          {/* Bottom Actions */}
-          <View className="flex-row items-center mt-2 px-2 w-full">
+          <View className="flex-col justify-evenly items-center w-1/2">
             {/* Address Section - 50% width */}
             <View
               style={{ width: "50%" }}
@@ -177,27 +101,8 @@ const CompanyCard: React.FC<CompanyCardProps> = ({
                 />
               )}
             </View>
-
-            {/* Viewers Section - 35% width */}
-            <View
-              style={{ width: "35%" }}
-              className="flex-row items-center justify-center px-2 py-1 rounded"
-            >
-              <View
-                className="flex-row items-center justify-center px-2 py-1 rounded"
-                style={{ backgroundColor: addAlpha(theme.body, 0.1) }}
-              >
-                <MaterialCommunityIcons
-                  name="eye-outline"
-                  size={18}
-                  color={theme.accent}
-                />
-                <Text className="text-text text-xs ml-1">
-                  {item.viewers} {localization.menu.viewing || "Viewing"}
-                </Text>
-              </View>
-            </View>
-
+          </View>
+          <View className="flex-col justify-evenly items-center w-1/4">
             {/* Chat Section - 15% width */}
             <View
               style={{ width: "15%" }}
@@ -214,9 +119,6 @@ const CompanyCard: React.FC<CompanyCardProps> = ({
           </View>
         </View>
       </Card>
-
-      {/* Price Plans */}
-      <PricePlansSection item={item} />
     </View>
   );
 };
@@ -234,7 +136,7 @@ export const MemoizedImageCard = React.memo(
           item={item}
           showFaovertIcon={fieldsType.isFav}
           style={{ width: imageSize, height: imageSize }}
-          //className={isWeb ? "!w-[100%] !h-40 sm:!h-52 lg:!h-56" : "!size-40"}
+          className={isWeb ? "!w-[30%] !h-20 sm:!h-32 lg:!h-46" : "!size-20"}
         >
           <></>
         </ImageCardActions>
@@ -247,4 +149,4 @@ export const MemoizedImageCard = React.memo(
     prevProps.imageSize === nextProps.imageSize,
 );
 
-export default CompanyCard;
+export default OwnAssetCard;

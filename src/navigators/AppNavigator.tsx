@@ -28,6 +28,7 @@ import { isRTL } from "../utils/operation/isRTL";
 import { selectedRoutes } from "../utils/operation/routes";
 import { MargeStackWithTabs } from "./MargeStackWithTabs";
 import CompareScreen from "../kitchensink-components/compare/CompareScreen";
+import AdditionalInfoScreen from "../kitchensink-components/auth/signup/AddtionInfo";
 
 // ✅ Lazy-loaded screens
 const MenuFilter = lazy(() => import("../components/filters/MenuFilter"));

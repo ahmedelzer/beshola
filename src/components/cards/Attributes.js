@@ -5,10 +5,20 @@ import { getDynamicWidth } from "../../utils/operation/getDynamicWidth";
 import { theme } from "../../Theme";
 import { addAlpha } from "../../utils/operation/addAlpha";
 
-const AttributeItem = ({ fullText }) => {
+import { FontAwesome5 } from "@expo/vector-icons";
+
+const iconMap = {
+  "985a6440-8efa-4618-ad5f-1698b076e914": "bed",
+  "7789ef2a-6553-4656-b9bd-9e9e5c91342b": "bath",
+};
+
+const AttributeItem = ({ iconID, fullText }) => {
   const [itemWidth, setItemWidth] = useState(0);
+
   const calculatedLimit = Math.floor(Math.max(0, itemWidth - 24) / 8);
   const dynamicWidth = getDynamicWidth(fullText, 8.5, 25);
+
+  const iconName = iconMap[iconID] || "circle";
 
   return (
     <View
@@ -22,17 +32,27 @@ const AttributeItem = ({ fullText }) => {
           maxWidth: 240,
           backgroundColor: addAlpha(theme.accent, 0.3),
           borderWidth: 1,
-          borderColor: addAlpha(theme.accent, 0.3),
+          borderColor: theme.accent,
           borderRadius: 8,
           paddingHorizontal: 12,
           paddingVertical: 6,
-          justifyContent: "center",
+          flexDirection: "row",
+          alignItems: "center",
+          gap: 6,
         }}
       >
+        {/* Icon */}
+        <FontAwesome5
+          name={iconName}
+          size={14}
+          color={theme.accent}
+        />
+
+        {/* Text */}
         <ExpandableText
           text={fullText}
           initLimit={(calculatedLimit > 0 ? calculatedLimit : 35) - 5}
-          className="text-white text-sm font-medium"
+          className="text-text text-sm font-medium"
         />
       </TouchableOpacity>
     </View>
@@ -49,41 +69,51 @@ const Attributes = ({ attributes = [] }) => {
 
   return (
     <View style={{ flexDirection: "column", gap: 8, width: "100%" }}>
-      {displayedAttributes.map((attr, index) => {
-        const parts = attr.split(":");
-        const key = parts[0]?.trim() || "";
-        const value = parts.slice(1).join(":").trim();
-        const fullText = value ? `${key}: ${value}` : key;
+  {displayedAttributes.map((attr, index) => {
+    const parts = attr.split("{,}");
 
-        return <AttributeItem key={index} fullText={fullText} />;
-      })}
+    const iconID = parts[0]?.trim() || "";
+    const label = parts[1]?.trim() || "";
+    const value = parts[2]?.trim() || "";
 
-      {/* Footer "Show More" Button */}
-      {hasMore && (
-        <TouchableOpacity
-          style={{
-            marginTop: 4,
-            paddingVertical: 4,
-            alignSelf: "flex-start",
-          }}
-          onPress={() => {
-            /* Logic to show all attributes, e.g., open a modal or expand the list */
-            console.log("Show all attributes pressed");
-          }}
-        >
-          <Text
-            style={{
-              color: theme.accent,
-              fontSize: 14,
-              fontWeight: "bold",
-              textDecorationLine: "underline",
-            }}
-          >
-            Show {attributes.length - initialLimit} more attributes...
-          </Text>
-        </TouchableOpacity>
-      )}
-    </View>
+    const fullText = value ? `${value}` : label;
+
+    return (
+      <AttributeItem
+        key={`${iconID}-${index}`}
+        iconID={iconID}
+        label={label}
+        value={value}
+        fullText={fullText}
+      />
+    );
+  })}
+
+  {/* Footer "Show More" Button */}
+  {hasMore && (
+    <TouchableOpacity
+      style={{
+        marginTop: 4,
+        paddingVertical: 4,
+        alignSelf: "flex-start",
+      }}
+      onPress={() => {
+        console.log("Show all attributes pressed");
+      }}
+    >
+      <Text
+        style={{
+          color: theme.accent,
+          fontSize: 14,
+          fontWeight: "bold",
+          textDecorationLine: "underline",
+        }}
+      >
+        Show {attributes.length - initialLimit} more attributes...
+      </Text>
+    </TouchableOpacity>
+  )}
+</View>
   );
 };
 

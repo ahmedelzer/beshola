@@ -6,15 +6,15 @@ import DrawerComponent from "./DrawerComponent";
 import { store } from "../../store/reduxStore";
 
 const PolygonMapEmbed = ({
-  location = store.getState().location.currentLocation,
+  location = {},
   clickable = false,
   fields = [
     /* ... your default fields ... */
   ],
-  haveRadius = false,
+  haveRadius = true,
   clickAction = "pin",
-  host = "http://localhost:3001",
-  // host = "https://ihs-solutions.com:7552",
+  //host = "http://localhost:3001",
+  host = "https://ihs-solutions.com:7552",
   onLocationChange,
   setNewPolygon,
 }) => {
@@ -51,7 +51,9 @@ const PolygonMapEmbed = ({
   });
 
   const url = `${host}/displayMap?${params.toString()}`;
-
+  console.log("====================================");
+  console.log(location, "params");
+  console.log("====================================");
   const switchFun = (data) =>
     windowMessageSwitch(data, onLocationChange, setNewPolygon, setPolygonObj);
 
