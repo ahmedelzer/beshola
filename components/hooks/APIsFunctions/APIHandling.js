@@ -22,9 +22,6 @@ export default async function APIHandling(url, methodType, sendBody) {
     redirect: "follow",
   };
   if (methodType !== "Get") requestOptions = { ...requestOptions, body: raw };
-  console.log("====================================");
-  console.log(url, requestOptions);
-  console.log("====================================");
   try {
     const response = await fetch(url, requestOptions);
     // Handle 204 No Content
@@ -35,9 +32,6 @@ export default async function APIHandling(url, methodType, sendBody) {
       };
     }
     const result = await response.json();
-    console.log("====================================");
-    console.log(response, result, "result");
-    console.log("====================================");
     // Check if the API call was successful based on the HTTP status code
     if (response.ok) {
       const successResponse = {
@@ -56,14 +50,14 @@ export default async function APIHandling(url, methodType, sendBody) {
           setRedirect({
             route: "SignIn",
             mess: localization.Login.loginNotify,
-          })
+          }),
         );
       } else if (result.status === 500) {
         store.dispatch(
           setRedirect({
             route: "ErrorScreen",
             mess: "",
-          })
+          }),
         );
       }
       return errorResponse;

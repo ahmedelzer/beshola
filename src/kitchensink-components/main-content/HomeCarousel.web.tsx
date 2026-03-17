@@ -11,6 +11,9 @@ const data = [
   { src: require("../../../assets/display/ad2.png") },
   { src: require("../../../assets/display/ad3.png") },
   { src: require("../../../assets/display/ad4.png") },
+  {
+    src: require("../../../assets/display/default-ui-image-placeholder-wireframes-600nw-1037719192.jpg"),
+  },
 ];
 
 const HomeCarouselWeb = () => {

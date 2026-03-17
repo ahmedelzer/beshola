@@ -15,6 +15,8 @@ import { persistor, store } from "../src/store/reduxStore";
 import { useDisplayToast } from "../src/components/form-container/ShowToast";
 import { isRTL } from "../src/utils/operation/isRTL";
 import { useDispatch } from "react-redux";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { setRedirect } from "../src/reducers/redirectReducer";
 function AuthProvider(props) {
   const [user, setUser] = useState(null);
   const [profileInfo, setProfileInfo] = useState(null);
@@ -103,6 +105,23 @@ function AuthProvider(props) {
       console.error("❌ SIGN OUT ERROR:", err);
     }
   }, []);
+  useEffect(() => {
+    const checkRedirect = async () => {
+      if (user && !user.nationality) {
+        const neverSee = await AsyncStorage.getItem("hideAdditionalInfo");
+
+        if (neverSee !== "true") {
+          store.dispatch(
+            setRedirect({
+              route: "AdditionInformation",
+              mess: "",
+            }),
+          );
+        }
+      }
+    };
+    checkRedirect();
+  }, [user]);
 
   // const signOut = useCallback(async () => {
   //   console.log("signOut");

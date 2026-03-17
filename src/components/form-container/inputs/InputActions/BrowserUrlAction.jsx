@@ -36,30 +36,30 @@ const BrowserUrlAction = ({ onImageUpload }) => {
     setImageUrl("");
   };
   const validateAndFetch = async () => {
-    // try {
-    //   const response = await fetch(imageUrl);
-    //   if (response.ok) {
-    //     const contentType = response.headers.get("content-type");
-    //     if (contentType && contentType.startsWith("image")) {
-    //       const blob = await response.blob();
-    //       this.props.onImageUpload(URL.createObjectURL(blob), blob.type);
-    //       this.toggleModal();
-    //     } else {
-    //       // this.setState({ error: localization.browser.error.notImage });
-    //       setError(localization.browser.error.notImage);
-    //     }
-    //   } else {
-    //     setError(
-    //       localization.browser.error.fetchFailed.replace(
-    //         "{status}",
-    //         response.status,
-    //       ),
-    //     );
-    //   }
-    // } catch (error) {
-    //   setError(localization.browser.error.fetchError);
-    // }
-    onImageUpload(imageUrl, "image");
+    try {
+      const response = await fetch(imageUrl);
+      if (response.ok) {
+        const contentType = response.headers.get("content-type");
+        if (contentType && contentType.startsWith("image")) {
+          const blob = await response.blob();
+          onImageUpload(URL.createObjectURL(blob), blob.type);
+          toggleModal();
+        } else {
+          // this.setState({ error: localization.browser.error.notImage });
+          setError(localization.browser.error.notImage);
+        }
+      } else {
+        setError(
+          localization.browser.error.fetchFailed.replace(
+            "{status}",
+            response.status,
+          ),
+        );
+      }
+    } catch (error) {
+      setError(localization.browser.error.fetchError);
+    }
+    // onImageUpload(imageUrl, "image");
   };
   // const validateAndFetch = async () => {
   //   try {
