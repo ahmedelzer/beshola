@@ -38,7 +38,6 @@ function FormContainer({
   shouldDisplayErrorInForm = false,
   ...props
 }: any) {
-
   const errors = errorResult?.error?.errors || {};
   const { showToast } = useDisplayToast();
   const localization = useSelector((state) => state.localization.localization);
@@ -117,7 +116,6 @@ function FormContainer({
       return row[param.parameterField];
     }
   }
-
   return (
     <ScrollView ref={scrollViewRef} showsVerticalScrollIndicator={false}>
       <SetComponentsPlatforms

@@ -13,6 +13,7 @@ export { default as LocationParameter } from "./inputs/LocationParameter";
 export { default as RadioListParameter } from "./inputs/RadioListParameter";
 export { default as InputWithLabel } from "./inputs/InputWithLabel";
 export { default as PhoneNumberParameter } from "./inputs/PhoneNumberParameter";
+export { default as ImagePathParameter } from "./inputs/ImagePathParameter";
 export { default as OtpParameter } from "./inputs/OtpParameter";
 export { default as ButtonInput } from "./inputs/ButtonInput";
 export { default as ListOfKeywordsParameter } from "./inputs/ListOfKeywordsParameter";

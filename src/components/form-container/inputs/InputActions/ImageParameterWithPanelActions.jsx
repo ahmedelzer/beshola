@@ -127,7 +127,7 @@ class ImageParameterWithPanelActions extends BaseInput {
 
   render() {
     const { FileData } = this.state;
-    const { isFileContainer = false, control, fieldName } = this.props;
+    const { isFileContainer = false, control, fieldName, type } = this.props;
 
     return (
       <View>

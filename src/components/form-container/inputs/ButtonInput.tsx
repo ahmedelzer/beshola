@@ -19,9 +19,11 @@ import { addAlpha } from "../../../utils/operation/addAlpha";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { theme } from "../../../Theme";
 import { iconMap } from "../../../utils/operation/getIconWithID";
+import FileContainer from "./CustomInputs/FileContainer";
+import DisplayFilesServerSchema from "./../../../Schemas/MenuSchema/DisplayFilesServerSchema.json";
 
 const ButtonInput = (props) => {
-  const { title = "Open", fieldName, enable } = props;
+  const { title = "Open", fieldName, enable, parentSchema = {} } = props;
   const { control, handleSubmit, formState } = useForm();
   const { errors } = formState;
   // ✅ Modal State
@@ -103,14 +105,6 @@ const ButtonInput = (props) => {
     }
   };
   const iconName = iconMap[props?.dashboardFormSchemaParameterID] || "circle";
-  console.log("====================================");
-  console.log(
-    iconName,
-    props?.dashboardFormSchemaParameterID,
-    props,
-    "props?.dashboardFormSchemaParameterID",
-  );
-  console.log("====================================");
   return (
     <View>
       {/* ✅ Button */}
@@ -124,11 +118,12 @@ const ButtonInput = (props) => {
         onPress={() => {
           setIsModalVisible(true);
         }}
-        className="p-2 rounded-full mb-2"
+        className="p-2 rounded-xl mb-2 flex-row gap-1"
         style={{ backgroundColor: theme.accent }}
       >
         {/* Icon */}
-        <FontAwesome5 name={iconName} size={14} color={theme.accent} />
+        <Text className="!text-xs font-semibold text-body">{title}</Text>
+        <FontAwesome5 name={iconName} size={14} color={theme.body} />
       </TouchableOpacity>
 
       {/* ✅ Popup */}
@@ -143,7 +138,22 @@ const ButtonInput = (props) => {
           onSubmit={handleSubmit(onSubmit)}
           errors={errors}
           disable={loading}
-        />
+          parentSchema={parentSchema}
+          childSchema={schema}
+          isFormModal={schema.schemaType !== "FilesContainer"}
+        >
+          {schema.schemaType === "FilesContainer" && (
+            <FileContainer
+              parentSchemaParameters={
+                parentSchema?.dashboardFormSchemaParameters
+              }
+              row={{}}
+              schema={schema}
+              serverSchema={DisplayFilesServerSchema}
+              title={title}
+            />
+          )}
+        </PopupModal>
       )}
     </View>
   );

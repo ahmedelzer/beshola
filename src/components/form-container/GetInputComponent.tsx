@@ -18,6 +18,7 @@ import {
   ListOfKeywordsParameter,
   LookupParameter,
   ButtonInput,
+  ImagePathParameter,
 } from "./index";
 export function GetInputComponent(type) {
   switch (type) {
@@ -38,6 +39,8 @@ export function GetInputComponent(type) {
     case "publicImage":
     case "imagePath":
       return ImageParameterWithPanelActions;
+    // case "imagePath":
+    //   return ImagePathParameter;
     case "boolean":
       return BooleanParameter;
     case "radio":

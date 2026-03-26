@@ -1,0 +1,66 @@
+{
+  "dashboardFormSchemaID": "d4cf9cd7-0b06-4a56-a9cc-7b518f5455e7",
+  "schemaType": "ServerFilesContainer",
+  "idField": "fileID",
+  "dashboardFormSchemaInfoDTOView": {
+    "dashboardFormSchemaID": "d4cf9cd7-0b06-4a56-a9cc-7b518f5455e7",
+    "schemaHeader": "Archive Files",
+    "addingHeader": "Add Archive File",
+    "editingHeader": "Edit Archive File"
+  },
+  "dashboardFormSchemaParameters": [
+    {
+      "dashboardFormSchemaParameterID": "4460b03b-d440-45ff-8ce5-cd517376112c",
+      "dashboardFormSchemaID": "d4cf9cd7-0b06-4a56-a9cc-7b518f5455e7",
+      "isEnable": false,
+      "parameterType": "text",
+      "parameterField": "fileID",
+      "parameterTitel": "File ID",
+      "parameterLookupTitel": "File ID",
+      "isIDField": true,
+      "lookupID": null,
+      "lookupReturnField": null,
+      "lookupDisplayField": null,
+      "indexNumber": 0,
+      "isFilterOperation": true,
+      "dashboardFormSchemaParameterDependencies": []
+    },
+    {
+      "dashboardFormSchemaParameterID": "6d9cb789-211a-44ce-ae7f-8a259d716e52",
+      "dashboardFormSchemaID": "d4cf9cd7-0b06-4a56-a9cc-7b518f5455e7",
+      "isEnable": true,
+      "parameterType": "image",
+      "parameterField": "fileContent",
+      "parameterTitel": "Display File",
+      "parameterLookupTitel": "Display File",
+      "isIDField": false,
+      "lookupID": null,
+      "lookupReturnField": null,
+      "lookupDisplayField": null,
+      "indexNumber": 1,
+      "isFilterOperation": true,
+      "dashboardFormSchemaParameterDependencies": []
+    },
+    {
+      "dashboardFormSchemaParameterID": "6d9cb789-211a-44ce-ae7f-8a259d716e52",
+      "dashboardFormSchemaID": "d4cf9cd7-0b06-4a56-a9cc-7b518f5455e7",
+      "isEnable": true,
+      "parameterType": "imageStatus",
+      "parameterField": "systemApprove",
+      "parameterTitel": "System Approve",
+      "parameterLookupTitel": "System Approve",
+      "isIDField": false,
+      "lookupID": null,
+      "lookupReturnField": null,
+      "lookupDisplayField": null,
+      "indexNumber": 1,
+      "isFilterOperation": true,
+      "dashboardFormSchemaParameterDependencies": []
+    }
+  ],
+  "projectProxyRoute": "BrandingMartArchiving",
+  "isMainSchema": false,
+  "dataSourceName": "Assets",
+  "propertyName": "",
+  "indexNumber": 2
+}

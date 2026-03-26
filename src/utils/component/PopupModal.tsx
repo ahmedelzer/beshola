@@ -36,6 +36,7 @@ const PopupModal = ({
   row = {},
   size = null,
   children,
+  ...props
 }) => {
   const localization = useSelector((state) => state.localization.localization);
   const [scrollY, setScrollY] = useState(0);
@@ -116,6 +117,7 @@ const PopupModal = ({
               row={row}
               schema={schema}
               isSmallScreen={isSmallScreen}
+              {...props}
             >
               {children}
             </PopupModalBody>
@@ -158,6 +160,7 @@ const PopupModalBody = ({
   errors,
   control,
   isSmallScreen,
+  ...props
 }) => {
   // Render ScrollView only on small screens
   if (isSmallScreen) {
@@ -190,6 +193,7 @@ const PopupModalBody = ({
                   shouldDisplayErrorInForm={true}
                   errorResult={errors}
                   control={control}
+                  {...props}
                 />
               )}
               {children}
@@ -210,6 +214,7 @@ const PopupModalBody = ({
           errorResult={errors}
           shouldDisplayErrorInForm={true}
           control={control}
+          {...props}
         />
       )}
       {children}

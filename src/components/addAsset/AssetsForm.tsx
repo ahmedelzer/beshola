@@ -35,7 +35,7 @@ const AssetsForm = () => {
       (action) => action.dashboardFormActionMethodType === "Get",
     );
   const { rows, totalCount, loading, handleScroll } = usePreloadList({
-    schema: AddAssetsSchema,
+    idField: AddAssetsSchema.idField,
     getAction: getAddAssetsSchemaAction,
     dataSourceAPI: addAssetDataSourceAPI,
     deps: [],

@@ -28,6 +28,8 @@ import { handleSubmitWithCallback } from "../../utils/operation/handleSubmitWith
 import FormContainer from "../form-container/FormContainer";
 import { GetFieldsItemTypes } from "../../utils/operation/GetFieldsItemTypes";
 import { getField } from "../../utils/operation/getField";
+import { ButtonInput } from "../form-container";
+import { CreateInputProps } from "../form-container/CreateInputProps";
 
 const OwnAssetCard = ({
   itemPackage,
@@ -168,34 +170,45 @@ const OwnAssetCard = ({
       >
         <View className="flex-row items-center mt-2 px-2 w-full">
           {/* Image */}
-          <View className="flex flex-col relative w-1/4">
+          <View
+            className="flex flex-col relative"
+            style={{ width: "66.666667%" }}
+          >
             <MemoizedImageCard
               item={item}
               fieldsType={fieldsType}
               imageSize={imageSize}
               schemaActions={schemaActions}
             />
-          </View>
-
-          {/* Address */}
-          <View className="flex-col justify-center items-center w-1/2">
-            {fieldsType.address && item[fieldsType.address] && (
-              <AddressComponent
-                addressText={item[fieldsType.address]}
-                fieldsType={fieldsType}
-                item={item}
-              />
-            )}
+            {/* Address */}
+            <View className="w-full justify-center items-center">
+              {fieldsType.address && item[fieldsType.address] && (
+                <AddressComponent
+                  addressText={item[fieldsType.address]}
+                  fieldsType={fieldsType}
+                  item={item}
+                />
+              )}
+            </View>
           </View>
 
           {/* Actions */}
-          <View className="flex-col justify-center items-center w-1/4">
-            <FormContainer
-              tableSchema={ownSchemaWithButtonOnlyParameters}
-              row={{}}
-              errorResult={{}}
-              control={control}
-            />
+          <View className="flex-col justify-center items-center w-1/3">
+            {ownSchemaWithButtonOnlyParameters.dashboardFormSchemaParameters
+              .filter(
+                (column: any) =>
+                  !column.isIDField &&
+                  column.isEnable &&
+                  !column.parameterType.startsWith("hidden"),
+              )
+              .map((param: any) => {
+                return (
+                  <ButtonInput
+                    parentSchema={ownSchemaWithButtonOnlyParameters}
+                    {...CreateInputProps(param, {})}
+                  />
+                );
+              })}
             {/* Contact Icon */}
             {/* <TouchableOpacity
               className="p-2 rounded-full mb-2"

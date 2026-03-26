@@ -10,7 +10,7 @@ import { createRowCache } from "./createRowCache";
 import { getRemoteRows } from "./getRemoteRows";
 
 export const usePreloadList = ({
-  schema,
+  idField,
   getAction,
   dataSourceAPI,
   cacheTime = VIRTUAL_PAGE_SIZE,
@@ -18,7 +18,7 @@ export const usePreloadList = ({
 }) => {
   const [state, dispatch] = useReducer(
     reducer,
-    initialState(cacheTime, schema.idField),
+    initialState(cacheTime, idField),
   );
   const [currentSkip, setCurrentSkip] = useState(0);
 
@@ -53,9 +53,9 @@ export const usePreloadList = ({
     const remaining = totalCount - rows.length;
     if (remaining <= 0) return;
 
-    const take = Math.min(VIRTUAL_PAGE_SIZE * 2, remaining);
+    const take = Math.min(cacheTime * 2, remaining);
 
-    getRemoteRows(currentSkip, VIRTUAL_PAGE_SIZE, dispatch);
+    getRemoteRows(currentSkip, cacheTime, dispatch);
     setCurrentSkip((prev) => prev + take);
   };
   return {

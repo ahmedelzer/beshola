@@ -1,0 +1,35 @@
+[
+  {
+    "dashboardFormSchemaActionID": "19e67b31-a996-4bc9-8d36-2355515c231f",
+    "dashboardFormActionMethodType": "Post",
+    "routeAdderss": "Asset/AddOwnAssetFile",
+    "body": "",
+    "returnPropertyName": "",
+    "projectProxyRoute": "BrandingMartAssets",
+    "dashboardFormSchemaActionQueryParams": []
+  },
+  {
+    "dashboardFormSchemaActionID": "ac648562-e859-4cae-a49a-6f9a4cce975d",
+    "dashboardFormActionMethodType": "Get",
+    "routeAdderss": "Asset/GetOwnAssetFiles",
+    "body": "",
+    "returnPropertyName": "",
+    "projectProxyRoute": "BrandingMartAssets",
+    "dashboardFormSchemaActionQueryParams": [
+      {
+        "dashboardFormSchemaActionQueryParameterID": "896ccbd1-7d20-4f8b-939b-31bda6cc7f23",
+        "dashboardFormSchemaActionID": "ac648562-e859-4cae-a49a-6f9a4cce975d",
+        "parameterName": "PageNumber",
+        "dashboardFormParameterField": "pageIndex",
+        "isRequired": true
+      },
+      {
+        "dashboardFormSchemaActionQueryParameterID": "7d505ab0-1e04-4c1a-a791-49c9b92a08f5",
+        "dashboardFormSchemaActionID": "ac648562-e859-4cae-a49a-6f9a4cce975d",
+        "parameterName": "PageSize",
+        "dashboardFormParameterField": "pageSize",
+        "isRequired": true
+      }
+    ]
+  }
+]

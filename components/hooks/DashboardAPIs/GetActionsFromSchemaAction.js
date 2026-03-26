@@ -1,4 +1,4 @@
-export function GetActionsFromSchemaAction(schemaActions) {
+export default function GetActionsFromSchemaAction(schemaActions) {
   const getAction = schemaActions?.find(
     (action) => action.dashboardFormActionMethodType === "Get",
   );
