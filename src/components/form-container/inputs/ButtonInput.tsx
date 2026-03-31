@@ -29,7 +29,7 @@ const ButtonInput = (props) => {
     withLabel = true,
     staticSchema,
   } = props;
-  const { control, handleSubmit, formState } = useForm();
+  const { control, handleSubmit, formState, setValue } = useForm();
   const { errors } = formState;
   // ✅ Modal State
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -145,6 +145,7 @@ const ButtonInput = (props) => {
           onSubmit={handleSubmit(onSubmit)}
           errors={errors}
           disable={loading}
+          setValue={setValue}
           // parentSchema={parentSchema}
           childSchema={schema}
           isFormModal={schema.schemaType !== "FilesContainer"}

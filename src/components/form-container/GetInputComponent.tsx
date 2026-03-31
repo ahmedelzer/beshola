@@ -1,25 +1,25 @@
 import {
   BooleanParameter,
+  ButtonInput,
+  CalendarParameter,
   CheckBoxParameter,
   DateParameter,
+  DynamicRangeComponent,
+  DynamicTreeSchema,
+  ImageParameterWithPanelActions,
   InputPassword,
-  MiddleRangeParameter,
-  RadioParameter,
-  SelectParameter,
-  TextParameter,
-  RadioListParameter,
-  LocationParameter,
   InputWithLabel,
+  ListOfKeywordsParameter,
+  LocationParameter,
+  LookupParameter,
+  MiddleRangeParameter,
   OtpParameter,
   PhoneNumberParameter,
-  ImageParameterWithPanelActions,
-  DynamicTreeSchema,
-  DynamicRangeComponent,
-  ListOfKeywordsParameter,
-  LookupParameter,
-  ButtonInput,
-  ImagePathParameter,
-  CalendarParameter,
+  RadioListParameter,
+  RadioParameter,
+  SelectParameter,
+  StartEndTimeParameter,
+  TextParameter,
 } from "./index";
 export function GetInputComponent(type) {
   switch (type) {
@@ -33,6 +33,9 @@ export function GetInputComponent(type) {
       return CheckBoxParameter;
     case "calender":
       return CalendarParameter;
+    case "startTime":
+      // case "endTime":
+      return StartEndTimeParameter;
     case "datetime":
     case "date":
     case "birthday":
