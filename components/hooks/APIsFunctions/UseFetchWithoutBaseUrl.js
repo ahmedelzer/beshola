@@ -1,44 +1,63 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { request, SetHeaders } from "../../../request";
 
 const useFetchWithoutBaseUrl = (realurl) => {
-  const languageRow = useSelector((state) => state.localization.languageRow);
-
+  // const navigate = useNavigate();
+  const languageID = useSelector((state) => state.localization.languageID);
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  const fetchedRef = useRef(false); // ✅ Prevents double-fetch in StrictMode
+  const lastUrlRef = useRef(null); // ✅ Prevents same-URL re-fetch
   useEffect(() => {
+    if (!realurl) return;
+    // Avoid re-fetching the same URL or refetch due to StrictMode
+    if (fetchedRef.current && lastUrlRef.current === `${realurl}-${languageID}`)
+      return;
+
+    fetchedRef.current = true;
+    lastUrlRef.current = `${realurl}-${languageID}`;
+
+    const controller = new AbortController(); // ✅ Abort on unmount
+
     const fetchData = async () => {
       setIsLoading(true);
+      setError(null);
+
       try {
-        const headers = await SetHeaders();
-        request.interceptors.request.use(
-          (config) => {
-            config.headers = {
-              ...config.headers,
-              ...headers,
-            };
-            return config;
-          },
-          (error) => {
-            return Promise.reject(error);
-          },
-        );
+        // ✅ Add interceptor only once globally
+        if (!request.interceptors.request.handlers.length) {
+          request.interceptors.request.use(
+            (config) => {
+              config.headers = {
+                ...config.headers,
+                ...SetHeaders(),
+              };
+              return config;
+            },
+            (error) => Promise.reject(error),
+          );
+        }
 
-        const res = await request.get(realurl);
-
+        const res = await request.get(realurl, {
+          signal: controller.signal,
+        });
         setData(res.data);
-      } catch (error) {
-        setError(error);
+      } catch (err) {
+        if (err.name === "AbortError") return; // cancelled
+        setError(err);
+        if (err.code === 401) RedirectToLogin(navigate, err);
       } finally {
         setIsLoading(false);
       }
     };
 
-    if (realurl) fetchData();
-  }, [realurl, languageRow]); // refetch if language or url changes
+    fetchData();
+
+    return () => controller.abort(); // cleanup
+  }, [realurl, languageID]);
 
   return { data, isLoading, error };
 };

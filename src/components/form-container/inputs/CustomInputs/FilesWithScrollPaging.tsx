@@ -23,6 +23,8 @@ import { Text } from "react-native";
 import { useSelector } from "react-redux";
 import { cleanObject } from "../../../../utils/operation/cleanObject";
 import { getFileTypeFromUrl } from "../../../../utils/operation/getFileTypeFromUrl";
+import { ScrollView } from "react-native-gesture-handler";
+import { buildFileUrl } from "../../../../utils/operation/buildFileUrl";
 
 function FilesWithScrollPaging({
   title,
@@ -32,7 +34,6 @@ function FilesWithScrollPaging({
   setSelectedServerFiles,
   getAction,
   fileFieldName,
-
   handleUpload,
   setSelectedFiles,
 }) {
@@ -49,13 +50,15 @@ function FilesWithScrollPaging({
       ...row,
     });
   };
-  const { rows, totalCount, loading, handleScroll } = usePreloadList({
-    idField: idField,
-    getAction: getAction,
-    dataSourceAPI: dataSourceAPI,
-    cacheTime: 4,
-    deps: [],
-  });
+  const { rows, totalCount, loading, lastQuery, handleScroll } = usePreloadList(
+    {
+      idField: idField,
+      getAction: getAction,
+      dataSourceAPI: dataSourceAPI,
+      cacheTime: 4,
+      deps: [],
+    },
+  );
 
   // 🔥 Infinite Scroll
   const handleLoadMore = () => {
@@ -72,17 +75,9 @@ function FilesWithScrollPaging({
     );
   };
   const renderItem = ({ item }) => {
-    const buildFileUrl = (base, path) => {
-      if (!path) return "";
-
-      return `${base.replace(/\/+$/, "")}/${path
-        .replace(/\\/g, "/")
-        .replace(/^\/+/, "")}`;
-    };
-
     const photo = {
       ...item,
-      displayFile: item[fileFieldName],
+      displayFile: item[fileFieldName].split("?v")[0],
       file: buildFileUrl(publicImageURL, item[fileFieldName]),
       type: getFileTypeFromUrl(
         buildFileUrl(publicImageURL, item[fileFieldName]),
@@ -95,14 +90,14 @@ function FilesWithScrollPaging({
     return (
       <View className="mr-4">
         {/* Card */}
-        <View className="w-40 bg-white rounded-2xl shadow overflow-hidden">
+        <View className="w-40 bg-body rounded-2xl shadow overflow-hidden">
           {/* Image */}
           <View className="h-40 w-full">
             <TypeFile file={photo.file} title={title} type={photo.type} />
           </View>
 
           {/* Checkbox Overlay */}
-          <View className="absolute top-2 right-2 bg-white rounded-full p-1 shadow">
+          <View className="absolute top-2 right-2 bg-body rounded-full p-1 shadow">
             <Checkbox
               value={isSelected}
               onChange={() => handleCheckboxChange(photo)}
@@ -143,7 +138,11 @@ function FilesWithScrollPaging({
     setFiles([]);
   };
   return (
-    <View className="flex-1 flex-row">
+    <ScrollView
+      horizontal
+      showsHorizontalScrollIndicator={false}
+      className="flex-1 flex-row "
+    >
       <View>
         <ImageParameterWithPanelActions
           fieldName={fileFieldName || "image"}
@@ -185,7 +184,7 @@ function FilesWithScrollPaging({
           ) : null
         }
       />
-    </View>
+    </ScrollView>
   );
 }
 

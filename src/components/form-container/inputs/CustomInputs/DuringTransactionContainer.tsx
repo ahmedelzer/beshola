@@ -89,7 +89,6 @@ function DuringTransactionContainer({
   const AutomatedTransform = async () => {
     if (selectionContext.length > 0) {
       setSelectionContext([]);
-
       const tasks = selectionContext.map((item) =>
         onApply(
           item,

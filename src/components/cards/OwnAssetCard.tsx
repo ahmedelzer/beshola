@@ -202,7 +202,12 @@ const OwnAssetCard = ({
                   !column.parameterType.startsWith("hidden"),
               )
               .map((param: any) => {
-                return <ButtonInput {...CreateInputProps(param, {})} />;
+                return (
+                  <ButtonInput
+                    rowDetails={item}
+                    {...CreateInputProps(param, {})}
+                  />
+                );
               })}
             {/* Contact Icon */}
             {/* <TouchableOpacity

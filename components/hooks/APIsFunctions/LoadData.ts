@@ -15,7 +15,7 @@ export default async function LoadData(
   // const { signOut } = useAuth();
   // const navigate = useNavigate(); seen error dom hooks
   const query = dataSourceAPI(getAction, requestedSkip, take);
-  if (!getAction) return;
+  if (!getAction || !query) return;
   if (query !== lastQuery && (!loading || abortController)) {
     const cached = cache.getRows(requestedSkip, take);
     if (cached.length === take) {

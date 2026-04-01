@@ -8,7 +8,7 @@ import {
 import UseFetchWithoutBaseUrl from "./UseFetchWithoutBaseUrl";
 
 const useFetch = (url, projectRoute) => {
-  const realurl = `${GetProjectUrl(projectRoute)}${url}`;
+  const realurl = !url ? null : `${GetProjectUrl(projectRoute)}${url}`;
   return UseFetchWithoutBaseUrl(realurl);
 };
 export const fetchData = async (url, projectRoute, options = {}) => {

@@ -26,17 +26,41 @@ export function buildApiUrl(
     return null; // or some default value or throw an error, depending on your use case
   }
   const routeAddress = apiRequest.routeAdderss;
-  const queryParam = apiRequest.dashboardFormSchemaActionQueryParams
-    .filter(
-      (param) =>
-        param.IsRequired || constants[param.dashboardFormParameterField],
-    )
-    .map(
-      (param) =>
-        `${param.parameterName}=${constants[param.dashboardFormParameterField]}`,
-    )
-    .join("&");
+  // const queryParam = apiRequest.dashboardFormSchemaActionQueryParams
+  //   .filter(
+  //     (param) =>
+  //       param.IsRequired || constants[param.dashboardFormParameterField],
+  //   )
+  //   .map(
+  //     (param) =>
+  //       `${param.parameterName}=${constants[param.dashboardFormParameterField]}`,
+  //   )
+  //   .join("&");
+  const queryParts = [];
 
+  for (const param of apiRequest.dashboardFormSchemaActionQueryParams) {
+    const newKey =
+      param.dashboardFormParameterField.charAt(0).toLowerCase() +
+      param.dashboardFormParameterField.slice(1);
+
+    const value = constants[newKey];
+
+    // ❌ If required and no value → return null immediately
+    if (
+      param.isRequired &&
+      (value === undefined || value === null || value === "")
+    ) {
+      console.log("❌ Missing required param:", param.parameterName);
+      return null; // 🔥 STOP everything
+    }
+
+    // ✅ If has value → include it
+    if (value !== undefined && value !== null && value !== "") {
+      queryParts.push(`${param.parameterName}=${value}`);
+    }
+  }
+
+  const queryParam = queryParts.join("&");
   const apiUrl = `${getProjectUrl}/${routeAddress}${
     routeAddress.includes("?") ? "&" : "?"
   }${queryParam}`;

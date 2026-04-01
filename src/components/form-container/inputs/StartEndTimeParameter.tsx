@@ -19,13 +19,32 @@ if (Platform.OS === "web") {
   registerLocale = webImports.registerLocale;
   require("react-datepicker/dist/react-datepicker.css");
 }
+const getSafeValue = (val, additionDays = 0, type) => {
+  let date;
 
+  if (!val) {
+    // default today + additionDays
+    date = new Date(Date.now() + additionDays * 24 * 60 * 60 * 1000);
+  } else {
+    date = new Date(val);
+    if (isNaN(date.getTime())) {
+      date = new Date(Date.now() + additionDays * 24 * 60 * 60 * 1000);
+    }
+  }
+
+  if (type === "localDateTime") {
+    date = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+  }
+
+  return date;
+};
 const StartEndTimeParameter = ({
   value = {},
   onChange,
   enable = true,
   setValue,
   formSchemaParameters = [],
+  type,
 }) => {
   const localization = useSelector((state) => state.localization.localization);
   const startField = formSchemaParameters?.find(
@@ -36,14 +55,11 @@ const StartEndTimeParameter = ({
   );
 
   const [startDate, setStartDate] = useState(
-    startField
-      ? new Date(value[startField.parameterField] || Date.now())
-      : null,
+    startField ? getSafeValue(value[startField.parameterField], 0, type) : null,
   );
+
   const [endDate, setEndDate] = useState(
-    endField
-      ? new Date(value[endField.parameterField] || Date.now() + 3600 * 1000)
-      : null,
+    endField ? getSafeValue(value[endField.parameterField], 30, type) : null,
   );
 
   const [pickerMode, setPickerMode] = useState("start");
@@ -55,12 +71,15 @@ const StartEndTimeParameter = ({
   };
   const hidePicker = () => setPickerVisible(false);
 
-  const handleConfirm = (selected) => {
-    if (pickerMode === "start") {
+  const handleConfirm = (selected, mode = pickerMode) => {
+    if (mode === "start") {
       setStartDate(selected);
       if (startField) {
         setValue(startField.parameterField, selected);
       }
+      console.log("====================================");
+      console.log(endDate, selected, "endDate");
+      console.log("====================================");
       if (endDate && selected > endDate) setEndDate(null);
     } else {
       setEndDate(selected);
@@ -115,7 +134,7 @@ const StartEndTimeParameter = ({
         {startField && (
           <DatePicker
             selected={startDate}
-            onChange={(date) => handleConfirm(date)}
+            onChange={(date) => handleConfirm(date, "start")}
             showTimeSelect
             timeFormat="HH:mm"
             timeIntervals={15}
@@ -123,12 +142,22 @@ const StartEndTimeParameter = ({
             placeholderText="Select Start"
             className="form-control"
             minDate={new Date()}
+            popperPlacement="bottom-start"
+            popperClassName="z-[9999]"
+            portalId="root-portal" // 👈 This makes the calendar render in a portal
+            // popperContainer={({ children }) => (
+            //   <div
+            //     style={{ zIndex: 9999, position: "relative", minWidth: 1000 }}
+            //   >
+            //     {children}
+            //   </div>
+            // )}
           />
         )}
         {endField && (
           <DatePicker
             selected={endDate}
-            onChange={(date) => handleConfirm(date)}
+            onChange={(date) => handleConfirm(date, "end")}
             showTimeSelect
             timeFormat="HH:mm"
             timeIntervals={15}
@@ -136,6 +165,16 @@ const StartEndTimeParameter = ({
             placeholderText="Select End"
             className="form-control"
             minDate={startDate || new Date()}
+            popperPlacement="bottom-start"
+            popperClassName="z-[9999]"
+            portalId="root-portal" // 👈 This makes the calendar render in a portal
+            popperContainer={({ children }) => (
+              <div
+                style={{ zIndex: 9999, position: "relative", minWidth: 1000 }}
+              >
+                {children}
+              </div>
+            )}
           />
         )}
       </View>

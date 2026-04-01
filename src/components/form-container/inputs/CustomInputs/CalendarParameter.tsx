@@ -88,6 +88,9 @@ const CalendarParameterState = ({
   schemaActions,
   setValue,
 }) => {
+  console.log("====================================");
+  console.log(value, "value");
+  console.log("====================================");
   const timeBounder = {
     startTime: "12:00",
     endTime: "18:00",
@@ -104,7 +107,9 @@ const CalendarParameterState = ({
   const today = new Date().toISOString().split("T")[0]; // format: yyyy-mm-dd
 
   const [selectedValues, setSelectedValues] = useState(value[fieldName] || []);
-  const [selectedDate, setSelectedDate] = useState(value[fieldName] || today);
+  const [selectedDate, setSelectedDate] = useState(
+    parentRow[fieldName] || today,
+  );
   const [reqError, setReqError] = useState(null);
   const [disable, setDisable] = useState(false);
   const getAction =
@@ -156,7 +161,7 @@ const CalendarParameterState = ({
   };
   const availability = {};
 
-  const [selectedTime, setSelectedTime] = useState(null);
+  const [selectedTime, setSelectedTime] = useState(parentRow[fieldName]);
 
   // 🎯 Mark available + selected days
   // const markedDates = useMemo(() => {
@@ -230,6 +235,14 @@ const CalendarParameterState = ({
 
     setCurrentSkip((prev) => prev + 1);
   }, [selectedDate]);
+  console.log("====================================");
+  console.log(
+    selectedDate,
+    parentRow,
+    fieldName,
+    "value 4 upgrade addAssetSchema ",
+  );
+  console.log("====================================");
   return (
     <Controller
       control={control}
@@ -238,6 +251,7 @@ const CalendarParameterState = ({
         <View>
           {/* 📅 Calendar */}
           <Calendar
+            current={selectedDate}
             markedDates={{
               [selectedDate]: {
                 selected: true,
@@ -308,6 +322,9 @@ const CalendarParameterState = ({
 
 // ---------------- Main Export ----------------
 const CalendarParameter = (props) => {
+  console.log("====================================");
+  console.log(props, "props value");
+  console.log("====================================");
   return (
     <CalendarParameterState
       {...props}

@@ -21,9 +21,10 @@ export const onApply = async (
   //   showErrorToast("connection Error", "please connect to internet ");
   //   return null;
   // }
-  let row = schemaParameters
-    ? SharedLists(editedRow, schemaParameters, "parameterField")
-    : null;
+  let row =
+    schemaParameters && !isNew
+      ? SharedLists(editedRow, schemaParameters, "parameterField")
+      : null;
   if (row) editedRow = row;
   const body = isNew
     ? editedRow

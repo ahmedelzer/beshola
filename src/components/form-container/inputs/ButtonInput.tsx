@@ -28,6 +28,7 @@ const ButtonInput = (props) => {
     enable,
     withLabel = true,
     staticSchema,
+    rowDetails = {},
   } = props;
   const { control, handleSubmit, formState, setValue } = useForm();
   const { errors } = formState;
@@ -39,13 +40,13 @@ const ButtonInput = (props) => {
 
   // ✅ Fetch schema
   const { data: schema } = useFetch(
-    GetSchemaUrl(props.lookupID),
+    isModalVisible ? GetSchemaUrl(props.lookupID) : null,
     defaultProjectProxyRouteWithoutBaseURL,
   );
 
   // ✅ Fetch actions
   const { data: _schemaActions } = useFetch(
-    GetSchemaActionsUrl(props.lookupID),
+    isModalVisible ? GetSchemaActionsUrl(props.lookupID) : null,
     defaultProjectProxyRouteWithoutBaseURL,
   );
 
@@ -71,12 +72,12 @@ const ButtonInput = (props) => {
     buildApiUrl(query, {
       pageIndex: skip + 1,
       pageSize: take,
-      ...props?.rowDetails,
+      ...rowDetails,
     });
 
   // ✅ Load data
   useEffect(() => {
-    if (!getAction) return;
+    if (!getAction || !isModalVisible) return;
 
     LoadData(
       state,
@@ -148,11 +149,11 @@ const ButtonInput = (props) => {
           setValue={setValue}
           // parentSchema={parentSchema}
           childSchema={schema}
-          isFormModal={schema.schemaType !== "FilesContainer"}
+          isFormModal={schema?.schemaType !== "FilesContainer"}
         >
-          {schema.schemaType === "FilesContainer" && (
+          {schema?.schemaType === "FilesContainer" && (
             <FileContainer
-              row={{}}
+              row={rowDetails}
               schema={schema}
               serverSchema={DisplayFilesServerSchema}
               title={title}

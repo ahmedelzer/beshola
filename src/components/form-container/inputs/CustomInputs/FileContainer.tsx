@@ -17,6 +17,7 @@ import FilesWithScrollPaging from "./FilesWithScrollPaging";
 import StaticFilesModel from "./StaticFilesModel";
 import DisplayFilesServerSchemaActions from "../../../../Schemas/MenuSchema/DisplayFilesServerSchemaActions.json";
 import DuringTransactionContainer from "./DuringTransactionContainer";
+import FilesWithButtonPaging from "./FilesWithButtonPaging";
 
 function FileContainer({ schema, row, title, serverSchema }) {
   const localization = useSelector((state) => state.localization.localization);
@@ -173,7 +174,7 @@ function FileContainer({ schema, row, title, serverSchema }) {
                 selectedServerFiles,
                 schema.projectProxyRoute,
                 serverSchema,
-                serverSchema?.dashboardFormSchemaParameters,
+                schemaWithoutID,
               )
             }
           >
@@ -208,7 +209,7 @@ function FileContainer({ schema, row, title, serverSchema }) {
         />
       )}
 
-      {/* {!isLoading && getActionSchema && (
+      {!isLoading && getActionSchema && (
         <FilesWithButtonPaging
           title={title}
           idField={idField}
@@ -218,7 +219,7 @@ function FileContainer({ schema, row, title, serverSchema }) {
           handleToDelete={() => console.log("delete")}
           fileFieldName={fileFieldNameButtonPaging}
         />
-      )} */}
+      )}
 
       <DuringTransactionContainer
         tableSchema={selectedSchema}

@@ -30,13 +30,14 @@ const StaticButtonInput = (props) => {
     withLabel = true,
     schema,
     _schemaActions,
+    rowDetails = {},
   } = props;
   const { control, handleSubmit, formState, watch, setValue } = useForm();
   const { errors } = formState;
   // ✅ Modal State
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [rootRow, setRootRow] = useState(props?.rowDetails || {});
+  const [rootRow, setRootRow] = useState(rowDetails || {});
   const [dependenceRow, setDependenceRow] = useState({});
   const [disable, setDisable] = useState(false);
   const [reqError, setReqError] = useState(false);
@@ -160,10 +161,10 @@ const StaticButtonInput = (props) => {
           isOpen={isModalVisible}
           onClose={() => setIsModalVisible(false)}
           headerTitle={title}
-          row={{}}
+          row={rowDetails}
           control={control}
           schemaActions={_schemaActions}
-          parentRow={props?.rowDetails}
+          parentRow={rowDetails}
           schema={schema}
           onSubmit={handleSubmit(onSubmit)}
           errors={reqError || errors}

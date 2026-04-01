@@ -215,38 +215,6 @@
       "indexNumber": 15,
       "isFilterOperation": false,
       "dashboardFormSchemaParameterDependencies": []
-    },
-    {
-      "dashboardFormSchemaParameterID": "3ea25aa9-7e3d-4933-9015-afb86278524c",
-      "dashboardFormSchemaID": "854454a8-119b-4def-abdc-4b337d643813",
-      "isEnable": true,
-      "parameterType": "detailsCell",
-      "parameterField": "assetPricePlan",
-      "parameterTitel": "Price Plane",
-      "parameterLookupTitel": null,
-      "isIDField": false,
-      "lookupID": "5a2a24f7-354c-418f-a582-d1ca8f3a86dc",
-      "lookupReturnField": null,
-      "lookupDisplayField": null,
-      "indexNumber": 15,
-      "isFilterOperation": false,
-      "dashboardFormSchemaParameterDependencies": []
-    },
-    {
-      "dashboardFormSchemaParameterID": "3ea25aa9-7e3d-4933-9015-afb86278524c",
-      "dashboardFormSchemaID": "854454a8-119b-4def-abdc-4b337d643813",
-      "isEnable": true,
-      "parameterType": "detailsCell",
-      "parameterField": "assetPricePlan",
-      "parameterTitel": "Price Plane",
-      "parameterLookupTitel": null,
-      "isIDField": false,
-      "lookupID": "5a2a24f7-354c-418f-a582-d1ca8f3a86dc",
-      "lookupReturnField": null,
-      "lookupDisplayField": null,
-      "indexNumber": 15,
-      "isFilterOperation": false,
-      "dashboardFormSchemaParameterDependencies": []
     }
   ],
 

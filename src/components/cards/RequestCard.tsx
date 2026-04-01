@@ -367,7 +367,7 @@ const RequestCard: React.FC<RequestCardProps> = ({
                 .map((param: any) => {
                   return (
                     <StaticButtonInput
-                      withLabel={false}
+                      withLabel={true}
                       fieldName={param.parameterField}
                       schema={RequsetTimeSchema}
                       rowDetails={item}

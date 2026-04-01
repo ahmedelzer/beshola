@@ -60,6 +60,7 @@ export const usePreloadList = ({
   };
   return {
     ...state,
+    state: state,
     reload,
     dispatch,
     handleScroll,
