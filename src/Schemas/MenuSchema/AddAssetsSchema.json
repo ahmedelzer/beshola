@@ -215,6 +215,22 @@
       "indexNumber": 15,
       "isFilterOperation": false,
       "dashboardFormSchemaParameterDependencies": []
+    },
+    {
+      "dashboardFormSchemaParameterID": "3ea25aa9-7e3d-4933-9015-afb86278524c",
+      "dashboardFormSchemaID": "854454a8-119b-4def-abdc-4b337d643813",
+      "isEnable": true,
+      "parameterType": "detailsCell",
+      "parameterField": "attributes",
+      "parameterTitel": "Attributes",
+      "parameterLookupTitel": null,
+      "isIDField": false,
+      "lookupID": "6cb949c3-71fc-4a0f-b841-2fcc9534f395",
+      "lookupReturnField": null,
+      "lookupDisplayField": null,
+      "indexNumber": 15,
+      "isFilterOperation": false,
+      "dashboardFormSchemaParameterDependencies": []
     }
   ],
 

@@ -46,13 +46,13 @@ class TextParameter extends BaseInput {
         type={this.setParameterType(type)}
         required={enable}
         defaultValue={value}
-   
+        value={value}
         name={fieldName}
         id={fieldName}
         title={title}
         readOnly={!enable}
         {...props}
-       // step={this.setParameterTypeStep(type)}
+        // step={this.setParameterTypeStep(type)}
       />
     );
   }

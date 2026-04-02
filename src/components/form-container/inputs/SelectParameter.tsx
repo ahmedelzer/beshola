@@ -27,10 +27,11 @@ function SelectParameter({
   ...props
 }) {
   const localization = useSelector((state) => state.localization.localization);
+  console.log(values, "selectedRow in lookup parameter");
 
   // Local state for selected item
   const [selectedValue, setSelectedValue] = useState(
-    defaultValue ? defaultValue[lookupReturnField] : ""
+    defaultValue ? defaultValue[lookupReturnField] : "",
   );
 
   // Apply selectTheFirst on mount if no default value
@@ -43,7 +44,7 @@ function SelectParameter({
   }, [selectTheFirst, selectedValue, values, onValueChange]);
 
   const selectedItem = values.find(
-    (item) => item?.[lookupReturnField] === selectedValue
+    (item) => item?.[lookupReturnField] === selectedValue,
   );
 
   return (
@@ -53,7 +54,7 @@ function SelectParameter({
         className="mx-2"
         onValueChange={(displayValue) => {
           const selected = values.find(
-            (item) => item?.[lookupDisplayField] === displayValue
+            (item) => item?.[lookupDisplayField] === displayValue,
           );
           setSelectedValue(selected?.[lookupReturnField] || "");
           console.log("Selected item:", selected);

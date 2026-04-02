@@ -8,7 +8,10 @@ export default function MiddleRangeParameter({
   value: initialRange,
 }) {
   const { width } = useWindowDimensions();
-  const sliderWidth = useMemo(() => (width > 768 ? width * 0.5 : width * 0.9), [width]);
+  const sliderWidth = useMemo(
+    () => (width > 768 ? width * 0.5 : width * 0.9),
+    [width],
+  );
 
   // 1. BOUNDS STATE: This defines the far left and far right of the slider track
   const [bounds, setBounds] = useState({
@@ -37,44 +40,43 @@ export default function MiddleRangeParameter({
         min: initialRange.min,
         max: initialRange.max,
       };
-      setBounds(newValues);        // Resets the slider track limits
-      setCurrentRange(newValues);  // Resets the thumb positions
+      setBounds(newValues); // Resets the slider track limits
+      setCurrentRange(newValues); // Resets the thumb positions
     }
   }, [initialRange]);
 
-
-    return (
-  <GestureHandlerRootView>
-    <View className="px-4 py-6 w-full">
-      <View className="flex-row justify-between mb-3 px-2">
-        <Text style={{ fontSize: 14, fontWeight: "500" }}>
-          {currentRange.min.toLocaleString()}
-        </Text>
-        <Text style={{ fontSize: 14, fontWeight: "500" }}>
-          {currentRange.max.toLocaleString()}
-        </Text>
-      </View>
-
-      {/* Logic: If min and max are the same, don't show the slider */}
-      {bounds.min === bounds.max ? (
-        <View className="h-10 justify-center items-center bg-gray-100 rounded-lg">
-          <Text className="text-gray-500 italic">
-            Fixed value: {bounds.min.toLocaleString()}
+  return (
+    <GestureHandlerRootView>
+      <View className="px-4 py-6 w-full">
+        <View className="flex-row justify-between mb-3 px-2">
+          <Text style={{ fontSize: 14, fontWeight: "500" }}>
+            {currentRange.min.toLocaleString()}
+          </Text>
+          <Text style={{ fontSize: 14, fontWeight: "500" }}>
+            {currentRange.max.toLocaleString()}
           </Text>
         </View>
-      ) : (
-        <RangeSlider
-          min={bounds.min}
-          max={bounds.max}
-          step={step}
-          sliderWidth={sliderWidth}
-          value={currentRange}
-          onValueChange={(val) => {
-            setCurrentRange(val);
-          }}
-        />
-      )}
-    </View>
-  </GestureHandlerRootView>
-);
+
+        {/* Logic: If min and max are the same, don't show the slider */}
+        {bounds.min === bounds.max ? (
+          <View className="h-10 justify-center items-center bg-gray-100 rounded-lg">
+            <Text className="text-gray-500 italic">
+              Fixed value: {bounds.min.toLocaleString()}
+            </Text>
+          </View>
+        ) : (
+          <RangeSlider
+            min={bounds.min}
+            max={bounds.max}
+            step={step}
+            sliderWidth={sliderWidth}
+            value={currentRange}
+            onValueChange={(val) => {
+              setCurrentRange(val);
+            }}
+          />
+        )}
+      </View>
+    </GestureHandlerRootView>
+  );
 }

@@ -110,6 +110,8 @@ const PopupModal = ({
             style={{ maxHeight: 400, flex: 1 }}
             horizontal={false} // vertical scroll by default
           >
+            {children}
+
             <PopupModalBody
               control={control}
               errors={errors}
@@ -118,9 +120,7 @@ const PopupModal = ({
               schema={schema}
               isSmallScreen={isSmallScreen}
               {...props}
-            >
-              {children}
-            </PopupModalBody>
+            ></PopupModalBody>
           </ScrollView>
         </ModalBody>
 

@@ -27,6 +27,7 @@ import { drawTimeLine } from "../../../../utils/operation/drawTimeLine";
 import { handleSubmitWithCallback } from "../../../../utils/operation/handleSubmitWithCallback";
 import { getField } from "../../../../utils/operation/getField";
 import { combineDateTime } from "../../../../utils/operation/timeOperations";
+import { theme } from "../../../../Theme";
 const testSchema = {
   dashboardFormSchemaID: "937cdd0e-3303-447b-bd7c-f0f027e8ce78",
   schemaType: "Table",
@@ -88,9 +89,19 @@ const CalendarParameterState = ({
   schemaActions,
   setValue,
 }) => {
-  console.log("====================================");
-  console.log(value, "value");
-  console.log("====================================");
+  const formatDate = (date) => {
+    if (!date) return null;
+
+    if (typeof date === "string") {
+      return date.split("T")[0]; // handles ISO
+    }
+
+    if (date instanceof Date) {
+      return date.toISOString().split("T")[0];
+    }
+
+    return null;
+  };
   const timeBounder = {
     startTime: "12:00",
     endTime: "18:00",
@@ -107,8 +118,9 @@ const CalendarParameterState = ({
   const today = new Date().toISOString().split("T")[0]; // format: yyyy-mm-dd
 
   const [selectedValues, setSelectedValues] = useState(value[fieldName] || []);
+
   const [selectedDate, setSelectedDate] = useState(
-    parentRow[fieldName] || today,
+    formatDate(parentRow?.[fieldName]) || today,
   );
   const [reqError, setReqError] = useState(null);
   const [disable, setDisable] = useState(false);
@@ -235,14 +247,7 @@ const CalendarParameterState = ({
 
     setCurrentSkip((prev) => prev + 1);
   }, [selectedDate]);
-  console.log("====================================");
-  console.log(
-    selectedDate,
-    parentRow,
-    fieldName,
-    "value 4 upgrade addAssetSchema ",
-  );
-  console.log("====================================");
+
   return (
     <Controller
       control={control}
@@ -255,8 +260,8 @@ const CalendarParameterState = ({
             markedDates={{
               [selectedDate]: {
                 selected: true,
-                selectedColor: "#3b82f6", // 🔵 background color
-                selectedTextColor: "#ffffff", // ⚪ text color
+                selectedColor: theme.accent, // 🔵 background color
+                selectedTextColor: theme.body, // ⚪ text color
               },
             }}
             onDayPress={(day) => {
@@ -265,8 +270,8 @@ const CalendarParameterState = ({
               setSelectedTime(null);
             }}
             theme={{
-              todayTextColor: "#3b82f6",
-              arrowColor: "#3b82f6",
+              todayTextColor: theme.accent,
+              arrowColor: theme.accent,
             }}
           />
 
@@ -322,9 +327,6 @@ const CalendarParameterState = ({
 
 // ---------------- Main Export ----------------
 const CalendarParameter = (props) => {
-  console.log("====================================");
-  console.log(props, "props value");
-  console.log("====================================");
   return (
     <CalendarParameterState
       {...props}

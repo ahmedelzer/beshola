@@ -39,9 +39,9 @@ export function buildApiUrl(
   const queryParts = [];
 
   for (const param of apiRequest.dashboardFormSchemaActionQueryParams) {
-    const newKey =
-      param.dashboardFormParameterField.charAt(0).toLowerCase() +
-      param.dashboardFormParameterField.slice(1);
+    const newKey = param.dashboardFormParameterField;
+    // param.dashboardFormParameterField.charAt(0).toLowerCase() +
+    // param.dashboardFormParameterField.slice(1);
 
     const value = constants[newKey];
 
@@ -51,6 +51,7 @@ export function buildApiUrl(
       (value === undefined || value === null || value === "")
     ) {
       console.log("❌ Missing required param:", param.parameterName);
+      // throw new Error(`Missing required parameter: ${param.parameterName}`);
       return null; // 🔥 STOP everything
     }
 

@@ -212,7 +212,7 @@ import {
 } from "react-native";
 import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
-import { Card, Box, VStack } from "../../../components/ui";
+import { Card, Box, VStack, HStack } from "../../../components/ui";
 import { theme } from "../../Theme";
 import PricePlansSection from "./PricePlansSection";
 import ImageCardActions from "./ImageCardActions";
@@ -356,7 +356,26 @@ const RequestCard: React.FC<RequestCardProps> = ({
                 />
               )}
             </View>
-            <VStack>
+            <HStack
+              alignItems="center"
+              justifyContent="center"
+              style={{
+                width: "100%",
+                gap: 12, // 🔥 spacing between items (in px)
+              }}
+            >
+              <TouchableOpacity
+                style={{
+                  backgroundColor: theme.accent,
+                  padding: 8,
+                  borderRadius: 999,
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <AntDesign name="wechat" size={22} color={theme.body} />
+              </TouchableOpacity>
+
               {ownSchemaWithButtonOnlyParameters.dashboardFormSchemaParameters
                 .filter(
                   (column: any) =>
@@ -364,8 +383,8 @@ const RequestCard: React.FC<RequestCardProps> = ({
                     column.isEnable &&
                     !column.parameterType.startsWith("hidden"),
                 )
-                .map((param: any) => {
-                  return (
+                .map((param: any) => (
+                  <View key={param.parameterField} style={{ flexShrink: 1 }}>
                     <StaticButtonInput
                       withLabel={true}
                       fieldName={param.parameterField}
@@ -374,9 +393,9 @@ const RequestCard: React.FC<RequestCardProps> = ({
                       _schemaActions={RequestSchemaActions}
                       {...CreateInputProps(param, {})}
                     />
-                  );
-                })}
-            </VStack>
+                  </View>
+                ))}
+            </HStack>
           </View>
         </View>
       </Card>

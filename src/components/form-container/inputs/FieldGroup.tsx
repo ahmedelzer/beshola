@@ -20,7 +20,7 @@ export default function FieldGroup({
         required: true,
       }}
       name={name}
-      render={({ field: { onChange, onBlur, value } }) =>
+      render={({ field: { onChange, onBlur, value = defaultValue } }) =>
         isTextarea ? (
           <TextInput
             value={value}

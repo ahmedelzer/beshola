@@ -358,8 +358,11 @@ export const PreparingApp: React.FC<{ children: ReactNode }> = ({
   ////////////////////////////////
   const [isAdditionalInfoCompleted, setIsAdditionalInfoCompleted] =
     useState(false);
+  const [openAdditionalInfoPopup, setOpenAdditionalPopup] = useState(false);
   const [selectedAdditionalInfoSchema, setSelectedAdditionalInfoSchema] =
     useState(AdditionInformationSchema[0]);
+
+  // Check if user needs to see additional info or skip forever
   useEffect(() => {
     const checkRedirect = async () => {
       if (user && !user.nationality) {
@@ -368,37 +371,47 @@ export const PreparingApp: React.FC<{ children: ReactNode }> = ({
         );
 
         if (neverSee === "true") {
-          setIsAdditionalInfoCompleted(true); // ✅ skip forever
+          setIsAdditionalInfoCompleted(true); // skip forever
         } else {
-          setIsAdditionalInfoCompleted(false); // ✅ show screen
+          setIsAdditionalInfoCompleted(false); // show screen
         }
       } else {
-        setIsAdditionalInfoCompleted(true); // ✅ no need to show
+        setIsAdditionalInfoCompleted(true); // no need to show
       }
     };
 
     checkRedirect();
   }, [user, selectedAdditionalInfoSchema]);
+
+  // Open popup after 30s if not completed
+  useEffect(() => {
+    if (isEndFinishing && !isAdditionalInfoCompleted) {
+      const timer = setTimeout(() => {
+        setOpenAdditionalPopup(true);
+      }, 30000); // 30 seconds
+      return () => clearTimeout(timer);
+    }
+  }, [isEndFinishing, isAdditionalInfoCompleted]);
+
   return (
     <WSContext.Provider
       value={{ notifications: [], setNotifications: () => {} }}
     >
-      {isEndFinishing ? (
-        !isAdditionalInfoCompleted ? (
-          // Show additional screen first
+      {/* Always show children */}
+      {isEndFinishing && <>{children}</>}
+
+      {/* Show AdditionalInfoScreen as popup after 30s */}
+      {isEndFinishing &&
+        openAdditionalInfoPopup &&
+        !isAdditionalInfoCompleted && (
           <AdditionalInfoScreen
-            onComplete={() => setIsAdditionalInfoCompleted(true)}
             schema={selectedAdditionalInfoSchema}
+            onComplete={() => {
+              setIsAdditionalInfoCompleted(true);
+              setOpenAdditionalPopup(false);
+            }}
           />
-        ) : (
-          // Only show children after additional screen is completed
-          <>{children}</>
-        )
-      ) : null}
-      {/* <AdditionalInfoScreen
-        onComplete={() => setIsAdditionalInfoCompleted(true)}
-        schema={selectedAdditionalInfoSchema}
-      /> */}
+        )}
     </WSContext.Provider>
   );
 };

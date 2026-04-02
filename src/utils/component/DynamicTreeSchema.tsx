@@ -66,21 +66,34 @@ const testSchema = {
   propertyName: "string",
   indexNumber: 0,
 };
+type DynamicTreeSchemaProps = {
+  schema?: typeof testSchema;
+  selectedRow?: Record<string, any>;
+  fieldName?: string;
+  control?: any;
+  filtersMap?: Record<string, any>;
+  value?: any;
+  setValue?: any;
+};
+
 const DynamicTreeSchema = ({
   schema = testSchema,
   selectedRow = {},
   fieldName,
   control,
   filtersMap,
-}) => {
-  const [subSchemas, setSubSchemas] = useState([]);
-  const [parentRow, setParentRow] = useState([]);
+  value = [],
+  setValue,
+}: DynamicTreeSchemaProps) => {
+  type SchemaType = typeof testSchema;
+  const [subSchemas, setSubSchemas] = useState<SchemaType[]>([]);
+  const [parentRow, setParentRow] = useState(value);
   // const { setValue } = useFormContext();
 
   // prevent duplicate fetch
   const visitedLookups = useRef(new Set());
 
-  const GetSubSchemas = async (currentSchema) => {
+  const GetSubSchemas = async (currentSchema: typeof testSchema | null) => {
     if (!currentSchema) return;
 
     const columns = currentSchema.dashboardFormSchemaParameters || [];
@@ -133,6 +146,9 @@ const DynamicTreeSchema = ({
   console.log("====================================");
   console.log(parentRow, "parentRow");
   console.log("====================================");
+  useEffect(() => {
+    setValue(fieldName, parentRow);
+  }, [parentRow, fieldName, setValue]);
   return (
     <View>
       {schema && (

@@ -21,7 +21,7 @@ export const WebContainer = ({
             ?.filter(
               (column: any) =>
                 !column.isIDField &&
-                column.isEnable &&
+                // column.isEnable &&
                 !avoidColsTypes.find(
                   (columnType) => column.parameterType === columnType,
                 ) &&

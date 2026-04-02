@@ -23,6 +23,7 @@ export default function MenuFilter({
     handleSubmit,
     formState: { errors },
     reset,
+    setValue,
     ...methods
   } = useForm();
   const localization = useSelector((state) => state.localization.localization);
@@ -109,30 +110,31 @@ export default function MenuFilter({
       </TouchableOpacity>
       {/* Form Content */}
       <ScrollView>
-        <FormProvider {...methods}>
-          <FormContainer
-            key={updateKey}
-            tableSchema={schema}
-            row={{
-              rating: { min: 1, max: 400 },
-              bedrooms: { min: 1, max: 20 },
-              bathrooms: { min: 1, max: 10 },
-              area: { min: 80, max: 1000 },
-            }} // Populate form with Redux state
-            errorResult={errors}
-            control={control}
-            filtersMap={filtersMap}
-            labelStyle={{
-              fontSize: 16,
-              color: theme.body, // text color for contrast
-              backgroundColor: theme.accent,
-              fontWeight: "bold",
-              paddingHorizontal: 6,
-              paddingVertical: 2,
-              borderRadius: 4,
-            }}
-          />
-        </FormProvider>
+        {/* <FormProvider {...methods}> */}
+        <FormContainer
+          key={updateKey}
+          tableSchema={schema}
+          row={{
+            rating: { min: 1, max: 400 },
+            bedrooms: { min: 1, max: 20 },
+            bathrooms: { min: 1, max: 10 },
+            area: { min: 80, max: 1000 },
+          }} // Populate form with Redux state
+          errorResult={errors}
+          control={control}
+          setValue={setValue}
+          filtersMap={filtersMap}
+          labelStyle={{
+            fontSize: 16,
+            color: theme.body, // text color for contrast
+            backgroundColor: theme.accent,
+            fontWeight: "bold",
+            paddingHorizontal: 6,
+            paddingVertical: 2,
+            borderRadius: 4,
+          }}
+        />
+        {/* </FormProvider> */}
       </ScrollView>
 
       {/* Footer Button */}

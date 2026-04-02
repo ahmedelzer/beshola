@@ -52,7 +52,12 @@ const BaseRange = ({ schema }) => {
     if (!getAction || Object.keys(rowDetails).length === 0) return;
 
     const run = async () => {
-      const query = buildApiUrl(getAction, rowDetails);
+      const query = buildApiUrl(getAction, {
+        // pageIndex: 1,
+        // pageSize: 100,
+        ...rowDetails,
+      });
+
       if (query !== lastQuery) {
         setLastQuery(query);
         const result = await APIHandling(
@@ -69,14 +74,10 @@ const BaseRange = ({ schema }) => {
     run();
   }, [getAction, rowDetails]);
   useEffect(() => {
-    
-      // Clean object is optional if you want to remove empty/undefined values
-      
-      setRowDetails(() => watch);
-      // setRootRow({ ...rootRow, ...cleanedValues });
- 
+    // Clean object is optional if you want to remove empty/undefined values
 
-   
+    setRowDetails(() => watch);
+    // setRootRow({ ...rootRow, ...cleanedValues });
   }, [watch]);
 
   // Current selected parameter metadata

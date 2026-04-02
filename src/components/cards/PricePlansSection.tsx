@@ -35,7 +35,7 @@ import CardPriceDiscount from "../../utils/component/CardPriceDiscount";
 import { useSelector } from "react-redux";
 
 const PricePlansSection = ({ item }) => {
-    const localization = useSelector((state) => state.localization.localization);
+  const localization = useSelector((state) => state.localization.localization);
   const [openModal, setOpenModal] = useState(false);
   const getAction = PricePlanSchemaActions?.find(
     (action) => action.dashboardFormActionMethodType === "Get",
@@ -84,51 +84,55 @@ const PricePlansSection = ({ item }) => {
   //   )}`;
   //   Linking.openURL(url);
   // };
- 
+
   return (
-    <Box className="items-center h-[120px]"> {/* Set fixed height here */}
-   <TouchableOpacity
-    className="w-full flex-row items-center justify-between h-[80px] px-5 py-3 rounded-b-xl rounded-t-none shadow-md"
-    style={{ backgroundColor: theme.accent }}
-    onPress={() => setOpenModal(true)}
-  >
-    {/* Centered content */}
-    <View
-      className="flex-1 flex-col items-center justify-center" // Center vertically & horizontally
-    >
-      {/* Main text */}
-      <Text
-        className="font-bold text-md"
-        style={{ color: theme.body, textAlign: "center", direction: "inherit" }}
+    <Box className="items-center h-[120px]">
+      {" "}
+      {/* Set fixed height here */}
+      <TouchableOpacity
+        className="w-full flex-row items-center justify-between h-[80px] px-5 py-3 rounded-b-xl rounded-t-none shadow-md"
+        style={{ backgroundColor: theme.accent }}
+        onPress={() => setOpenModal(true)}
       >
-        {localization.menu.exploerMore || "Explore more plans"}
-      </Text>
+        {/* Centered content */}
+        <View
+          className="flex-1 flex-col items-center justify-center" // Center vertically & horizontally
+        >
+          {/* Main text */}
+          <Text
+            className="font-bold text-md"
+            style={{
+              color: theme.body,
+              textAlign: "center",
+              direction: "inherit",
+            }}
+          >
+            {localization.menu.exploerMore || "Explore more plans"}
+          </Text>
 
-      {/* Put CardPriceDiscount under the text */}
-      <CardPriceDiscount
-        fieldsType={pricePlanFieldsType}
-        item={item}
-        style={{ marginTop: 4 }}
-      />
-    </View>
+          {/* Put CardPriceDiscount under the text */}
+          <CardPriceDiscount
+            fieldsType={pricePlanFieldsType}
+            item={item}
+            style={{ marginTop: 4 }}
+          />
+        </View>
 
-    {/* Arrow on the right */}
-    <MaterialCommunityIcons
-      name={isRTL() ? "chevron-left" : "chevron-right"}
-      size={30}
-      color={theme.body}
-    />
-  </TouchableOpacity>
-
-
-  {/* Modal stays the same */}
-  <Modal isOpen={openModal} onClose={() => setOpenModal(false)}>
-    <ModalBackdrop />
-    <ModalContent className="rounded-2xl relative bg-body p-3 max-h-[80vh]">
-      {/* ...rest of your modal content */}
-    </ModalContent>
-  </Modal>
-</Box>
+        {/* Arrow on the right */}
+        <MaterialCommunityIcons
+          name={isRTL() ? "chevron-left" : "chevron-right"}
+          size={30}
+          color={theme.body}
+        />
+      </TouchableOpacity>
+      {/* Modal stays the same */}
+      <Modal isOpen={openModal} onClose={() => setOpenModal(false)}>
+        <ModalBackdrop />
+        <ModalContent className="rounded-2xl relative bg-body p-3 max-h-[80vh]">
+          {/* ...rest of your modal content */}
+        </ModalContent>
+      </Modal>
+    </Box>
   );
 };
 

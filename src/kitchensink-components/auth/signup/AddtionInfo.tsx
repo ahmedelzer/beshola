@@ -153,9 +153,15 @@ export default function AdditionalInfoScreen({ schema, onComplete }) {
   };
 
   return (
-    <Box className="flex-1 bg-gray-50 items-center justify-center px-4">
+    // Full screen overlay
+    <Box
+      className="absolute inset-0 bg-black bg-opacity-50 flex-1 items-center justify-center px-4"
+      zIndex={999} // Make sure it appears on top
+    >
+      {/* Centered card */}
       <Box className="w-full max-w-xl bg-white rounded-2xl shadow-lg p-6">
         <VStack space="lg">
+          {/* Header */}
           <Text className="text-2xl font-bold text-gray-800 text-center">
             Complete Your Profile
           </Text>
@@ -164,7 +170,7 @@ export default function AdditionalInfoScreen({ schema, onComplete }) {
             Please provide additional information
           </Text>
 
-          {/* Job Type */}
+          {/* Form */}
           <VStack>
             <FormContainer
               tableSchema={schema}
@@ -174,47 +180,9 @@ export default function AdditionalInfoScreen({ schema, onComplete }) {
               errorResult={errors}
               clearErrors={clearErrors}
             />
-            {/* <Text className="text-sm text-gray-600 font-medium">Job Type</Text>
-
-            <Select>
-              <SelectTrigger className="rounded-xl border-gray-200">
-                <SelectInput placeholder="Select job type" />
-              </SelectTrigger>
-
-              <SelectPortal>
-                <SelectContent>
-                  <SelectItem label="Full Time" value="fulltime" />
-                  <SelectItem label="Part Time" value="parttime" />
-                  <SelectItem label="Freelance" value="freelance" />
-                  <SelectItem label="Student" value="student" />
-                </SelectContent>
-              </SelectPortal>
-            </Select> */}
           </VStack>
 
-          {/* Nationality */}
-          {/* <VStack space="xs">
-            <Text className="text-sm text-gray-600 font-medium">
-              Nationality
-            </Text>
-
-            <Select>
-              <SelectTrigger className="rounded-xl border-gray-200">
-                <SelectInput placeholder="Select nationality" />
-              </SelectTrigger>
-
-              <SelectPortal>
-                <SelectContent>
-                  <SelectItem label="Egyptian" value="egypt" />
-                  <SelectItem label="Saudi" value="saudi" />
-                  <SelectItem label="Emirati" value="uae" />
-                  <SelectItem label="Other" value="other" />
-                </SelectContent>
-              </SelectPortal>
-            </Select>
-          </VStack> */}
-
-          {/* ✅ Buttons */}
+          {/* Buttons */}
           <VStack space="sm" className="mt-4">
             {/* Continue */}
             <Button
@@ -226,7 +194,7 @@ export default function AdditionalInfoScreen({ schema, onComplete }) {
               </ButtonText>
             </Button>
 
-            {/* Skip + Don't show */}
+            {/* Skip + Don’t show again */}
             <HStack className="justify-between">
               <Button
                 variant="outline"

@@ -1,16 +1,19 @@
-import React, { useEffect, useMemo, useReducer, useRef } from "react";
-import { View } from "react-native";
+import { Controller, useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
-import { buildApiUrl } from "../../../../components/hooks/APIsFunctions/BuildApiUrl";
-import LoadData from "../../../../components/hooks/APIsFunctions/LoadData";
+import React, { useEffect, useMemo, useReducer, useRef, useState } from "react";
+import { View } from "react-native";
 import useFetch from "../../../../components/hooks/APIsFunctions/useFetch";
 import GetSchemaActionsUrl from "../../../../components/hooks/DashboardAPIs/GetSchemaActionsUrl";
 import { defaultProjectProxyRouteWithoutBaseURL } from "../../../../request";
-import { createRowCache } from "../../Pagination/createRowCache";
 import { initialState, VIRTUAL_PAGE_SIZE } from "../../Pagination/initialState";
 import reducer from "../../Pagination/reducer";
+import { createRowCache } from "../../Pagination/createRowCache";
+import { buildApiUrl } from "../../../../components/hooks/APIsFunctions/BuildApiUrl";
+import LoadData from "../../../../components/hooks/APIsFunctions/LoadData";
 import { updateRows } from "../../Pagination/updateRows";
 import SelectParameter from "./SelectParameter";
+import { cleanObject } from "../../../utils/operation/cleanObject";
+import BaseRange from "../../../utils/component/BaseRange";
 
 function LookupParameter({
   fieldName,

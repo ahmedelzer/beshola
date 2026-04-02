@@ -105,9 +105,6 @@ function FormContainer({
     }, 300);
   }, [shouldDisplayErrorInForm, globalErrorMessages]);
   function SetValue(param: any | undefined) {
-    console.log("====================================");
-    console.log(row, param, row[param.parameterField], "value2");
-    console.log("====================================");
     if (
       param.lookupID ||
       param.parameterType === "areaMapLongitudePoint" ||
