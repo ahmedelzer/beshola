@@ -158,6 +158,7 @@ function FormContainer({
                 errorResult={errorResult}
                 tableSchema={tableSchema}
                 {...props}
+                row={row}
               />
             ),
           },

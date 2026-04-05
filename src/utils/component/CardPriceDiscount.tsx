@@ -8,6 +8,7 @@ export default function CardPriceDiscount({
   fieldsType,
   colorOfPriceAfterDiscount = theme.body,
   style,
+  priceScale
 }) {
   const localization = useSelector((state) => state.localization.localization);
 

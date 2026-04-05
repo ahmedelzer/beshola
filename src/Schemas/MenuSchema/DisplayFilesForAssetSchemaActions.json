@@ -1,0 +1,33 @@
+[
+  {
+    "dashboardFormSchemaActionID": "554f3948-bae4-4b26-bb47-25bbaa14bc59",
+    "dashboardFormActionMethodType": "Get",
+    "routeAdderss": "Asset/GetDisplayFilesForAsset",
+    "body": "",
+    "returnPropertyName": "",
+    "projectProxyRoute": "BrandingMartAssets",
+    "dashboardFormSchemaActionQueryParams": [
+      {
+        "dashboardFormSchemaActionQueryParameterID": "b0ce07e0-9600-44fa-a65b-500cc7e3040f",
+        "dashboardFormSchemaActionID": "554f3948-bae4-4b26-bb47-25bbaa14bc59",
+        "parameterName": "PageSize",
+        "dashboardFormParameterField": "pageSize",
+        "isRequired": true
+      },
+      {
+        "dashboardFormSchemaActionQueryParameterID": "36ea6a17-e10a-4e85-ab68-5e0907f882b7",
+        "dashboardFormSchemaActionID": "554f3948-bae4-4b26-bb47-25bbaa14bc59",
+        "parameterName": "PageNumber",
+        "dashboardFormParameterField": "pageIndex",
+        "isRequired": true
+      },
+      {
+        "dashboardFormSchemaActionQueryParameterID": "ca737930-4f44-4afa-b148-c0efb08466ef",
+        "dashboardFormSchemaActionID": "554f3948-bae4-4b26-bb47-25bbaa14bc59",
+        "parameterName": "AssetID",
+        "dashboardFormParameterField": "assetID",
+        "isRequired": true
+      }
+    ]
+  }
+]

@@ -38,6 +38,7 @@ const PopupModal = ({
   children,
   ...props
 }) => {
+  
   const localization = useSelector((state) => state.localization.localization);
   const [scrollY, setScrollY] = useState(0);
   const [isSmallScreen, setIsSmallScreen] = useState(false);

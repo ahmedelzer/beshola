@@ -1,17 +1,34 @@
+// ... imports stay the same
+
 import React, { useState } from "react";
-import { View, Pressable, Image, Modal } from "react-native";
+import { View, Pressable, Image, Modal, Text } from "react-native";
 import { VideoView, useVideoPlayer } from "expo-video";
 import { useSelector } from "react-redux";
 import { Button, ButtonText } from "../../../../../components/ui";
+import { theme } from "../../../../Theme";
 
-function TypeFile({ file, title, type = false }) {
+function TypeFile({
+  file,
+  className = "",
+  type = false,
+  haveFileStatuesFieldName = false,
+  fileStatuesFieldNameValue = true,
+}) {
   const [modalOpen, setModalOpen] = useState(false);
   const localization = useSelector((state) => state.localization.localization);
-
+  console.log("====================================");
+  console.log(file, "file");
+  console.log("====================================");
   const fileSrc = file;
   const typeFile = type || "";
 
-  // ✅ Create player ONLY for video
+  // ✅ Determine Circle Color
+  const statusColor = !haveFileStatuesFieldName
+    ? theme.success
+    : fileStatuesFieldNameValue
+      ? theme.success
+      : theme.error;
+
   const player = useVideoPlayer(
     typeFile?.startsWith("video") ? { uri: fileSrc } : null,
     (player) => {
@@ -23,66 +40,88 @@ function TypeFile({ file, title, type = false }) {
     setModalOpen((prev) => !prev);
   };
 
-  // 🔥 Render content
   const renderFileContent = (full = false) => {
-    // ✅ IMAGE
+    const commonStyle = {
+      width: "100%",
+      height: full ? "80%" : 150,
+      borderRadius: 12,
+    };
+
     if (typeFile?.startsWith("image") || typeFile === "publicImage") {
       return (
         <Image
           source={{ uri: fileSrc }}
-          style={{
-            width: "100%",
-            height: full ? "80%" : 150,
-            borderRadius: 12,
-          }}
-          resizeMode={full ? "contain" : "cover"} // 🔥 مهم جداً
+          style={commonStyle}
+          className={className}
+          resizeMode={full ? "contain" : "cover"}
         />
       );
     }
 
-    // ✅ VIDEO
     if (typeFile?.startsWith("video") && player) {
       return (
         <VideoView
-          style={{
-            width: "100%",
-            height: full ? "60%" : 150,
-            borderRadius: 12,
-          }}
+          style={commonStyle}
           player={player}
+          className={className}
           allowsFullscreen
-          allowsPictureInPicture
           contentFit="contain"
         />
       );
     }
 
-    // ✅ DEFAULT
     return (
-      <View className="p-4 bg-gray-200 rounded-xl">
-        <Button>
-          <ButtonText>{localization.fileContainer.fileNotSupport}</ButtonText>
-        </Button>
+      <View
+        style={[
+          commonStyle,
+          {
+            backgroundColor: "#e5e7eb",
+            justifyContent: "center",
+            alignItems: "center",
+          },
+        ]}
+      >
+        <Text style={{ color: "#6b7280" }}>
+          {localization.fileContainer.fileNotSupport}
+        </Text>
       </View>
     );
   };
 
   return (
-    <View className="w-full">
-      {/* Preview */}
-      <Pressable onPress={toggleModal}>{renderFileContent(false)}</Pressable>
+    <View className="w-full my-2">
+      <Pressable onPress={toggleModal} style={{ position: "relative" }}>
+        {/* Main Content */}
+        {renderFileContent(false)}
+
+        {/* ✅ Status Circle (Bottom-Left Corner) */}
+        <View
+          style={{
+            position: "absolute",
+            bottom: 8,
+            left: 8,
+            width: 16,
+            height: 16,
+            borderRadius: 8,
+            backgroundColor: statusColor,
+            borderWidth: 2,
+            borderColor: "white", // Makes it pop against the image
+            elevation: 5, // Shadow for Android
+            shadowColor: "#000", // Shadow for iOS
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.3,
+            shadowRadius: 2,
+          }}
+        />
+      </Pressable>
 
       {/* Modal */}
       <Modal visible={modalOpen} animationType="fade" transparent>
         <View className="flex-1 bg-black/90 justify-center items-center p-4">
-          {/* Full Content */}
-          <View className="w-full h-full justify-center items-center">
-            {renderFileContent(true)}
-
-            <Button className="mt-4" onPress={toggleModal}>
-              <ButtonText>Close</ButtonText>
-            </Button>
-          </View>
+          {renderFileContent(true)}
+          <Button className="mt-8" onPress={toggleModal}>
+            <ButtonText>Close</ButtonText>
+          </Button>
         </View>
       </Modal>
     </View>

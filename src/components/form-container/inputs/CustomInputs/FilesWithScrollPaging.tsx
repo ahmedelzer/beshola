@@ -84,15 +84,11 @@ function FilesWithScrollPaging({
         buildFileUrl(publicImageURL, item[fileFieldName]),
       ),
       id: item[idField],
+      status :item?.[fileStatuesFieldName]
     };
 
     const isSelected = selectedServerFiles.some((f) => f.id === photo.id);
-    console.log(
-      "rendering file",
-      fileStatuesFieldName,
-      "isSelected:",
-      item[fileStatuesFieldName],
-    );
+    
     return (
       <View className="me-4">
         {/* Card */}
@@ -100,11 +96,13 @@ function FilesWithScrollPaging({
           {/* Image */}
           <View
             className={
-              "h-40 w-full !border-3" +
-              `${!fileStatuesFieldName ? "!border-success" : item[fileStatuesFieldName] ? "!border-success" : "!border-error"}`
+              "h-40 w-full !border-3" 
+              
             }
           >
-            <TypeFile file={photo.file} title={title} type={photo.type} />
+            <TypeFile file={photo.file} title={title} type={photo.type} 
+            haveFileStatuesFieldName={photo.status?true:false} 
+            fileStatuesFieldNameValue={photo.status} />
           </View>
 
           {/* Checkbox Overlay */}

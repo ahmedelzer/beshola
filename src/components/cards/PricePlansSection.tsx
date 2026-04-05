@@ -1,38 +1,28 @@
-import React, { useState } from "react";
-import { TouchableOpacity, Linking, I18nManager, View } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import {
-  Accordion,
-  AccordionItem,
-  AccordionHeader,
-  AccordionTrigger,
-  AccordionContent,
-  AccordionIcon,
-  Box,
-  VStack,
-  HStack,
-  Text,
-  Modal,
-  ModalBackdrop,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  Button,
-  ButtonText,
-  Divider,
-} from "../../../components/ui";
-import { useForm, Controller } from "react-hook-form";
-import { theme } from "../../Theme";
-import { isRTL } from "../../utils/operation/isRTL";
-import PricePlansInput from "./PricePlansInput";
-import PricePlanSchemaActions from "../../Schemas/MenuSchema/PricePlanSchemaActions.json";
-import PricePlanSchema from "../../Schemas/MenuSchema/PricePlanSchema.json";
+import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+import { TouchableOpacity, View } from "react-native";
+import { useSelector } from "react-redux";
 import { buildApiUrl } from "../../../components/hooks/APIsFunctions/BuildApiUrl";
 import useFetchWithoutBaseUrl from "../../../components/hooks/APIsFunctions/UseFetchWithoutBaseUrl";
-import { getField } from "../../utils/operation/getField";
+import {
+  Box,
+  Button,
+  Modal,
+  ModalBackdrop,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  Text,
+  VStack,
+} from "../../../components/ui";
+import PricePlanSchema from "../../Schemas/MenuSchema/PricePlanSchema.json";
+import PricePlanSchemaActions from "../../Schemas/MenuSchema/PricePlanSchemaActions.json";
+import { theme } from "../../Theme";
 import CardPriceDiscount from "../../utils/component/CardPriceDiscount";
-import { useSelector } from "react-redux";
+import { getField } from "../../utils/operation/getField";
+import { isRTL } from "../../utils/operation/isRTL";
+import PricePlansInput from "./PricePlansInput";
 
 const PricePlansSection = ({ item }) => {
   const localization = useSelector((state) => state.localization.localization);
@@ -51,12 +41,12 @@ const PricePlansSection = ({ item }) => {
     });
 
   const query = dataSourceAPI(getAction);
-  const { data: pricePlans } = useFetchWithoutBaseUrl(query);
+  const { data: pricePlans } = useFetchWithoutBaseUrl(openModal ? query : null);
   const { control, watch, setValue } = useForm({
     defaultValues: { selectedPlan: "0" },
   });
   const parameters = PricePlanSchema.dashboardFormSchemaParameters;
-  console.log(pricePlans, "pricePlans");
+
   const pricePlanFieldsType = {
     idField: PricePlanSchema.idField,
     name: getField(parameters, "onlineAssetPricePlanName", false),
@@ -130,6 +120,24 @@ const PricePlansSection = ({ item }) => {
         <ModalBackdrop />
         <ModalContent className="rounded-2xl relative bg-body p-3 max-h-[80vh]">
           {/* ...rest of your modal content */}
+          <ModalBody>
+            <VStack className="space-y-3 mt-1">
+              <PricePlansInput
+                pricePlans={pricePlans?.dataSource || []}
+                fieldsType={pricePlanFieldsType}
+              />
+            </VStack>
+          </ModalBody>
+          <ModalFooter>
+            <Button
+              className="bg-accent rounded-xl px-5"
+              onPress={() => setOpenModal(false)}
+            >
+              {/* <ButtonText>
+                {selectedPlan ? `Selected: ${selectedPlan.name}` : "Close"}
+              </ButtonText> */}
+            </Button>
+          </ModalFooter>
         </ModalContent>
       </Modal>
     </Box>

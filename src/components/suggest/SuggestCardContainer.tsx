@@ -26,10 +26,11 @@ import { RenderSuggestCards } from "./RenderSuggestCards";
 import { useSchemas } from "../../../context/SchemaProvider";
 import { useShopNode } from "../../../context/ShopNodeProvider";
 import { getItemsLoadingCount } from "../../utils/operation/getItemsLoadingCount";
-import FavoriteMenuItemsSchema from "../../Schemas/MenuSchema/FavoriteMenuItemsSchema.json";
+import SuggestCardSchema from "../../Schemas/MenuSchema/SuggestCardSchema.json";
 import { Heading } from "../../../components/ui";
 import { isRTL } from "../../utils/operation/isRTL";
 import { scale } from "react-native-size-matters";
+import { GetFieldsItemTypes } from "../../utils/operation/GetFieldsItemTypes";
 export default function SuggestCardContainer({
   row = {},
   schemaActions,
@@ -43,15 +44,15 @@ imageScale=scale(90),
   const [currentSkip, setCurrentSkip] = useState(1);
   const [newItems, setNewItems] = useState(1);
   const { _wsMessageSuggest, setWSMessageSuggest } = useWS();
-  const { suggestCardState } = useSchemas();
+
   const [suggestState, suggestReducerDispatch] = useReducer(
     reducer,
-    initialState(4000, suggestCardState.schema.idField),
+    initialState(4000, SuggestCardSchema.idField),
   );
   const itemsLoadingCount = useMemo(() => getItemsLoadingCount(), []);
 
   const parameters =
-    suggestCardState.schema?.dashboardFormSchemaParameters ?? [];
+    SuggestCardSchema?.dashboardFormSchemaParameters ?? [];
   const getSuggestAction =
     schemaActions &&
     schemaActions.find(
@@ -67,21 +68,8 @@ imageScale=scale(90),
   const [selectedLocation, setSelectedLocation] = useState(
     reduxSelectedLocation || null,
   );
-  const { selectedNode } = useShopNode();
-  const suggestFieldsType = {
-    imageView: getField(parameters, "menuItemImage"),
-    text: getField(parameters, "menuItemName"),
-    description: getField(parameters, "menuItemDescription"),
-    price: getField(parameters, "price"),
-    isAvailable: getField(parameters, "isAvailable"),
-    discount: getField(parameters, "discount"),
-    priceAfterDiscount: getField(parameters, "priceAfterDiscount"),
-    rewardPoints: getField(parameters, "rewardPoints"),
-    idField: suggestCardState.schema.idField,
-    dataSourceName: suggestCardState.schema.dataSourceName,
-    cardAction: getField(parameters, "cardAction"),
-    isFav: getField(parameters, "isFav"),
-  };
+
+  const suggestFieldsType = GetFieldsItemTypes(SuggestCardSchema);
 
   const {
     rows: suggestRows,
@@ -109,7 +97,7 @@ imageScale=scale(90),
     return buildApiUrl(query, {
       pageIndex: skip + 1,
       pageSize: take,
-      projectRout: suggestCardState.schema.projectProxyRoute,
+      projectRout: SuggestCardSchema?.projectProxyRoute,
       ...row
     });
   };
@@ -117,7 +105,7 @@ imageScale=scale(90),
   useEffect(() => {
     //if (!selectedNode) return;
     setWS_Connected(false);
-  }, [selectedNode, isOnline]);
+  }, [ isOnline]);
   // 🌐 Setup WebSocket connection on mount or WS_Connected change
   useEffect(() => {
     if (WS_Connected) return;
@@ -164,7 +152,7 @@ imageScale=scale(90),
 
   const rowRef = useRef({});
   useEffect(() => {
-    console.log("suggestReducerDispatch");
+   
     if (rowRef.current !== row) {
       rowRef.current = row;
       suggestReducerDispatch({
@@ -179,7 +167,7 @@ imageScale=scale(90),
   ]);
 
   useEffect(() => {
-    console.log("row",row)
+  
     if(!getSuggestAction) return;
     prepareLoad({
       state: suggestState,

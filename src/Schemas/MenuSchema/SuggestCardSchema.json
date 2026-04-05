@@ -1,7 +1,7 @@
 {
   "dashboardFormSchemaID": "270f513b-1788-4c01-879e-4526c990f899",
-  "schemaType": "suggest",
-  "idField": "assetID",
+  "schemaType": "Service",
+  "idField": "onlineAssetID",
   "dashboardFormSchemaInfoDTOView": {
     "dashboardFormSchemaID": "66a8b526-4e63-49b9-ad10-b5112f6646f4",
     "schemaHeader": "Menu Item",
@@ -10,118 +10,161 @@
   },
   "dashboardFormSchemaParameters": [
     {
-      "dashboardFormSchemaParameterID": "b7100c23-a107-4898-afb3-0a4994aa3bd0",
-      "dashboardFormSchemaID": "66a8b526-4e63-49b9-ad10-b5112f6646f4",
-      "isEnable": true,
-      "parameterType": "menuItemName",
-      "parameterField": "menuItemName",
-      "parameterTitel": "Menu Item Name",
-      "parameterLookupTitel": "Menu Item Name",
-      "isIDField": false,
-      "lookupID": null,
-      "lookupReturnField": null,
-      "lookupDisplayField": null,
+      "parameterType": "assetID",
+      "parameterField": "onlineAssetID",
+      "parameterTitel": "Asset ID",
+      "isIDField": true,
       "indexNumber": 1
     },
     {
-      "dashboardFormSchemaParameterID": "86833423-e4b8-44af-9fdf-96cd4aa541dd",
-      "dashboardFormSchemaID": "66a8b526-4e63-49b9-ad10-b5112f6646f4",
-      "isEnable": false,
-      "parameterType": "menuItemImage",
-      "parameterField": "itemImage",
-      "parameterTitel": "Item Image",
-      "parameterLookupTitel": "Item Image",
+      "parameterType": "productID",
+      "parameterField": "productID",
+      "parameterTitel": "Product ID",
       "isIDField": false,
-      "lookupID": null,
-      "lookupReturnField": null,
-      "lookupDisplayField": null,
+      "indexNumber": 2
+    },
+    {
+      "parameterType": "assetSerialNumber",
+      "parameterField": "assetSerialNumber",
+      "parameterTitel": "Serial Number",
+      "isIDField": false,
+      "indexNumber": 3
+    },
+    {
+      "parameterType": "accountName",
+      "parameterField": "accountName",
+      "parameterTitel": "Account Name",
+      "isIDField": false,
+      "indexNumber": 4
+    },
+    {
+      "parameterType": "companyName",
+      "parameterField": "companyName",
+      "parameterTitel": "Company Name",
+      "isIDField": false,
+      "indexNumber": 5
+    },
+    {
+      "parameterType": "companyLogo",
+      "parameterField": "companyLogo",
+      "parameterTitel": "Company Logo",
+      "isIDField": false,
+      "indexNumber": 6
+    },
+    {
+      "parameterType": "isActive",
+      "parameterField": "isActive",
+      "parameterTitel": "Active",
+      "isIDField": false,
+      "indexNumber": 7
+    },
+    {
+      "parameterType": "city",
+      "parameterField": "city",
+      "parameterTitel": "City",
+      "isIDField": false,
+      "indexNumber": 8
+    },
+    {
+      "parameterType": "address",
+      "parameterField": "address",
+      "parameterTitel": "Address",
+      "isIDField": false,
       "indexNumber": 9
     },
     {
-      "dashboardFormSchemaParameterID": "86833423-e4b8-44af-9fdf-96cd4aa541dd",
-      "dashboardFormSchemaID": "66a8b526-4e63-49b9-ad10-b5112f6646f4",
-      "isEnable": false,
-      "parameterType": "price",
-      "parameterField": "price",
-      "parameterTitel": "price",
-      "parameterLookupTitel": "price",
+      "parameterType": "streetName",
+      "parameterField": "streetName",
+      "parameterTitel": "Street Name",
       "isIDField": false,
-      "lookupID": null,
-      "lookupReturnField": null,
-      "lookupDisplayField": null,
-      "indexNumber": 9
+      "indexNumber": 10
     },
     {
-      "dashboardFormSchemaParameterID": "86833423-e4b8-44af-9fdf-96cd4aa541dd",
-      "dashboardFormSchemaID": "66a8b526-4e63-49b9-ad10-b5112f6646f4",
-      "isEnable": false,
-      "parameterType": "discount",
-      "parameterField": "discount",
-      "parameterTitel": "discount",
-      "parameterLookupTitel": "price",
+      "parameterType": "zoneName",
+      "parameterField": "zoneName",
+      "parameterTitel": "Zone",
       "isIDField": false,
-      "lookupID": null,
-      "lookupReturnField": null,
-      "lookupDisplayField": null,
-      "indexNumber": 9
+      "indexNumber": 11
     },
     {
-      "dashboardFormSchemaParameterID": "86833423-e4b8-44af-9fdf-96cd4aa541dd",
-      "dashboardFormSchemaID": "66a8b526-4e63-49b9-ad10-b5112f6646f4",
-      "isEnable": false,
-      "parameterType": "isAvailable",
-      "parameterField": "isAvailable",
-      "parameterTitel": "isAvailable",
-      "parameterLookupTitel": "isAvailable",
+      "parameterType": "buildNumber",
+      "parameterField": "buildNumber",
+      "parameterTitel": "Building Number",
       "isIDField": false,
-      "lookupID": null,
-      "lookupReturnField": null,
-      "lookupDisplayField": null,
-      "indexNumber": 9
+      "indexNumber": 12
     },
     {
-      "dashboardFormSchemaParameterID": "86833423-e4b8-44af-9fdf-96cd4aa541dd",
-      "dashboardFormSchemaID": "66a8b526-4e63-49b9-ad10-b5112f6646f4",
-      "isEnable": false,
-      "parameterType": "cardAction",
-      "parameterField": "quantity",
-      "parameterTitel": "quantity",
-      "parameterLookupTitel": "quantity",
+      "parameterType": "floorNumber",
+      "parameterField": "floorNumber",
+      "parameterTitel": "Floor",
       "isIDField": false,
-      "lookupID": "270f513b-1788-4c01-879e-4526c990f888",
-      "lookupReturnField": "quantity",
-      "lookupDisplayField": "quantity",
-      "indexNumber": 9
+      "indexNumber": 13
     },
     {
-      "dashboardFormSchemaParameterID": "86833423-e4b8-44af-9fdf-96cd4aa541dd",
-      "dashboardFormSchemaID": "66a8b526-4e63-49b9-ad10-b5112f6646f4",
-      "isEnable": false,
-      "parameterType": "priceAfterDiscount",
-      "parameterField": "priceAfterDiscount",
-      "parameterTitel": "priceAfterDiscount",
-      "parameterLookupTitel": null,
+      "parameterType": "partitionNumber",
+      "parameterField": "partitionNumber",
+      "parameterTitel": "Partition",
       "isIDField": false,
-      "lookupID": null,
-      "lookupReturnField": null,
-      "lookupDisplayField": null,
-      "indexNumber": 9
+      "indexNumber": 14
     },
     {
-      "dashboardFormSchemaParameterID": "bbc47b3c-baba-4c80-8a8e-50d9875a15d6",
-      "dashboardFormSchemaID": "270f513b-1788-4c01-879e-4526c990f899",
-      "isEnable": true,
-      "parameterType": "isFav",
-      "parameterField": "isFav",
-      "parameterTitel": "isFav",
+      "parameterType": "flagMark",
+      "parameterField": "flagMark",
+      "parameterTitel": "Landmark",
       "isIDField": false,
-      "lookupID": null,
-      "lookupReturnField": null,
-      "lookupDisplayField": null,
-      "indexNumber": 0
+      "indexNumber": 15
+    },
+    {
+      "parameterType": "locationLatitudePoint",
+      "parameterField": "locationLatitudePoint",
+      "parameterTitel": "Latitude",
+      "isIDField": false,
+      "indexNumber": 16
+    },
+    {
+      "parameterType": "locationLongitudePoint",
+      "parameterField": "locationLongitudePoint",
+      "parameterTitel": "Longitude",
+      "isIDField": false,
+      "indexNumber": 17
+    },
+    {
+      "parameterType": "attributes",
+      "parameterField": "attributes",
+      "parameterTitel": "Attributes",
+      "isIDField": false,
+      "indexNumber": 18
+    },
+    {
+      "parameterType": "serviceName",
+      "parameterField": "serviceName",
+      "parameterTitel": "Service",
+      "isIDField": false,
+      "indexNumber": 19
+    },
+    {
+      "parameterType": "serviceDescription",
+      "parameterField": "serviceDescription",
+      "parameterTitel": "Service Description",
+      "isIDField": false,
+      "indexNumber": 20
+    },
+    {
+      "parameterType": "createdOn",
+      "parameterField": "createdOn",
+      "parameterTitel": "Created On",
+      "isIDField": false,
+      "indexNumber": 21
+    },
+    {
+      "parameterType": "displayFile",
+      "parameterField": "displayFile",
+      "parameterTitel": "displayFile",
+      "isIDField": false,
+      "indexNumber": 21
     }
   ],
-  "projectProxyRoute": "BrandingMartPOS",
+  "projectProxyRoute": "BrandingMartAssets",
   "isMainSchema": true,
   "dataSourceName": "nodeMenuItemID",
   "propertyName": null,

@@ -83,7 +83,7 @@ const ButtonInput = (props) => {
   const [loading, setLoading] = useState(false);
   const [disable, setDisable] = useState(false);
   const [reqError, setReqError] = useState(false);
-  const [row, setRow] = useState({});
+  const [row, setRow] = useState(rowDetails);
   const { control, handleSubmit, formState, setValue } = useForm({
     defaultValues: row,
   });
@@ -124,7 +124,6 @@ const ButtonInput = (props) => {
     buildApiUrl(query, {
       pageIndex: skip + 1,
       pageSize: take,
-      onlineAssetID: "67abea4d-cacf-48c5-92a6-2c628b06799a",
       ...rowDetails,
     });
 
@@ -143,7 +142,7 @@ const ButtonInput = (props) => {
   const onSubmit = async (data) => {
     try {
       await handleSubmitWithCallback({
-        data,
+        data: { ...rowDetails, ...data },
         setDisable,
         action: postAction,
         proxyRoute: postAction?.projectProxyRoute,
@@ -193,11 +192,7 @@ const ButtonInput = (props) => {
           isOpen={isModalVisible}
           onClose={() => setIsModalVisible(false)}
           headerTitle={title}
-          row={{
-            ...row,
-            // startDate: "2025-04-09T00:00:00",
-            // endDate: "2025-04-10T00:00:00",
-          }}
+          row={row}
           control={control}
           schema={schema?.schemaType === "Tree" ? {} : schema}
           onSubmit={handleSubmit(onSubmit)}
@@ -215,6 +210,7 @@ const ButtonInput = (props) => {
             schemaType={schema?.schemaType}
             row={rowDetails}
             schema={schema}
+            rows={state.rows}
             serverSchema={DisplayFilesServerSchema}
             title={title}
             setRow={setRow}

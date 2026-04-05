@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { View, TouchableOpacity, Text, Modal, ScrollView } from "react-native";
+import {
+  View,
+  TouchableOpacity,
+  Text,
+  Modal,
+  ScrollView,
+} from "react-native";
 import ExpandableText from "../../utils/component/ExpandableText";
 import { getDynamicWidth } from "../../utils/operation/getDynamicWidth";
 import { theme } from "../../Theme";
@@ -48,51 +54,11 @@ const AttributeItem = ({ iconID, fullText }) => {
     </View>
   );
 };
-const AttributeCompactItem = ({ iconID, fullText }) => {
-  const [itemWidth, setItemWidth] = useState(0);
-
-  const calculatedLimit = Math.floor(Math.max(0, itemWidth - 24) / 8);
-  const dynamicWidth = getDynamicWidth(fullText, 8.5, 25);
-
-  const iconName = iconMap[iconID] || "circle";
-
-  return (
-    <View
-      className="flex-row"
-      style={{
-        width: dynamicWidth,
-        maxWidth: 240,
-        backgroundColor: addAlpha(theme.accent, 0.3),
-        borderWidth: 1,
-        borderColor: theme.accent,
-        borderRadius: 8,
-        paddingHorizontal: 12,
-        paddingVertical: 6,
-        flexDirection: "row",
-        alignItems: "center",
-        gap: 6,
-      }}
-    >
-      <FontAwesome5 name={iconName} size={14} color={theme.accent} />
-
-      <Text
-        style={{
-          fontSize: 14,
-          color: theme.text,
-          whiteSpace: "nowrap", // safe for web
-        }}
-      >
-        {fullText}
-      </Text>
-    </View>
-  );
-};
 
 const Attributes = ({
   attributes = [],
   isCompact = false,
-  initialLimit = 2,
-  
+  initialLimit = 1,
 }) => {
   const [showModal, setShowModal] = useState(false);
 
@@ -113,33 +79,22 @@ const Attributes = ({
       {/* ================== MAIN VIEW ================== */}
       {isCompact ? (
         <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{
-            alignItems: "center",
-            borderTopWidth: 1,
-            paddingTop: 4,
-            gap: 8,
-          }}
-        >
-          {displayedAttributes.map((attr, index) => {
-            const parts = attr.split("{,}");
-            const iconID = parts[0]?.trim() || "";
-            const fullText = getText(attr);
-
-            return (
-              <View
-                key={`${iconID}-${index}`}
-                style={{ flexDirection: "row", gap: 4 }}
-              >
-                <AttributeCompactItem iconID={iconID} fullText={fullText} />
-                {index < displayedAttributes.length - 1 && (
-                  <Text className="text-accent text-sm">|</Text>
-                )}
-              </View>
-            );
-          })}
-        </ScrollView>
+  horizontal
+  showsHorizontalScrollIndicator={false}
+  contentContainerStyle={{
+    alignItems: "center",
+  }}
+>
+  <Text
+    style={{
+      fontSize: 14,
+      color: theme.text,
+      whiteSpace: "nowrap", // safe for web
+    }}
+  >
+    {displayedAttributes.map(getText).join(" | ")}
+  </Text>
+</ScrollView>
       ) : (
         <View style={{ flexDirection: "column", gap: 8 }}>
           {displayedAttributes.map((attr, index) => {

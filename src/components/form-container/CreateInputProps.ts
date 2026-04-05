@@ -1,5 +1,5 @@
 export function CreateInputProps(param, value) {
-  console.log("param", value, param);
+ 
   let props = {
     fieldName: param.parameterField,
     title: param.parameterTitel,

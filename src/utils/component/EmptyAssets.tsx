@@ -5,8 +5,9 @@ import { theme } from "../../Theme";
 
 const EmptyAssets = ({
   message = "You did not add any assets yet",
-  icon = "inventory-2",
-  size = 64,
+  IconComponent = (
+    <MaterialIcons name={"inventory-2"} size={64} color={theme.text} />
+  ),
   actionComponent, // ✅ injected button/component
 }) => {
   return (
@@ -18,7 +19,7 @@ const EmptyAssets = ({
         gap: 12,
       }}
     >
-      <MaterialIcons name={icon} size={size} color={theme.text} />
+      {IconComponent}
 
       <Text
         style={{

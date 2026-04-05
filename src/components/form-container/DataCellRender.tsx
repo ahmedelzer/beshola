@@ -9,6 +9,7 @@ export default function DataCellRender({
   onChange,
   value,
   control,
+  row,
   ...props
 }) {
   // Determine the key to use for input mapping
@@ -25,6 +26,7 @@ export default function DataCellRender({
       return false;
     return true;
   };
+  
   return (
     <InputDisplay
       props={{
@@ -32,7 +34,7 @@ export default function DataCellRender({
         onChange: onChange,
         control: control,
         showTitle: props.showTitle || displayLabel(),
-        ...props,
+        ...props,row
       }}
       errorResult={errorResult}
       BaseInput={InputComponentClass}

@@ -82,13 +82,12 @@
 //       console.log("lookup1",state.rows?.length)
 //     }
 
-    
 //   }, [state.rows]);
 
 //   const localization = useSelector((state) => state.localization.localization);
-  
+
 //   return (
-    
+
 //     <View key={`${fieldName}-${selectedValue?.[lookupReturnField] || "none"}`}>
 //       <SelectParameter
 //         onValueChange={(selectedItem) => props?.setwatch(selectedItem)}
@@ -152,17 +151,17 @@ function LookupParameter({
 }) {
   const { data: _schemaActions } = useFetch(
     GetSchemaActionsUrl(props?.selectParam?.lookupID || lookupID),
-    defaultProjectProxyRouteWithoutBaseURL
+    defaultProjectProxyRouteWithoutBaseURL,
   );
 
   const getAction =
     _schemaActions?.find(
-      (action) => action.dashboardFormActionMethodType === "Get"
+      (action) => action.dashboardFormActionMethodType === "Get",
     ) || null;
 
   const [state, dispatch] = useReducer(
     reducer,
-    initialState(VIRTUAL_PAGE_SIZE, fieldName)
+    initialState(VIRTUAL_PAGE_SIZE, fieldName),
   );
 
   const cache = useMemo(() => createRowCache(VIRTUAL_PAGE_SIZE), []);
@@ -171,7 +170,7 @@ function LookupParameter({
     buildApiUrl(query, {
       pageIndex: skip + 1,
       pageSize: take,
-      ...props?.rowDetails,
+      ...props?.row,
     });
 
   useEffect(() => {
@@ -183,7 +182,7 @@ function LookupParameter({
       getAction,
       cache,
       updateRows(dispatch, cache, state),
-      dispatch
+      dispatch,
     );
   }, [getAction, dataSourceAPI]);
 
@@ -191,22 +190,20 @@ function LookupParameter({
 
   // Auto-select the first row once rows load
   useEffect(() => {
- 
-  if (state.rows?.length > 0 ) {
-    const firstRow = state.rows[0];
-    setSelectedValue(firstRow);
+    if (state.rows?.length > 0) {
+      const firstRow = state.rows[0];
+      setSelectedValue(firstRow);
 
-    // 🔥 log the value and type of setwatch
+      // 🔥 log the value and type of setwatch
 
-
-    // Call it if it exists
-    props?.setwatch?.(firstRow);
-  }
-}, [state.rows]);
-// useEffect(() => {
-//   console.log("selectedValue",selectedValue)
-//     props?.setwatch?.(selectedValue);
-//   }, [selectedValue]);
+      // Call it if it exists
+      props?.setValue?.(lookupReturnField, firstRow?.[lookupReturnField] || "");
+    }
+  }, [state.rows]);
+  // useEffect(() => {
+  //   console.log("selectedValue",selectedValue)
+  //     props?.setwatch?.(selectedValue);
+  //   }, [selectedValue]);
   const localization = useSelector((state) => state.localization.localization);
 
   return (
@@ -216,12 +213,15 @@ function LookupParameter({
         className="mx-2"
         onValueChange={(selectedKey) => {
           const selected = state.rows.find(
-            (item) => item?.[lookupReturnField] === selectedKey
+            (item) => item?.[lookupReturnField] === selectedKey,
           );
-          
+
           setSelectedValue(selected || null);
-           props?.setwatch?.(selected);
-           // propagate selection
+          props?.setValue?.(
+            lookupReturnField,
+            selected?.[lookupReturnField] || "",
+          );
+          // propagate selection
         }}
       >
         <SelectTrigger
@@ -238,11 +238,7 @@ function LookupParameter({
             }
             className="text-base text-text"
           />
-          <SelectIcon
-            as={AntDesign}
-            name="down"
-            className="mr-3 text-text"
-          />
+          <SelectIcon as={AntDesign} name="down" className="mr-3 text-text" />
         </SelectTrigger>
 
         <SelectPortal>

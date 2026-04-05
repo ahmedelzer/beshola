@@ -21,7 +21,7 @@ function FilesWithButtonPaging({
   getAction,
   deleteAction,
   handleToDelete,
-  fileFieldName,
+  fileFieldName,fileStatuesFieldNameValue
 }) {
   const [modalDeleteIsOpen, setModalDeleteIsOpen] = useState(false);
   const [deleteID, setDeleteID] = useState(false);
@@ -117,6 +117,7 @@ function FilesWithButtonPaging({
       displayFile: buildFileUrl(publicImageURL, row[fileFieldName]),
       fileCodeNumber: row.fileCodeNumber === 0 ? "image" : "video",
       id: row[idField],
+      status:row?.[fileStatuesFieldNameValue]
     })) || [];
 
   return (
@@ -143,7 +144,10 @@ function FilesWithButtonPaging({
               file={item.displayFile}
               title={title}
               type={item.fileCodeNumber}
+               haveFileStatuesFieldName={item.status?true:false} 
+            fileStatuesFieldNameValue={item.status}
             />
+           
           </View>
         )}
       />

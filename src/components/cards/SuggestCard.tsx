@@ -9,7 +9,7 @@ import PricePlansSection from "./PricePlansSection";
 
 export default function SuggestCard({
   item,
-  imageScale = scale(90),
+  imageScale = scale(120),
   fieldsType,
   schemaActions,
 }) {
@@ -27,7 +27,10 @@ export default function SuggestCard({
         />
 
         {/* Attributes */}
-        <View className="absolute bottom-1 w-full p-2">
+        <View
+          className="absolute bottom-1 w-full p-2"
+          style={{ width: imageScale }}
+        >
           <Attributes
             attributes={
               item?.[fieldsType?.attributes] || item?.["attributes"] || []
@@ -36,7 +39,9 @@ export default function SuggestCard({
           />
         </View>
       </View>
-      <PricePlansSection item={item} />
+      <View style={{ width: imageScale }}>
+        <PricePlansSection item={item} />
+      </View>
     </View>
   );
 }

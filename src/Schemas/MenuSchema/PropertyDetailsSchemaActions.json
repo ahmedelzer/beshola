@@ -1,0 +1,11 @@
+[
+  {
+    "dashboardFormSchemaActionID": "554f3948-bae4-4b26-bb47-25bbaa14bc59",
+    "dashboardFormActionMethodType": "Get",
+    "routeAdderss": "Asset/GetOnlineAssetForUser/Field{onlineAssetID}",
+    "body": "",
+    "returnPropertyName": "",
+    "projectProxyRoute": "BrandingMartAssets",
+    "dashboardFormSchemaActionQueryParams": []
+  }
+]

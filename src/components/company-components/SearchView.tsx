@@ -34,7 +34,7 @@ const SearchView = ({}: any) => {
 
   const Content = (
     <>
-      <HStack space="2xl" className="items-center md:my-2 !bg-body py-3 z-50">
+      <HStack space="sm" className="items-center md:my-1 !bg-body py-3 z-50">
         {/* Optional filters */}
         <View style={{ minWidth: 50 }}>
           <TouchableOpacity

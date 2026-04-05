@@ -46,7 +46,7 @@ function FileContainer({ schema, row, title, serverSchema }) {
       (field) => field.parameterType === "image",
     )?.parameterField;
   const fileStatuesFieldName = serverSchema.dashboardFormSchemaParameters.find(
-    (field) => field.parameterType === "imageStatus",
+    (field) => field.parameterType === "fileStatus",
   )?.parameterField;
 
   const schemaWithoutID = schema.dashboardFormSchemaParameters.filter(
@@ -105,9 +105,7 @@ function FileContainer({ schema, row, title, serverSchema }) {
   }
   function addToCustomerServer(postAction, files, route) {
     setSelectPostAction(postAction);
-    console.log("====================================");
-    console.log(postAction, files, route, "handleUpload");
-    console.log("====================================");
+ 
     if (files.length > 0) {
       const mapped = files.map((file) => ({
         ...file,
@@ -210,6 +208,7 @@ function FileContainer({ schema, row, title, serverSchema }) {
           selectedServerFiles={selectedServerFiles}
           setSelectedServerFiles={setSelectedServerFiles}
           fileFieldName={fileFieldNameScrollPaging}
+          fileStatuesFieldName={fileStatuesFieldName}
         />
       )}
 

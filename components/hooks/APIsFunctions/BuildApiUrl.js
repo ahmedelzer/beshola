@@ -2,6 +2,7 @@ import { GetProjectUrl } from "../../../request";
 import { selectSelectedNode } from "../../../src/reducers/LocationReducer";
 import { store } from "../../../src/store/reduxStore";
 import { clientID } from "../../../request";
+import { mapMessage } from "./MapMessage";
 //import store from "./store";
 
 export function buildApiUrl(
@@ -62,7 +63,7 @@ export function buildApiUrl(
   }
 
   const queryParam = queryParts.join("&");
-  const apiUrl = `${getProjectUrl}/${routeAddress}${
+  const apiUrl = `${getProjectUrl}/${mapMessage(routeAddress, constants)}${
     routeAddress.includes("?") ? "&" : "?"
   }${queryParam}`;
 
