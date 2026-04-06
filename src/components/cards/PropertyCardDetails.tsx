@@ -3,7 +3,7 @@ import {
   FontAwesome6,
   MaterialCommunityIcons,
 } from "@expo/vector-icons";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Dimensions,
   Image,
@@ -24,10 +24,16 @@ import AddressComponent from "./AddressComponent";
 import Attributes from "./Attributes";
 import PricePlansSection from "./PricePlansSection";
 import PropertyCardButtonsActions from "./PropertyCardButtonsActions";
-import DisplayFilesServerSchema from "../../Schemas/MenuSchema/DisplayFilesServerSchema.json";
+import DisplayFilesSchema from "../../Schemas/MenuSchema/DisplayFilesSchema.json";
 import TypeFile from "../form-container/inputs/CustomInputs/TypeFile";
 import { buildFileUrl } from "../../utils/operation/buildFileUrl";
 import { publicImageURL } from "../../../request";
+import logo from "../../../assets/display/logo.jpeg";
+import PolygonMapEmbed from "../maps/DrawSmoothPolygon";
+import AssetsSchemaActions from "../../Schemas/MenuSchema/AssetsSchemaActions.json";
+import SuggestCardContainer from "../suggest/SuggestCardContainer";
+import { useTab } from "../../../context/TabsProvider";
+import CompanyProjectCard from "./CompanyProjectCards";
 
 const { width } = Dimensions.get("window");
 
@@ -54,6 +60,8 @@ const PropertyCardDetails: React.FC<PropertyCardDetailsProps> = ({
     DisplayFilesForAssetSchemaActions.find(
       (action) => action.dashboardFormActionMethodType === "Get",
     );
+  const { activeTab } = useTab();
+
   const dataSourceAPI = (query) =>
     buildApiUrl(query, {
       pageIndex: 1,
@@ -63,7 +71,7 @@ const PropertyCardDetails: React.FC<PropertyCardDetailsProps> = ({
       ...item,
     });
   const fileFieldNameButtonPaging =
-    DisplayFilesServerSchema.dashboardFormSchemaParameters.find(
+    DisplayFilesSchema.dashboardFormSchemaParameters.find(
       (field) => field.parameterType === "image",
     )?.parameterField;
   const query = dataSourceAPI(getAction);
@@ -72,11 +80,18 @@ const PropertyCardDetails: React.FC<PropertyCardDetailsProps> = ({
     ...row,
     displayFile: buildFileUrl(publicImageURL, row[fileFieldNameButtonPaging]),
     fileCodeNumber: row.fileCodeNumber === 0 ? "image" : "video",
-    id: row[DisplayFilesServerSchema.idField],
+    id: row[DisplayFilesSchema.idField],
     status: true,
   }));
 
-  const [selectedImage, setSelectedImage] = useState(displayFiles?.[0]);
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  // 3. Use an effect to set the first item once displayFiles has data
+  useEffect(() => {
+    if (displayFiles && displayFiles.length > 0 && !selectedImage) {
+      setSelectedImage(displayFiles[0]);
+    }
+  }, [displayFiles]);
 
   const imageSize = getResponsiveImageSize(0.3, { min: 80, max: 100 });
   const localization = useSelector(
@@ -85,140 +100,132 @@ const PropertyCardDetails: React.FC<PropertyCardDetailsProps> = ({
   const price = item?.[fieldsType.price];
   const priceAfterDiscount = item?.[fieldsType.priceAfterDiscount];
   const hasDiscount = item?.[fieldsType.discount] > 0;
-  console.log("displayFiles", displayFiles);
+  console.log("====================================");
+  console.log(item, "activeTab item");
+  console.log("====================================");
   return (
     <Box className="flex-1 bg-body">
       <ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
-        {/* Image Gallery */}
-        {displayFiles && selectedImage && (
-          <View className="relative">
-            <Image
-              source={{ uri: selectedImage?.displayFile }}
-              className="w-full h-64 sm:h-96 lg:h-[400px] my-2"
-              resizeMode="cover"
-            />
-            <View className="absolute top-2 !bg-transparent right-2 flex-row space-x-2">
-              <PropertyCardButtonsActions
-                item={item}
-                fieldsType={fieldsType}
-                additionClassName={"!bg-transparent"}
-              />
-            </View>
-          </View>
-        )}
-
-        <HStack className="gap-x-4 flex-row gap-y-5 py-3 items-center justify-center flex-wrap">
-          {displayFiles &&
-            displayFiles?.map((img, idx) => (
-              // <TouchableOpacity
-              // className={`!w-16 !h-16 rounded-md border-2 ${
-              //   selectedImage === img ? "!border-accent" : "border-border"
-              // }`}
-              //   key={idx}
-              //   onPress={() => setSelectedImage(img)}
-              // >
+        {/* ========================================== */}
+        {/* SECTION 2: IMAGE GALLERY (Main + Thumbs)   */}
+        {/* ========================================== */}
+        <Box className="mb-4">
+          {/* Selected Main Image */}
+          <View className="w-full h-64 sm:h-96 lg:h-[400px] bg-body rounded-lg overflow-hidden items-center justify-center">
+            {displayFiles && selectedImage ? (
               <TypeFile
-                file={img.displayFile}
-                type={img.fileCodeNumber}
-                className={`!w-16 !h-16 rounded-md border-2 ${
-                  selectedImage === img ? "!border-accent" : "border-border"
-                }`}
+                file={selectedImage.displayFile}
+                type={selectedImage.fileCodeNumber}
+                className="w-full h-full" // Increased height for main view
                 haveFileStatuesFieldName={false}
               />
-              // </TouchableOpacity>
-            ))}
-        </HStack>
+            ) : (
+              <Image
+                source={logo}
+                className="w-full h-full my-2"
+                resizeMode="cover"
+              />
+            )}
+          </View>
 
-        {/* Main Content */}
+          {/* Horizontal Thumbnail Scroller */}
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{
+              paddingVertical: 12,
+              paddingHorizontal: 16,
+            }}
+            className="flex-row"
+          >
+            {displayFiles?.map((img, idx) => (
+              <TouchableOpacity
+                key={idx}
+                onPress={() => {
+                  console.log("Parent Pressed!");
+                  setSelectedImage(img);
+                }}
+                className={`h-16 w-16 mr-3 rounded-md border-2 overflow-hidden ${
+                  selectedImage === img ? "border-accent" : "border-border"
+                }`}
+              >
+                <View pointerEvents="none" className="h-full w-full">
+                  <TypeFile
+                    file={img.displayFile}
+                    type={img.fileCodeNumber}
+                    className="h-full w-full"
+                    haveFileStatuesFieldName={false}
+                  />
+                </View>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+        </Box>
+
+        {/* ========================================== */}
+        {/* SECTION 3: CONTENT INFO (Commented Out)    */}
+        {/* ========================================== */}
         <Box className="px-4">
           <VStack>
             <View className={isRTL() ? "items-start" : "items-start min-h-28"}>
-              {/* Company Name + Verified */}
-              {/* {fieldsType.companyName && item[fieldsType.companyName] && (
-        <Text
-          numberOfLines={2}
-          key={`${item[fieldsType.idField]}-${fieldsType.companyName}-${
-            item[fieldsType.companyName]
-          }`}
-          className="text-lg font-bold mb-1"
-          style={{ color: theme.secondary, direction: "inherit" }}
-        >
-          {item.verified && (
-            <MaterialCommunityIcons
-              name="check-decagram"
-              size={18}
-              color={theme.accentHover}
-            />
-          )}{" "}
-          {item.companyName}
-        </Text>
-      )} */}
               <AccountInfo fieldsType={fieldsType} item={item} />
+            </View>
 
-              {/* attributes */}
-              {fieldsType.attributes && item?.[fieldsType.attributes] && (
-                <View className="w-full">
-                  <Attributes attributes={item[fieldsType.attributes]} />
-                </View>
-              )}
+            <View className="w-full p-1 rounded-xl">
+              <CompanyProjectCard item={item} />
             </View>
           </VStack>
+        </Box>
 
-          {/* Map & Location */}
-          {item && (
-            <View className="w-full my-4">
-              {fieldsType.address && item[fieldsType.address] && (
-                <AddressComponent
-                  addressText={item[fieldsType.address]}
-                  fieldsType={fieldsType}
-                  item={item}
-                />
-              )}
+        {/* ========================================== */}
+        {/* SECTION 4: MAP & LOCATION (Commented Out)  */}
+        {/* ========================================== */}
+        {fieldsType.address && item[fieldsType.address] && (
+          <View className="w-full mb-4" style={{ height: 400 }}>
+            <PolygonMapEmbed
+              location={{
+                [fieldsType.latitude]: item[fieldsType.latitude],
+                [fieldsType.longitude]: item[fieldsType.longitude],
+              }}
+              fields={fieldsType.parameters}
+              onLocationChange={() => {}}
+              setNewPolygon={() => {}}
+              canClickPolygon={false}
+            />
+          </View>
+        )}
+
+        {/* ========================================== */}
+        {/* SECTION 5: PRICE PLANS                     */}
+        {/* ========================================== */}
+        {/* <View className="w-full items-center justify-center"> */}
+        {fieldsType.price && item[fieldsType.price] && (
+          <PricePlansSection item={item} openingList={true} />
+        )}
+        {/* </View> */}
+        <View
+          className={
+            isRTL()
+              ? "items-start"
+              : "items-start min-h-28" + " border-t pt-1 w-full"
+          }
+        >
+          {fieldsType.attributes && item?.[fieldsType.attributes] && (
+            <View className="w-full">
+              <Attributes attributes={item[fieldsType.attributes]} />
             </View>
           )}
-
-          {/* Currently Viewing + Contact Button */}
-          <HStack className="items-center justify-between mb-4">
-            <HStack className="items-center gap-x-2">
-              <MaterialCommunityIcons
-                name="eye-outline"
-                size={18}
-                color={theme.accent}
-              />
-              <Text className="text-text text-sm">
-                {item?.[fieldsType.onlineAssetViews] || 0}{" "}
-                {localization.menu.viewing || "Viewing"}
-              </Text>
-            </HStack>
-            <TouchableOpacity
-              className="bg-accent p-2 rounded-full"
-              onPress={() => console.log("Contact pressed")}
-            >
-              <AntDesign name="wechat" size={24} color={theme.body} />
-            </TouchableOpacity>
-          </HStack>
-
-          {/* Price Plans */}
-          {/* <PricePlansSection pricePlans={item.pricePlans} /> */}
-          {/* <PricePlansInput pricePlans={item.pricePlans} /> */}
-          <PricePlansSection item={item} />
-        </Box>
+        </View>
       </ScrollView>
 
-      {/* Sticky Footer */}
+      {/* STICKY FOOTER */}
       <View className="flex-row items-center justify-between bg-body py-4 px-4 border-t border-card">
-        {/* {item[fieldsType.price] && (
-          <Text className="text-2xl font-bold text-text">
-            {priceAfterDiscount.toFixed(2)} {localization.menu.currency}
-          </Text>
-        )} */}
-
         <TouchableOpacity
-          className="bg-accent px-4 py-2 rounded-xl flex-row justify-center items-center"
-          onPress={() => console.log("Contact icon pressed")}
+          className="bg-accent px-4 py-3 rounded-xl flex-1 flex-row justify-center items-center"
+          onPress={() => console.log("Booked pressed")}
         >
-          <FontAwesome6 name="sack-dollar" size={24} color={theme.body} />
-          <Text className="text-md text-body ml-1">Booked</Text>
+          <FontAwesome6 name="sack-dollar" size={20} color={theme.body} />
+          <Text className="text-md font-bold text-body ml-2">Book Now</Text>
         </TouchableOpacity>
       </View>
     </Box>

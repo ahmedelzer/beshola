@@ -51,16 +51,7 @@ const Explorepage = () => {
         </Box>
       </ScrollView>
 
-      {/* Floating button always visible */}
-      <Pressable
-        onPress={() => setMapModalVisible(true)}
-        style={styles.floatingButton}
-      >
-        <Text style={styles.floatingButtonText}>
-          {mapModalVisible ? "Close Map" : "Open Map"}
-        </Text>
-      </Pressable>
-
+    
       {/* Centered modal */}
       <Modal
         visible={mapModalVisible}

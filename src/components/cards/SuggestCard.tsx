@@ -40,7 +40,7 @@ export default function SuggestCard({
         </View>
       </View>
       <View style={{ width: imageScale }}>
-        <PricePlansSection item={item} />
+        <PricePlansSection item={item} priceScale={imageScale} />
       </View>
     </View>
   );

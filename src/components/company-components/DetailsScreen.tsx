@@ -24,6 +24,7 @@ import useFetchWithoutBaseUrl from "../../../components/hooks/APIsFunctions/UseF
 import EmptyAssets from "../../utils/component/EmptyAssets";
 import AddAsset from "../addAsset/AddAsset";
 import LoadingScreen from "../../kitchensink-components/loading/LoadingScreen";
+import CompanyProjectCard from "../cards/CompanyProjectCards";
 
 const DetailsScreen = ({ route }) => {
   const [activeTab, setActiveTab] = useState("details"); // details | companyItems
@@ -144,20 +145,20 @@ const DetailsScreen = ({ route }) => {
                   </View>
                 </VStack>
                 <View className="w-full p-1 rounded-xl shadow-sm bg-accent/10">
-                  <CollapsibleSection
+                  {/* <CollapsibleSection
                     title={"Projects"}
                     iconColor={theme.accent}
                     textColor={theme.accent}
                     defaultExpandedSection={true}
                   >
-                    {/* <CompanyCardsFlatList
+                    <CompanyCardsFlatList
                     rows={initCompanyRows}
                     fieldsType={fieldsType}
                     cartState={{ rows: [] }}
                     menuItemsState={menuItemsState}
                     CardComponent={CompanyCardView}
-                  /> */}
-                  </CollapsibleSection>
+                  />
+                  </CollapsibleSection> */}
                 </View>
                 <View className="w-full p-1 mt-2 rounded-xl shadow-sm bg-accent/10">
                   <CollapsibleSection

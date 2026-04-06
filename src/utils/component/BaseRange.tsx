@@ -11,6 +11,7 @@ import { cleanObject } from "../operation/cleanObject";
 import useFetch from "../../../components/hooks/APIsFunctions/useFetch";
 import GetSchemaActionsUrl from "../../../components/hooks/DashboardAPIs/GetSchemaActionsUrl";
 import { defaultProjectProxyRouteWithoutBaseURL } from "../../../request";
+import SchemaTabs from "./SchemaTabs";
 // Import your specific range component
 
 const BaseRange = ({ schema }) => {
@@ -53,8 +54,8 @@ const BaseRange = ({ schema }) => {
 
     const run = async () => {
       const query = buildApiUrl(getAction, {
-         pageIndex: 1,
-         pageSize: 100,
+        pageIndex: 1,
+        pageSize: 100,
         ...rowDetails,
       });
 
@@ -104,29 +105,15 @@ const BaseRange = ({ schema }) => {
 
       {/* 2. Tabs */}
       <View style={{ marginBottom: 15 }}>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          {rangeParams.map((param, index) => (
-            <Pressable
-              key={param.dashboardFormSchemaParameterID}
-              onPress={() => setActiveTab(index)}
-              style={{
-                paddingHorizontal: 15,
-                paddingVertical: 10,
-                borderBottomWidth: activeTab === index ? 3 : 0,
-                borderBottomColor: theme.accentHover,
-              }}
-            >
-              <Text
-                style={{
-                  color: activeTab === index ? theme.accentHover : theme.text,
-                  fontWeight: activeTab === index ? "bold" : "normal",
-                }}
-              >
-                {param.parameterTitel}
-              </Text>
-            </Pressable>
-          ))}
-        </ScrollView>
+        <SchemaTabs
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          fieldsType={{
+            id: "dashboardFormSchemaParameterID",
+            title: "parameterTitel",
+          }}
+          params={rangeParams}
+        />
       </View>
 
       {/* 3. The Slider: Replaced DataCellRender with MiddleRangeParameter */}

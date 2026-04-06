@@ -16,9 +16,7 @@ function TypeFile({
 }) {
   const [modalOpen, setModalOpen] = useState(false);
   const localization = useSelector((state) => state.localization.localization);
-  console.log("====================================");
-  console.log(file, "file");
-  console.log("====================================");
+
   const fileSrc = file;
   const typeFile = type || "";
 
@@ -95,7 +93,7 @@ function TypeFile({
         {renderFileContent(false)}
 
         {/* ✅ Status Circle (Bottom-Left Corner) */}
-        <View
+      {haveFileStatuesFieldName&&  <View
           style={{
             position: "absolute",
             bottom: 8,
@@ -112,7 +110,7 @@ function TypeFile({
             shadowOpacity: 0.3,
             shadowRadius: 2,
           }}
-        />
+        />}
       </Pressable>
 
       {/* Modal */}

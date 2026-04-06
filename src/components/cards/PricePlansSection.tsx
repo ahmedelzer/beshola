@@ -1,4 +1,4 @@
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { TouchableOpacity, View } from "react-native";
@@ -23,10 +23,12 @@ import CardPriceDiscount from "../../utils/component/CardPriceDiscount";
 import { getField } from "../../utils/operation/getField";
 import { isRTL } from "../../utils/operation/isRTL";
 import PricePlansInput from "./PricePlansInput";
+import { scale } from "react-native-size-matters";
+import EmptyAssets from "../../utils/component/EmptyAssets";
 
-const PricePlansSection = ({ item }) => {
+const PricePlansSection = ({ item, openingList = false }) => {
   const localization = useSelector((state) => state.localization.localization);
-  const [openModal, setOpenModal] = useState(false);
+  const [openModal, setOpenModal] = useState(openingList);
   const getAction = PricePlanSchemaActions?.find(
     (action) => action.dashboardFormActionMethodType === "Get",
   );
@@ -41,7 +43,9 @@ const PricePlansSection = ({ item }) => {
     });
 
   const query = dataSourceAPI(getAction);
-  const { data: pricePlans } = useFetchWithoutBaseUrl(openModal ? query : null);
+  const { data: pricePlans, isLoading } = useFetchWithoutBaseUrl(
+    openModal ? query : null,
+  );
   const { control, watch, setValue } = useForm({
     defaultValues: { selectedPlan: "0" },
   });
@@ -74,48 +78,18 @@ const PricePlansSection = ({ item }) => {
   //   )}`;
   //   Linking.openURL(url);
   // };
-
-  return (
-    <Box className="items-center h-[120px]">
-      {" "}
-      {/* Set fixed height here */}
-      <TouchableOpacity
-        className="w-full flex-row items-center justify-between h-[80px] px-5 py-3 rounded-b-xl rounded-t-none shadow-md"
-        style={{ backgroundColor: theme.accent }}
-        onPress={() => setOpenModal(true)}
-      >
-        {/* Centered content */}
-        <View
-          className="flex-1 flex-col items-center justify-center" // Center vertically & horizontally
-        >
-          {/* Main text */}
-          <Text
-            className="font-bold text-md"
-            style={{
-              color: theme.body,
-              textAlign: "center",
-              direction: "inherit",
-            }}
-          >
-            {localization.menu.exploerMore || "Explore more plans"}
-          </Text>
-
-          {/* Put CardPriceDiscount under the text */}
-          <CardPriceDiscount
+  const [boxWidth, setBoxWidth] = useState(0);
+  function RenderPricePlans() {
+    if (openingList)
+      return (
+        <VStack className="space-y-3 w-full">
+          <PricePlansInput
+            pricePlans={pricePlans?.dataSource || []}
             fieldsType={pricePlanFieldsType}
-            item={item}
-            style={{ marginTop: 4 }}
           />
-        </View>
-
-        {/* Arrow on the right */}
-        <MaterialCommunityIcons
-          name={isRTL() ? "chevron-left" : "chevron-right"}
-          size={30}
-          color={theme.body}
-        />
-      </TouchableOpacity>
-      {/* Modal stays the same */}
+        </VStack>
+      );
+    return (
       <Modal isOpen={openModal} onClose={() => setOpenModal(false)}>
         <ModalBackdrop />
         <ModalContent className="rounded-2xl relative bg-body p-3 max-h-[80vh]">
@@ -140,6 +114,60 @@ const PricePlansSection = ({ item }) => {
           </ModalFooter>
         </ModalContent>
       </Modal>
+    );
+  }
+  return (
+    <Box className="items-center h-[120px]">
+      {" "}
+      {/* Set fixed height here */}
+      {!openingList && (
+        <TouchableOpacity
+          className="w-full flex-row items-center justify-between h-[80px] px-5 py-3 rounded-b-xl rounded-t-none shadow-md"
+          style={{ backgroundColor: theme.accent }}
+          onPress={() => setOpenModal(true)}
+          onLayout={(e) => {
+            console.log(e.nativeEvent.layout.width, "box width");
+            setBoxWidth(e.nativeEvent.layout.width);
+          }}
+        >
+          {/* Centered content */}
+          <View
+            className="flex-1 flex-col items-center justify-center" // Center vertically & horizontally
+          >
+            {/* Main text */}
+            <Text
+              className={
+                "font-bold lett " + `${boxWidth < 350 ? "text-xs" : "text-md"}`
+              } // Responsive text size
+              numberOfLines={1}
+              style={{
+                color: theme.body,
+                textAlign: "center",
+                direction: "inherit",
+              }}
+            >
+              {localization.menu.exploerMore || "Explore more plans"}
+            </Text>
+
+            {/* Put CardPriceDiscount under the text */}
+            <CardPriceDiscount
+              fieldsType={pricePlanFieldsType}
+              item={item}
+              boxWidth={boxWidth}
+              style={{ marginTop: 4 }}
+            />
+          </View>
+
+          {/* Arrow on the right */}
+          <MaterialCommunityIcons
+            name={isRTL() ? "chevron-left" : "chevron-right"}
+            size={30}
+            color={theme.body}
+          />
+        </TouchableOpacity>
+      )}
+      {/* Modal stays the same */}
+      <RenderPricePlans />
     </Box>
   );
 };

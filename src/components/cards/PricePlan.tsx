@@ -33,6 +33,10 @@ export default function PricePlan({
   index,
   isSelected = false,
 }: PricePlanProps) {
+  console.log("====================================");
+  console.log(index, isSelected, "index");
+  console.log("====================================");
+  const itemValue = `plan-${index}`;
   return (
     <TouchableOpacity
       key={plan?.[fieldsType?.id] || index}
@@ -49,6 +53,8 @@ export default function PricePlan({
       <Accordion
         type="single"
         collapsable
+        // If isExpanded is true, we set this item's value as the default
+        defaultValue={index === 0 ? itemValue : undefined}
         className={`bg-bg-body rounded-xl shadow-sm ${
           isSelected ? "bg-bg-selected" : ""
         }`}
@@ -98,7 +104,7 @@ export default function PricePlan({
             <PricePlanSummary
               plan={plan} // ✅ fixed
               schemaFieldsTypes={fieldsType}
-              isExpanded={true}
+              isExpanded={index === 0 ? true : false}
             />
           </AccordionContent>
         </AccordionItem>
