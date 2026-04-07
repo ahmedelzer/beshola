@@ -8,41 +8,66 @@ export default function CardPriceDiscount({
   fieldsType,
   colorOfPriceAfterDiscount = theme.body,
   style,
-  priceScale
+  boxWidth,
+  variant = "" // Added variant to bypass width logic
 }) {
   const localization = useSelector((state) => state.localization.localization);
 
-  const price = item?.[fieldsType.totalPrice.parameterField];
-  const downPayment = item?.[fieldsType.downPayment.parameterField];
-  const hasDiscount = item?.[fieldsType.discount.parameterField] > 0;
-  const currencyShortName = item?.[fieldsType.currencyShortName.parameterField];
-  const priceAfterDiscount =
-    price - (price * item?.[fieldsType.discount.parameterField]) / 100;
+  // Safely extract parameters
+  const price = item?.[fieldsType?.totalPrice?.parameterField] || 0;
+  const downPayment = item?.[fieldsType?.downPayment?.parameterField] || 0;
+  const discountPercent = item?.[fieldsType?.discount?.parameterField] || 0;
+  const hasDiscount = discountPercent > 0;
+  const currencyShortName = item?.[fieldsType?.currencyShortName?.parameterField] || "";
+  
+  const priceAfterDiscount = price - (price * discountPercent) / 100;
 
-  // Compose final style
-  const finalStyle = [
-    styles.discountedPrice,
-    { color: colorOfPriceAfterDiscount },
-    style,
-  ];
+  // Determine if we should use small styling
+  const isSmall = variant === "small" ;
 
   return (
-    <View>
-      <View style={styles.container}>
+    <View style={style}>
+      {/* Row 1: Prices */}
+      <View style={[styles.container, { marginTop: isSmall ? 0 : 4 }]}>
         {priceAfterDiscount >= 0 && (
-          <Text style={finalStyle}>
+          <Text 
+            numberOfLines={1}
+            style={[
+              styles.discountedPrice, 
+              { 
+                color: colorOfPriceAfterDiscount,
+                fontSize: isSmall ? 8 : 16 
+              }
+            ]}
+          >
             {priceAfterDiscount.toFixed(2)} {currencyShortName}
           </Text>
         )}
+
         {hasDiscount && (
-          <Text style={styles.originalPrice}>
+          <Text
+            numberOfLines={1}
+            style={[
+              styles.originalPrice,
+              { fontSize: isSmall ? 6 : 14 },
+            ]}
+          >
             {price.toFixed(2)} {currencyShortName}
           </Text>
         )}
       </View>
+
+      {/* Row 2: Down Payment */}
       {downPayment > 0 && (
-        <Text style={styles.downPayment}>
-         {localization.menu.downPayment||"Down Payment"} {downPayment.toFixed(2)} {currencyShortName}
+        <Text
+          numberOfLines={1}
+          ellipsizeMode="tail"
+          style={[
+            styles.downPayment,
+            { fontSize: isSmall ? 5 : 10 },
+          ]}
+        >
+          {localization.menu.downPayment || "Down Payment"}: {downPayment.toFixed(2)} {currencyShortName}
         </Text>
       )}
     </View>
@@ -52,28 +77,25 @@ export default function CardPriceDiscount({
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-    justifyContent: "center",
+    justifyContent: "flex-start", // Changed from center to align with text above
     alignItems: "center",
-    flexWrap: "wrap",
-    marginTop: 8,
   },
   discountedPrice: {
-    fontSize: 16,
     fontWeight: "bold",
-    marginRight: 8, // spacing between prices when discount exists
+    marginRight: 4,
     textAlign: "center",
   },
   originalPrice: {
-    fontSize: 14,
     fontWeight: "bold",
     color: theme.error,
     textDecorationLine: "line-through",
     textAlign: "center",
+    opacity: 0.8,
   },
   downPayment: {
-    fontSize: 10,
     fontWeight: "bold",
     color: theme.accentHover,
     textAlign: "center",
+    marginTop: 1,
   },
 });

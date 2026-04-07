@@ -37,7 +37,7 @@ const CompanyCardsFlatList: React.FC<CompanyCardsFlatListProps> = ({
   CardComponent = CompanyCard, // default fallback
 }) => {
   const { width } = useWindowDimensions();
-  const { recommendedState } = useSchemas();
+
 
   const numColumns = useMemo(() => {
     if (width >= 1280) return 3;

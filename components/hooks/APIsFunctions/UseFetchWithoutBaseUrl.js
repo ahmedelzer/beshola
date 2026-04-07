@@ -29,11 +29,12 @@ const useFetchWithoutBaseUrl = (realurl) => {
       try {
         // ✅ Add interceptor only once globally
         if (!request.interceptors.request.handlers.length) {
+          const headers = await SetHeaders();
           request.interceptors.request.use(
             (config) => {
               config.headers = {
                 ...config.headers,
-                ...SetHeaders(),
+                ...headers,
               };
               return config;
             },

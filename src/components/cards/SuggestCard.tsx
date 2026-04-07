@@ -6,12 +6,15 @@ import { MemoizedImageCard } from "./CompanyCard";
 import Attributes from "./Attributes"; // ✅ ADD THIS
 import PricePlanSummary from "../../kitchensink-components/cart/InvoiceSummary";
 import PricePlansSection from "./PricePlansSection";
+import { addAlpha } from "../../utils/operation/addAlpha";
+import { theme } from "../../Theme";
 
 export default function SuggestCard({
   item,
-  imageScale = scale(120),
+  imageScale = scale(150),
   fieldsType,
   schemaActions,
+  variant="small"
 }) {
   const { userGust } = useAuth();
 
@@ -26,21 +29,27 @@ export default function SuggestCard({
           schemaActions={schemaActions}
         />
 
-        {/* Attributes */}
-        <View
-          className="absolute bottom-1 w-full p-2"
-          style={{ width: imageScale }}
-        >
-          <Attributes
-            attributes={
-              item?.[fieldsType?.attributes] || item?.["attributes"] || []
-            }
-            isCompact={true} // ✅ FIXED
-          />
-        </View>
+      
       </View>
+      <View
+  className="w-full p-2 overflow-hidden" // Added overflow-hidden to clip any stray content
+  style={{ 
+    width: imageScale, 
+    backgroundColor :theme.body,
+    height: 30, // ✅ Fixed height added here
+    justifyContent: 'center' // Centers the attributes vertically within that fixed height
+  }}
+>
+  <Attributes
+    attributes={
+      item?.[fieldsType?.attributes] || item?.["attributes"] || []
+    }
+    isCompact={true}
+    variant="small"
+  />
+</View>
       <View style={{ width: imageScale }}>
-        <PricePlansSection item={item} priceScale={imageScale} />
+        <PricePlansSection item={item} variant={variant} />
       </View>
     </View>
   );

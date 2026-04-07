@@ -1,8 +1,3 @@
-import {
-  AntDesign,
-  FontAwesome6,
-  MaterialCommunityIcons,
-} from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
 import {
   Dimensions,
@@ -11,29 +6,22 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { useSelector } from "react-redux";
+import logo from "../../../assets/display/logo.jpeg";
 import { buildApiUrl } from "../../../components/hooks/APIsFunctions/BuildApiUrl";
 import useFetchWithoutBaseUrl from "../../../components/hooks/APIsFunctions/UseFetchWithoutBaseUrl";
-import { Box, HStack, Text, VStack } from "../../../components/ui";
-import DisplayFilesForAssetSchemaActions from "../../Schemas/MenuSchema/DisplayFilesForAssetSchemaActions.json";
-import { theme } from "../../Theme";
-import { getResponsiveImageSize } from "../../utils/component/getResponsiveImageSize";
-import { isRTL } from "../../utils/operation/isRTL";
-import AccountInfo from "./AccountInfo";
-import AddressComponent from "./AddressComponent";
-import Attributes from "./Attributes";
-import PricePlansSection from "./PricePlansSection";
-import PropertyCardButtonsActions from "./PropertyCardButtonsActions";
-import DisplayFilesSchema from "../../Schemas/MenuSchema/DisplayFilesSchema.json";
-import TypeFile from "../form-container/inputs/CustomInputs/TypeFile";
-import { buildFileUrl } from "../../utils/operation/buildFileUrl";
+import { Box, VStack } from "../../../components/ui";
 import { publicImageURL } from "../../../request";
-import logo from "../../../assets/display/logo.jpeg";
+import DisplayFilesForAssetSchemaActions from "../../Schemas/MenuSchema/DisplayFilesForAssetSchemaActions.json";
+import DisplayFilesSchema from "../../Schemas/MenuSchema/DisplayFilesSchema.json";
+import { buildFileUrl } from "../../utils/operation/buildFileUrl";
+import { isRTL } from "../../utils/operation/isRTL";
+import TypeFile from "../form-container/inputs/CustomInputs/TypeFile";
 import PolygonMapEmbed from "../maps/DrawSmoothPolygon";
-import AssetsSchemaActions from "../../Schemas/MenuSchema/AssetsSchemaActions.json";
-import SuggestCardContainer from "../suggest/SuggestCardContainer";
-import { useTab } from "../../../context/TabsProvider";
+import AccountInfo from "./AccountInfo";
+import Attributes from "./Attributes";
 import CompanyProjectCard from "./CompanyProjectCards";
+import PricePlansSection from "./PricePlansSection";
+import AssetActionButton from "./uiComponent/AssetActionButton";
 
 const { width } = Dimensions.get("window");
 
@@ -42,13 +30,6 @@ interface PropertyCardDetailsProps {
   fieldsType: any;
   schemaActions: any;
 }
-
-const testImages = [
-  "https://www.nawy.com/blog/wp-content/uploads/2022/12/%D8%B9%D9%82%D8%A7%D8%B1%D8%A7%D8%AA-%D9%84%D9%84%D8%A8%D9%8A%D8%B9-%D9%81%D9%8A-%D8%A7%D9%84%D8%B4%D9%8A%D8%AE-%D8%B2%D8%A7%D9%8A%D8%AF.png",
-  "https://www.ecoprops.co.za/images/slide-1.jpg",
-  "https://www.whatsonincannes.com/wp-content/uploads/2017/05/properties2.jpg",
-  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTta0XsQDICRBsKhhCivnBCRkL3KDsfAc66jg&s",
-];
 
 const PropertyCardDetails: React.FC<PropertyCardDetailsProps> = ({
   item,
@@ -60,7 +41,6 @@ const PropertyCardDetails: React.FC<PropertyCardDetailsProps> = ({
     DisplayFilesForAssetSchemaActions.find(
       (action) => action.dashboardFormActionMethodType === "Get",
     );
-  const { activeTab } = useTab();
 
   const dataSourceAPI = (query) =>
     buildApiUrl(query, {
@@ -85,24 +65,20 @@ const PropertyCardDetails: React.FC<PropertyCardDetailsProps> = ({
   }));
 
   const [selectedImage, setSelectedImage] = useState(null);
-
+  console.log("watch", fieldsType.price, item[fieldsType.price]);
   // 3. Use an effect to set the first item once displayFiles has data
   useEffect(() => {
     if (displayFiles && displayFiles.length > 0 && !selectedImage) {
       setSelectedImage(displayFiles[0]);
     }
   }, [displayFiles]);
-
-  const imageSize = getResponsiveImageSize(0.3, { min: 80, max: 100 });
-  const localization = useSelector(
-    (state: any) => state.localization.localization,
-  );
-  const price = item?.[fieldsType.price];
-  const priceAfterDiscount = item?.[fieldsType.priceAfterDiscount];
-  const hasDiscount = item?.[fieldsType.discount] > 0;
-  console.log("====================================");
-  console.log(item, "activeTab item");
-  console.log("====================================");
+  // const ownSchemaWithButtonOnlyParameters = {
+  //   ...RequestSchema,
+  //   dashboardFormSchemaParameters:
+  //     RequestSchema.dashboardFormSchemaParameters.filter(
+  //       (pram) => pram.parameterType === "detailsCell",
+  //     ),
+  // };
   return (
     <Box className="flex-1 bg-body">
       <ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
@@ -199,9 +175,7 @@ const PropertyCardDetails: React.FC<PropertyCardDetailsProps> = ({
         {/* SECTION 5: PRICE PLANS                     */}
         {/* ========================================== */}
         {/* <View className="w-full items-center justify-center"> */}
-        {fieldsType.price && item[fieldsType.price] && (
-          <PricePlansSection item={item} openingList={true} />
-        )}
+
         {/* </View> */}
         <View
           className={
@@ -212,21 +186,26 @@ const PropertyCardDetails: React.FC<PropertyCardDetailsProps> = ({
         >
           {fieldsType.attributes && item?.[fieldsType.attributes] && (
             <View className="w-full">
-              <Attributes attributes={item[fieldsType.attributes]} />
+              <Attributes
+                attributes={item[fieldsType.attributes]}
+                openMode={true}
+              />
             </View>
           )}
+        </View>
+        <View>
+          <PricePlansSection item={item} openingList={true} />
         </View>
       </ScrollView>
 
       {/* STICKY FOOTER */}
-      <View className="flex-row items-center justify-between bg-body py-4 px-4 border-t border-card">
-        <TouchableOpacity
-          className="bg-accent px-4 py-3 rounded-xl flex-1 flex-row justify-center items-center"
-          onPress={() => console.log("Booked pressed")}
-        >
-          <FontAwesome6 name="sack-dollar" size={20} color={theme.body} />
-          <Text className="text-md font-bold text-body ml-2">Book Now</Text>
-        </TouchableOpacity>
+      <View className="flex-row items-center justify-between bg-body py-4 px-4 border-t border-card w-full">
+        <AssetActionButton
+          isRequested={item?.[fieldsType.isRequested]}
+          item={item}
+          styleType="scroll"
+          additionClassName="w-full"
+        />
       </View>
     </Box>
   );

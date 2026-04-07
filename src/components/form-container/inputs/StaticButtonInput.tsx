@@ -31,6 +31,7 @@ const StaticButtonInput = (props) => {
     schema,
     _schemaActions,
     rowDetails = {},
+    additionClassName = "",
   } = props;
   const { control, handleSubmit, formState, watch, setValue } = useForm();
   const { errors } = formState;
@@ -133,7 +134,7 @@ const StaticButtonInput = (props) => {
   };
   const iconName = iconMap[props?.dashboardFormSchemaParameterID] || "circle";
   return (
-    <View>
+    <View className="w-full" style={{ width: "100%" }}>
       {/* ✅ Button */}
       {/* <Button
         title={title}
@@ -145,12 +146,17 @@ const StaticButtonInput = (props) => {
         onPress={() => {
           setIsModalVisible(true);
         }}
-        className="p-2 rounded-xl mb-2 flex-row gap-1 flex-1"
+        className={
+          "p-2 rounded-xl flex-row items-center justify-center gap-1 flex-1 " +
+          additionClassName
+        }
         style={{ backgroundColor: theme.accent }}
       >
         {/* Icon */}
         {withLabel && (
-          <Text className="!text-xs font-semibold text-body">{title}</Text>
+          <Text className="!text-xs font-semibold text-body text-center items-center">
+            {title}
+          </Text>
         )}
         <FontAwesome5 name={iconName} size={14} color={theme.body} />
       </TouchableOpacity>

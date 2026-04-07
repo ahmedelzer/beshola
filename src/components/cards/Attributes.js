@@ -5,64 +5,69 @@ import {
   Text,
   Modal,
   ScrollView,
+  StyleSheet,
 } from "react-native";
 import ExpandableText from "../../utils/component/ExpandableText";
 import { getDynamicWidth } from "../../utils/operation/getDynamicWidth";
 import { theme } from "../../Theme";
 import { addAlpha } from "../../utils/operation/addAlpha";
-
 import { FontAwesome5 } from "@expo/vector-icons";
 import { iconMap } from "../../utils/operation/getIconWithID";
 
-const AttributeItem = ({ iconID, fullText }) => {
+// ================== SUB-COMPONENT: ATTRIBUTE PILL ==================
+const AttributeItem = ({ iconID, fullText, variant }) => {
   const [itemWidth, setItemWidth] = useState(0);
+  const isSmall = variant === "small";
 
-  const calculatedLimit = Math.floor(Math.max(0, itemWidth - 24) / 8);
-  const dynamicWidth = getDynamicWidth(fullText, 8.5, 25);
-
+  // Dynamic sizing based on variant
+  const calculatedLimit = Math.floor(Math.max(0, itemWidth - (isSmall ? 16 : 24)) / 8);
+  const dynamicWidth = getDynamicWidth(fullText, isSmall ? 7 : 8.5, isSmall ? 15 : 25);
   const iconName = iconMap[iconID] || "circle";
 
   return (
     <View
       onLayout={(e) => setItemWidth(e.nativeEvent.layout.width)}
-      style={{ flexDirection: "row" }}
+      style={{ flexDirection: "row", marginBottom: isSmall ? 4 : 8 }}
     >
-      <TouchableOpacity
-        activeOpacity={0.8}
+      <View
         style={{
           width: dynamicWidth,
-          maxWidth: 240,
-          backgroundColor: addAlpha(theme.accent, 0.3),
+          maxWidth: isSmall ? 180 : 240,
+          backgroundColor: addAlpha(theme.accent, 0.2),
           borderWidth: 1,
           borderColor: theme.accent,
-          borderRadius: 8,
-          paddingHorizontal: 12,
-          paddingVertical: 6,
+          borderRadius: isSmall ? 6 : 8,
+          paddingHorizontal: isSmall ? 8 : 12,
+          paddingVertical: isSmall ? 4 : 6,
           flexDirection: "row",
           alignItems: "center",
-          gap: 6,
+          gap: isSmall ? 4 : 6,
         }}
       >
-        <FontAwesome5 name={iconName} size={14} color={theme.accent} />
-
+        <FontAwesome5 name={iconName} size={isSmall ? 10 : 14} color={theme.accent} />
         <ExpandableText
           text={fullText}
-          initLimit={(calculatedLimit > 0 ? calculatedLimit : 35) - 5}
-          className="text-text text-sm font-medium"
+          initLimit={(calculatedLimit > 0 ? calculatedLimit : (isSmall ? 20 : 35)) - 5}
+          className={`text-text font-medium ${isSmall ? "text-[10px]" : "text-sm"}`}
         />
-      </TouchableOpacity>
+      </View>
     </View>
   );
 };
 
+// ================== MAIN COMPONENT ==================
 const Attributes = ({
-  attributes = [],
+  Attributes = [],
   isCompact = false,
-  initialLimit = 1,
+  initialLimit = 2,
+  openMode = false, // If true, shows full list immediately (like openingList)
+  variant = "",     // "small" for compact card displays
 }) => {
   const [showModal, setShowModal] = useState(false);
-
-  if (!attributes.length) return null;
+console.log("watch attributes",attributes)
+  if (!attributes || attributes.length === 0) return <Text>
+    {"No attributes"}
+  </Text>;
 
   const displayedAttributes = attributes.slice(0, initialLimit);
   const hasMore = attributes.length > initialLimit;
@@ -74,67 +79,47 @@ const Attributes = ({
     return value || label;
   };
 
+  const getIcon = (attr) => attr.split("{,}")[0]?.trim() || "";
+
+  // Helper to render the vertical list used in Modal and openMode
+  const RenderVerticalList = ({ items }) => (
+    <View style={{ flexDirection: "column" }}>
+      {items.map((attr, index) => (
+        <AttributeItem
+          key={index}
+          iconID={getIcon(attr)}
+          fullText={getText(attr)}
+          variant={variant}
+        />
+      ))}
+    </View>
+  );
+
+  // If openMode is true, render the full list directly (no interaction needed)
+  if (openMode) {
+    return <RenderVerticalList items={attributes} />;
+  }
+
   return (
     <View style={{ width: "100%" }}>
-      {/* ================== MAIN VIEW ================== */}
-      {isCompact ? (
-        <ScrollView
-  horizontal
-  showsHorizontalScrollIndicator={false}
-  contentContainerStyle={{
-    alignItems: "center",
-  }}
->
-  <Text
-    style={{
-      fontSize: 14,
-      color: theme.text,
-      whiteSpace: "nowrap", // safe for web
-    }}
-  >
-    {displayedAttributes.map(getText).join(" | ")}
-  </Text>
-</ScrollView>
-      ) : (
-        <View style={{ flexDirection: "column", gap: 8 }}>
-          {displayedAttributes.map((attr, index) => {
-            const parts = attr.split("{,}");
-            const iconID = parts[0]?.trim() || "";
-            const fullText = getText(attr);
-
-            return (
-              <AttributeItem
-                key={`${iconID}-${index}`}
-                iconID={iconID}
-                fullText={fullText}
-              />
-            );
-          })}
-        </View>
-      )}
-
-      {/* ================== SHOW MORE BUTTON ================== */}
-      {hasMore && (
-        <TouchableOpacity
-          style={{
-            marginTop: 4,
-            paddingVertical: 4,
-            alignSelf: "flex-start",
-          }}
-          onPress={() => setShowModal(true)}
-        >
-          <Text
-            style={{
-              color: theme.accent,
-              fontSize: 14,
-              fontWeight: "bold",
-              textDecorationLine: "underline",
-            }}
+      {/* ================== MAIN VIEW / TRIGGER ================== */}
+      <TouchableOpacity 
+        activeOpacity={0.7} 
+        onPress={() => setShowModal(true)}
+      >
+        {isCompact ? (
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            pointerEvents="none" // Allows touch to pass through to TouchableOpacity
+            contentContainerStyle={{ alignItems: "center", paddingVertical: 4 }}
           >
-            Show {attributes.length - initialLimit} more attributes...
-          </Text>
-        </TouchableOpacity>
-      )}
+          <RenderVerticalList items={displayedAttributes} />
+          </ScrollView>
+        ) : (
+          <RenderVerticalList items={displayedAttributes} />
+        )}
+      </TouchableOpacity>
 
       {/* ================== MODAL ================== */}
       <Modal
@@ -143,72 +128,23 @@ const Attributes = ({
         animationType="fade"
         onRequestClose={() => setShowModal(false)}
       >
-        {/* Overlay */}
         <TouchableOpacity
           activeOpacity={1}
           onPress={() => setShowModal(false)}
-          style={{
-            flex: 1,
-            backgroundColor: "rgba(0,0,0,0.5)",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
+          style={styles.modalOverlay}
         >
-          {/* Prevent closing when clicking inside */}
-          <TouchableOpacity
-            activeOpacity={1}
-            style={{
-              width: "90%",
-              maxHeight: "70%",
-              backgroundColor: theme.body,
-              borderRadius: 12,
-              padding: 16,
-            }}
-          >
-            {/* Header */}
-            <Text
-              style={{
-                fontSize: 16,
-                fontWeight: "bold",
-                marginBottom: 10,
-              }}
-            >
-              All Attributes
-            </Text>
-
-            {/* List */}
-            <ScrollView>
-              <View style={{ flexDirection: "column", gap: 8 }}>
-                {attributes.map((attr, index) => {
-                  const parts = attr.split("{,}");
-                  const iconID = parts[0]?.trim() || "";
-                  const fullText = getText(attr);
-
-                  return (
-                    <AttributeItem
-                      key={`${iconID}-${index}`}
-                      iconID={iconID}
-                      fullText={fullText}
-                    />
-                  );
-                })}
-              </View>
+          <TouchableOpacity activeOpacity={1} style={styles.modalContent}>
+            <Text style={styles.modalHeader}>All Attributes</Text>
+            
+            <ScrollView showsVerticalScrollIndicator={false} style={{ marginVertical: 10 }}>
+              <RenderVerticalList items={attributes} />
             </ScrollView>
 
-            {/* Close Button */}
             <TouchableOpacity
               onPress={() => setShowModal(false)}
-              style={{
-                marginTop: 12,
-                padding: 10,
-                backgroundColor: theme.accent,
-                borderRadius: 8,
-                alignItems: "center",
-              }}
+              style={styles.closeButton}
             >
-              <Text style={{ color: theme.body, fontWeight: "bold" }}>
-                Close
-              </Text>
+              <Text style={styles.closeButtonText}>Close</Text>
             </TouchableOpacity>
           </TouchableOpacity>
         </TouchableOpacity>
@@ -217,64 +153,37 @@ const Attributes = ({
   );
 };
 
+const styles = StyleSheet.create({
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.5)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modalContent: {
+    width: "85%",
+    maxHeight: "70%",
+    backgroundColor: theme.body,
+    borderRadius: 16,
+    padding: 20,
+  },
+  modalHeader: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: theme.text,
+    marginBottom: 10,
+  },
+  closeButton: {
+    marginTop: 10,
+    padding: 12,
+    backgroundColor: theme.accent,
+    borderRadius: 10,
+    alignItems: "center",
+  },
+  closeButtonText: {
+    color: theme.body,
+    fontWeight: "bold",
+  },
+});
+
 export default Attributes;
-
-// const Attributes = ({ attributes = [] }) => {
-//   if (!attributes.length) return null;
-
-//   // Set the limit of items to show initially (e.g., 4)
-//   const initialLimit = 300;
-//   const displayedAttributes = attributes.slice(0, initialLimit);
-//   const hasMore = attributes.length > initialLimit;
-
-//   return (
-//     <View style={{ flexDirection: "column", gap: 8, width: "100%" }}>
-//       {displayedAttributes.map((attr, index) => {
-//         const parts = attr.split("{,}");
-
-//         const iconID = parts[0]?.trim() || "";
-//         const label = parts[1]?.trim() || "";
-//         const value = parts[2]?.trim() || "";
-
-//         const fullText = value ? `${value}` : label;
-
-//         return (
-//           <AttributeItem
-//             key={`${iconID}-${index}`}
-//             iconID={iconID}
-//             label={label}
-//             value={value}
-//             fullText={fullText}
-//           />
-//         );
-//       })}
-
-//       {/* Footer "Show More" Button */}
-//       {hasMore && (
-//         <TouchableOpacity
-//           style={{
-//             marginTop: 4,
-//             paddingVertical: 4,
-//             alignSelf: "flex-start",
-//           }}
-//           onPress={() => {
-//             console.log("Show all attributes pressed");
-//           }}
-//         >
-//           <Text
-//             style={{
-//               color: theme.accent,
-//               fontSize: 14,
-//               fontWeight: "bold",
-//               textDecorationLine: "underline",
-//             }}
-//           >
-//             Show {attributes.length - initialLimit} more attributes...
-//           </Text>
-//         </TouchableOpacity>
-//       )}
-//     </View>
-//   );
-// };
-
-// export default Attributes;

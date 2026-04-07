@@ -76,7 +76,7 @@ const BaseRange = ({ schema }) => {
   }, [getAction, rowDetails]);
   useEffect(() => {
     // Clean object is optional if you want to remove empty/undefined values
-
+console.log("watch",watch)
     setRowDetails(() => watch);
     // setRootRow({ ...rootRow, ...cleanedValues });
   }, [watch]);

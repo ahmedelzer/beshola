@@ -68,7 +68,7 @@ export const PreparingApp: React.FC<{ children: ReactNode }> = ({
   const { selectedNode, setSelectedNode } = useShopNode();
   const [isPrepared, setIsPrepared] = useState({
     setNode: false,
-    setWorkingHours: false,
+    setWorkingHours: true,
   });
   const { userGust, user } = useAuth();
   // WebSocket state

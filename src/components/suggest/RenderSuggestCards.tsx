@@ -12,7 +12,8 @@ export function RenderSuggestCards({
   items,
   schemaActions,
   suggestFieldsType,
-  imageScale = scale(90),
+  imageScale = scale(150),
+  variant="small"
 }) {
   const chunkArray = (arr, size) => {
     return Array.from({ length: Math.ceil(arr.length / size) }, (_, i) =>
@@ -33,6 +34,7 @@ export function RenderSuggestCards({
               fieldsType={suggestFieldsType}
               item={item}
               imageScale={imageScale} // ✅ Add this
+              variant={variant}
             />
           ))}
         </>
@@ -71,7 +73,8 @@ export function RenderSuggestCards({
                     item={item}
                     fieldsType={suggestFieldsType}
                     schemaActions={schemaActions}
-                    imageScale={imageScale} // ✅ Make sure it is here too
+                    imageScale={imageScale}
+                    variant={variant} // ✅ Make sure it is here too
                   />
                 </View>
               ))}

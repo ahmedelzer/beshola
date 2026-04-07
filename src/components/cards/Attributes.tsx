@@ -1,19 +1,24 @@
 import React, { useState } from "react";
-import { View, TouchableOpacity, Text, Modal, ScrollView } from "react-native";
+import {
+  View,
+  TouchableOpacity,
+  Text,
+  Modal,
+  ScrollView,
+  StyleSheet,
+} from "react-native";
+import { useSelector } from "react-redux";
 import ExpandableText from "../../utils/component/ExpandableText";
 import { getDynamicWidth } from "../../utils/operation/getDynamicWidth";
 import { theme } from "../../Theme";
 import { addAlpha } from "../../utils/operation/addAlpha";
-
 import { FontAwesome5 } from "@expo/vector-icons";
 import { iconMap } from "../../utils/operation/getIconWithID";
 
-const AttributeItem = ({ iconID, fullText }) => {
+const AttributeItem = ({ iconID, fullText,variant }) => {
   const [itemWidth, setItemWidth] = useState(0);
-
   const calculatedLimit = Math.floor(Math.max(0, itemWidth - 24) / 8);
   const dynamicWidth = getDynamicWidth(fullText, 8.5, 25);
-
   const iconName = iconMap[iconID] || "circle";
 
   return (
@@ -21,12 +26,11 @@ const AttributeItem = ({ iconID, fullText }) => {
       onLayout={(e) => setItemWidth(e.nativeEvent.layout.width)}
       style={{ flexDirection: "row" }}
     >
-      <TouchableOpacity
-        activeOpacity={0.8}
+      <View
         style={{
           width: dynamicWidth,
           maxWidth: 240,
-          backgroundColor: addAlpha(theme.accent, 0.3),
+          backgroundColor: addAlpha(theme.accent, 0.2),
           borderWidth: 1,
           borderColor: theme.accent,
           borderRadius: 8,
@@ -37,53 +41,14 @@ const AttributeItem = ({ iconID, fullText }) => {
           gap: 6,
         }}
       >
-        <FontAwesome5 name={iconName} size={14} color={theme.accent} />
-
+        <FontAwesome5 name={iconName} size={variant === "small" ? 8 : 14} color={theme.accent} />
         <ExpandableText
+        fontSize={variant === "small" ? 8 : 14}
           text={fullText}
           initLimit={(calculatedLimit > 0 ? calculatedLimit : 35) - 5}
-          className="text-text text-sm font-medium"
+          className="text-text  "
         />
-      </TouchableOpacity>
-    </View>
-  );
-};
-const AttributeCompactItem = ({ iconID, fullText }) => {
-  const [itemWidth, setItemWidth] = useState(0);
-
-  const calculatedLimit = Math.floor(Math.max(0, itemWidth - 24) / 8);
-  const dynamicWidth = getDynamicWidth(fullText, 8.5, 25);
-
-  const iconName = iconMap[iconID] || "circle";
-
-  return (
-    <View
-      className="flex-row"
-      style={{
-        width: dynamicWidth,
-        maxWidth: 240,
-        backgroundColor: addAlpha(theme.accent, 0.3),
-        borderWidth: 1,
-        borderColor: theme.accent,
-        borderRadius: 8,
-        paddingHorizontal: 12,
-        paddingVertical: 6,
-        flexDirection: "row",
-        alignItems: "center",
-        gap: 6,
-      }}
-    >
-      <FontAwesome5 name={iconName} size={14} color={theme.accent} />
-
-      <Text
-        style={{
-          fontSize: 14,
-          color: theme.text,
-          whiteSpace: "nowrap", // safe for web
-        }}
-      >
-        {fullText}
-      </Text>
+      </View>
     </View>
   );
 };
@@ -92,94 +57,77 @@ const Attributes = ({
   attributes = [],
   isCompact = false,
   initialLimit = 2,
-  
+  openMode = false, // Set to true if you want to display the full list immediately
+  variant = ""
 }) => {
   const [showModal, setShowModal] = useState(false);
+  const localization = useSelector((state) => state.localization.localization);
 
-  if (!attributes.length) return null;
+ if (!attributes || attributes.length === 0) {
+  return (
+    <Text 
+      style={{
+        textAlign: "center", // Correct property for centering text
+        fontSize: 12,
+        width: '100%',      // Ensures it takes up the full width to center properly
+        marginVertical: 10   // Optional: adds some breathing room
+      }}
+    >
+      No attributes
+    </Text>
+  );
+}
 
   const displayedAttributes = attributes.slice(0, initialLimit);
   const hasMore = attributes.length > initialLimit;
 
   const getText = (attr) => {
     const parts = attr.split("{,}");
-    const label = parts[1]?.trim() || "";
-    const value = parts[2]?.trim() || "";
-    return value || label;
+    return parts[2]?.trim() || parts[1]?.trim() || "";
   };
+
+  // Logic to render the list (used in both normal view and Modal)
+  const RenderList = ({ items }) => (
+    <View style={{ flexDirection: "column", gap: 8 }}>
+      {items.map((attr, index) => {
+        const parts = attr.split("{,}");
+        return (
+          <AttributeItem
+            key={index}
+            iconID={parts[0]?.trim() || ""}
+            fullText={getText(attr)}
+            variant={variant}
+          />
+        );
+      })}
+    </View>
+  );
+
+  // If openMode is active, we just show the full list and skip the modal logic
+  if (openMode) {
+    return <RenderList items={attributes} />;
+  }
 
   return (
     <View style={{ width: "100%" }}>
-      {/* ================== MAIN VIEW ================== */}
-      {isCompact ? (
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{
-            alignItems: "center",
-            borderTopWidth: 1,
-            paddingTop: 4,
-            gap: 8,
-          }}
-        >
-          {displayedAttributes.map((attr, index) => {
-            const parts = attr.split("{,}");
-            const iconID = parts[0]?.trim() || "";
-            const fullText = getText(attr);
-
-            return (
-              <View
-                key={`${iconID}-${index}`}
-                style={{ flexDirection: "row", gap: 4 }}
-              >
-                <AttributeCompactItem iconID={iconID} fullText={fullText} />
-                {index < displayedAttributes.length - 1 && (
-                  <Text className="text-accent text-sm">|</Text>
-                )}
-              </View>
-            );
-          })}
-        </ScrollView>
-      ) : (
-        <View style={{ flexDirection: "column", gap: 8 }}>
-          {displayedAttributes.map((attr, index) => {
-            const parts = attr.split("{,}");
-            const iconID = parts[0]?.trim() || "";
-            const fullText = getText(attr);
-
-            return (
-              <AttributeItem
-                key={`${iconID}-${index}`}
-                iconID={iconID}
-                fullText={fullText}
-              />
-            );
-          })}
-        </View>
-      )}
-
-      {/* ================== SHOW MORE BUTTON ================== */}
-      {hasMore && (
-        <TouchableOpacity
-          style={{
-            marginTop: 4,
-            paddingVertical: 4,
-            alignSelf: "flex-start",
-          }}
-          onPress={() => setShowModal(true)}
-        >
-          <Text
-            style={{
-              color: theme.accent,
-              fontSize: 14,
-              fontWeight: "bold",
-              textDecorationLine: "underline",
-            }}
+      {/* ================== TRIGGER VIEW ================== */}
+      <TouchableOpacity 
+        activeOpacity={0.7} 
+        onPress={() => setShowModal(true)}
+      >
+        {isCompact ? (
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            scrollEnabled={false} // Click opens modal instead of scrolling preview
+            contentContainerStyle={{ alignItems: "center", gap: 4 }}
           >
-            Show {attributes.length - initialLimit} more attributes...
-          </Text>
-        </TouchableOpacity>
-      )}
+            <RenderList items={displayedAttributes} />
+          </ScrollView>
+        ) : (
+          <RenderList items={displayedAttributes} />
+        )}
+      </TouchableOpacity>
 
       {/* ================== MODAL ================== */}
       <Modal
@@ -188,71 +136,29 @@ const Attributes = ({
         animationType="fade"
         onRequestClose={() => setShowModal(false)}
       >
-        {/* Overlay */}
         <TouchableOpacity
           activeOpacity={1}
           onPress={() => setShowModal(false)}
-          style={{
-            flex: 1,
-            backgroundColor: "rgba(0,0,0,0.5)",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
+          style={styles.modalOverlay}
         >
-          {/* Prevent closing when clicking inside */}
           <TouchableOpacity
             activeOpacity={1}
-            style={{
-              width: "90%",
-              maxHeight: "70%",
-              backgroundColor: theme.body,
-              borderRadius: 12,
-              padding: 16,
-            }}
+            style={styles.modalContent}
           >
-            {/* Header */}
-            <Text
-              style={{
-                fontSize: 16,
-                fontWeight: "bold",
-                marginBottom: 10,
-              }}
-            >
-              All Attributes
+            <Text style={styles.modalHeader}>
+               {localization?.menu?.allAttributes || "All Attributes"}
             </Text>
 
-            {/* List */}
-            <ScrollView>
-              <View style={{ flexDirection: "column", gap: 8 }}>
-                {attributes.map((attr, index) => {
-                  const parts = attr.split("{,}");
-                  const iconID = parts[0]?.trim() || "";
-                  const fullText = getText(attr);
-
-                  return (
-                    <AttributeItem
-                      key={`${iconID}-${index}`}
-                      iconID={iconID}
-                      fullText={fullText}
-                    />
-                  );
-                })}
-              </View>
+            <ScrollView showsVerticalScrollIndicator={false}>
+              <RenderList items={attributes} />
             </ScrollView>
 
-            {/* Close Button */}
             <TouchableOpacity
               onPress={() => setShowModal(false)}
-              style={{
-                marginTop: 12,
-                padding: 10,
-                backgroundColor: theme.accent,
-                borderRadius: 8,
-                alignItems: "center",
-              }}
+              style={styles.closeButton}
             >
-              <Text style={{ color: theme.body, fontWeight: "bold" }}>
-                Close
+              <Text style={styles.closeButtonText}>
+                {localization?.common?.close || "Close"}
               </Text>
             </TouchableOpacity>
           </TouchableOpacity>
@@ -262,64 +168,37 @@ const Attributes = ({
   );
 };
 
+const styles = StyleSheet.create({
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.5)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modalContent: {
+    width: "90%",
+    maxHeight: "70%",
+    backgroundColor: theme.body,
+    borderRadius: 12,
+    padding: 16,
+  },
+  modalHeader: {
+    fontSize: 16,
+    fontWeight: "bold",
+    marginBottom: 10,
+    color: theme.text
+  },
+  closeButton: {
+    marginTop: 12,
+    padding: 12,
+    backgroundColor: theme.accent,
+    borderRadius: 8,
+    alignItems: "center",
+  },
+  closeButtonText: {
+    color: theme.body,
+    fontWeight: "bold"
+  }
+});
+
 export default Attributes;
-
-// const Attributes = ({ attributes = [] }) => {
-//   if (!attributes.length) return null;
-
-//   // Set the limit of items to show initially (e.g., 4)
-//   const initialLimit = 300;
-//   const displayedAttributes = attributes.slice(0, initialLimit);
-//   const hasMore = attributes.length > initialLimit;
-
-//   return (
-//     <View style={{ flexDirection: "column", gap: 8, width: "100%" }}>
-//       {displayedAttributes.map((attr, index) => {
-//         const parts = attr.split("{,}");
-
-//         const iconID = parts[0]?.trim() || "";
-//         const label = parts[1]?.trim() || "";
-//         const value = parts[2]?.trim() || "";
-
-//         const fullText = value ? `${value}` : label;
-
-//         return (
-//           <AttributeItem
-//             key={`${iconID}-${index}`}
-//             iconID={iconID}
-//             label={label}
-//             value={value}
-//             fullText={fullText}
-//           />
-//         );
-//       })}
-
-//       {/* Footer "Show More" Button */}
-//       {hasMore && (
-//         <TouchableOpacity
-//           style={{
-//             marginTop: 4,
-//             paddingVertical: 4,
-//             alignSelf: "flex-start",
-//           }}
-//           onPress={() => {
-//             console.log("Show all attributes pressed");
-//           }}
-//         >
-//           <Text
-//             style={{
-//               color: theme.accent,
-//               fontSize: 14,
-//               fontWeight: "bold",
-//               textDecorationLine: "underline",
-//             }}
-//           >
-//             Show {attributes.length - initialLimit} more attributes...
-//           </Text>
-//         </TouchableOpacity>
-//       )}
-//     </View>
-//   );
-// };
-
-// export default Attributes;

@@ -35,8 +35,9 @@ export default function SuggestCardContainer({
   row = {},
   schemaActions,
   suggestContainerType = 1,
-imageScale=scale(90),
+imageScale=scale(120),
   header = "",
+  variant="small"
 }) {
 
   const { status, isOnline } = useNetwork();
@@ -200,6 +201,7 @@ imageScale=scale(90),
           suggestContainerType={suggestContainerType}
           suggestFieldsType={suggestFieldsType}
           imageScale={imageScale}
+          variant={variant}
         />
         {suggestLoading && (
           <>

@@ -17,8 +17,7 @@ export default function PropertyCardButtonsActions({
   item: any;
   fieldsType: any;
 }) {
-  const { compareItems, setCompareItems, handleCompareToggle } =
-    useContext(CompareContext);
+  const { compareItems, handleCompareToggle } = useContext(CompareContext);
 
   const itemId = item?.[fieldsType.idField];
 
@@ -30,18 +29,10 @@ export default function PropertyCardButtonsActions({
   const handleShare = async () => {
     try {
       const url = `${DOMAIN_NAME}/property/${itemId}`;
-
       await Share.share(
         Platform.OS === "web"
-          ? {
-              title: "Check this property",
-              text: "Check this property",
-              url,
-            }
-          : {
-              message: `Check this property:\n${url}`,
-              url,
-            },
+          ? { title: "Check this property", text: "Check this property", url }
+          : { message: `Check this property:\n${url}`, url },
       );
     } catch (error) {
       console.error("Share error:", error);
@@ -54,6 +45,15 @@ export default function PropertyCardButtonsActions({
     ${additionClassName}
   `;
 
+  // Standard shadow style object to keep code DRY
+  const shadowStyle = (color: string) => ({
+    shadowColor: color,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+    elevation: 4, // Necessary for Android shadow color to work
+  });
+
   return (
     <View
       className={containerClassName}
@@ -65,31 +65,37 @@ export default function PropertyCardButtonsActions({
     >
       {/* ================= COMPARE BUTTON ================= */}
       <TouchableOpacity
-        onPress={() => {
-          handleCompareToggle(item, fieldsType);
-        }}
-        className="px-3 py-1 flex-row justify-center items-center rounded-full shadow"
-        style={{
-          backgroundColor: isCompareItem ? addAlpha(theme.accent,.15) 
-          : addAlpha(theme.surface,.15) ,
-          borderWidth: 1,
-          borderColor: isCompareItem ? theme.accent : theme.surface,
-        }}
+        onPress={() => handleCompareToggle(item, fieldsType)}
+        className="px-3 py-1 flex-row justify-center items-center rounded-full"
+        style={[
+          {
+            backgroundColor: isCompareItem 
+              ? addAlpha(theme.accent, 0.15) 
+              : addAlpha(theme.surface, 0.15),
+            borderWidth: 1,
+            borderColor: isCompareItem ? theme.accent : theme.surface,
+          },
+          shadowStyle(isCompareItem ? theme.accent : "#000")
+        ]}
       >
         <Text
           className="text-[10px] font-semibold"
-          style={{
-            color: isCompareItem ? theme.body : theme.body,
-          }}
+          style={{ color: theme.body }}
         >
-          +Compare
+          {isCompareItem ? "Compared" : "+Compare"}
         </Text>
       </TouchableOpacity>
 
       {/* ================= SHARE ================= */}
       <TouchableOpacity
-        className="p-2 rounded-full shadow"
-        style={{ backgroundColor: addAlpha(theme.body,.15)}}
+        className="p-2 rounded-full"
+        style={[
+          { backgroundColor: addAlpha(theme.body, 0.15),
+            borderWidth: 1,
+            borderColor: theme.surface,
+           },
+          shadowStyle("#000")
+        ]}
         onPress={handleShare}
       >
         <Feather name="share-2" size={16} color={theme.body} />
@@ -97,10 +103,17 @@ export default function PropertyCardButtonsActions({
 
       {/* ================= FAVORITE ================= */}
       <TouchableOpacity
-        className="p-2 rounded-full shadow"
-        style={{ backgroundColor: addAlpha(theme.body,.15) }}
+        className="p-2 rounded-full"
+        style={[
+          { backgroundColor: addAlpha(theme.body, 0.15) ,
+
+            borderWidth: 1,
+            borderColor: theme.surface,
+          },
+          shadowStyle("#000")
+        ]}
       >
-        <Feather name="heart" size={16} color={theme.body} />
+        <Feather name="star" size={16} color={theme.body} />
       </TouchableOpacity>
     </View>
   );

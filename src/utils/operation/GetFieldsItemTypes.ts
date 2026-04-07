@@ -27,6 +27,7 @@ export function GetFieldsItemTypes(schema) {
     assetSerialNumber: getField(parameters, "assetSerialNumber"),
     city: getField(parameters, "city"),
     address: getField(parameters, "address"),
+    area: getField(parameters, "areaName"),
     streetName: getField(parameters, "streetName"),
     idField: schema.idField,
     dataSourceName: schema.dataSourceName,

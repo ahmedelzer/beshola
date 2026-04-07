@@ -8,7 +8,7 @@ import { useSchemas } from "../../../context/SchemaProvider";
 import { Text } from "react-native";
 import { theme } from "../../Theme";
 import PropertyCardButtonsActions from "../cards/PropertyCardButtonsActions";
-import CompanyInfo from "./CompanyInfo";
+import CompanyInfo from "../cards/uiComponent/CompanyInfo";
 import CompanyCardsFlatList from "./CompanyCardsVirtualized";
 import CompanyCardView from "./CompanyCardView";
 import { Heading, VStack } from "../../../components/ui";
@@ -21,17 +21,20 @@ import { useSearch } from "../../../context/SearchProvider";
 import PropertyDetailsSchemaActions from "../../Schemas/MenuSchema/PropertyDetailsSchemaActions.json";
 import { buildApiUrl } from "../../../components/hooks/APIsFunctions/BuildApiUrl";
 import useFetchWithoutBaseUrl from "../../../components/hooks/APIsFunctions/UseFetchWithoutBaseUrl";
-import EmptyAssets from "../../utils/component/EmptyAssets";
+import EmptyMessage from "../../utils/component/EmptyMessage";
 import AddAsset from "../addAsset/AddAsset";
 import LoadingScreen from "../../kitchensink-components/loading/LoadingScreen";
 import CompanyProjectCard from "../cards/CompanyProjectCards";
+import { GetIconContact } from "../../utils/component/GetIconContact";
+import DetailsTabs from "../cards/uiComponent/DetailsTabs";
+import CompanyDetailsInfo from "../cards/CompanyDetailsInfo";
 
 const DetailsScreen = ({ route }) => {
   const [activeTab, setActiveTab] = useState("details"); // details | companyItems
 
   const localization = useSelector((state) => state.localization.localization);
-  const fieldsType = useSelector((state) => state.menuItem.fieldsType);
-
+  const fieldsType = useSelector((state: any) => state.menuItem.fieldsType);
+  console.log("watch", fieldsType);
   const { state } = useSearch();
   const getAction =
     PropertyDetailsSchemaActions &&
@@ -58,7 +61,7 @@ const DetailsScreen = ({ route }) => {
   const schemaActions = menuItemsState.actions;
   if (!isLoading && !item) {
     return (
-      <EmptyAssets
+      <EmptyMessage
         message={localization.Hum_screens.ownAsset.noAsset}
         IconComponent={
           <MaterialIcons name={"error-outline"} size={64} color={theme.text} />
@@ -77,54 +80,7 @@ const DetailsScreen = ({ route }) => {
         />
 
         {/* ----------- TOP TABS ----------- */}
-        <View className="flex-row px-4 pt-4">
-          {/* COMPANY ITEMS TAB */}
-          <TouchableOpacity
-            onPress={() => setActiveTab("companyItems")}
-            className={`flex-1 pb-2 items-center ${
-              activeTab === "companyItems"
-                ? "!border-accent"
-                : "!border-transparent"
-            }`}
-            style={{
-              borderBottomWidth: 3,
-              borderBottomColor:
-                activeTab === "companyItems" ? theme.accent : "transparent",
-            }}
-          >
-            <Text
-              style={{
-                fontSize: 16,
-                fontWeight: activeTab === "companyItems" ? "bold" : "normal",
-                color: theme.text,
-              }}
-            >
-              {"Company Information"}
-            </Text>
-          </TouchableOpacity>
-          {/* DETAILS TAB */}
-          <TouchableOpacity
-            onPress={() => setActiveTab("details")}
-            className={`flex-1 pb-2 items-center ${
-              activeTab === "details" ? "!border-accent" : "!border-transparent"
-            }`}
-            style={{
-              borderBottomWidth: 3,
-              borderBottomColor:
-                activeTab === "details" ? theme.accent : "transparent",
-            }}
-          >
-            <Text
-              style={{
-                fontSize: 16,
-                fontWeight: activeTab === "details" ? "bold" : "normal",
-                color: theme.text,
-              }}
-            >
-              {"Details"}
-            </Text>
-          </TouchableOpacity>
-        </View>
+        <DetailsTabs activeTab={activeTab} setActiveTab={setActiveTab} />
 
         {/* ----------- TAB CONTENT ----------- */}
         <View>{isLoading && <LoadingScreen />}</View>
@@ -137,39 +93,7 @@ const DetailsScreen = ({ route }) => {
                 schemaActions={schemaActions}
               />
             ) : (
-              <View>
-                <VStack>
-                  <View className={isRTL() ? "items-start" : "items-start"}>
-                    {/* Company Name + Verified */}
-                    <CompanyInfo fieldsType={fieldsType} item={item} />
-                  </View>
-                </VStack>
-                <View className="w-full p-1 rounded-xl shadow-sm bg-accent/10">
-                  {/* <CollapsibleSection
-                    title={"Projects"}
-                    iconColor={theme.accent}
-                    textColor={theme.accent}
-                    defaultExpandedSection={true}
-                  >
-                    <CompanyCardsFlatList
-                    rows={initCompanyRows}
-                    fieldsType={fieldsType}
-                    cartState={{ rows: [] }}
-                    menuItemsState={menuItemsState}
-                    CardComponent={CompanyCardView}
-                  />
-                  </CollapsibleSection> */}
-                </View>
-                <View className="w-full p-1 mt-2 rounded-xl shadow-sm bg-accent/10">
-                  <CollapsibleSection
-                    title={"Information && Reviews"}
-                    iconColor={theme.accent}
-                    textColor={theme.accent}
-                  >
-                    <CompanyInfo fieldsType={fieldsType} item={item} />
-                  </CollapsibleSection>
-                </View>
-              </View>
+              <CompanyDetailsInfo item={item} fieldsType={fieldsType} />
             )}
           </View>
         )}

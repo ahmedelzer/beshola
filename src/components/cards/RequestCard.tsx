@@ -235,6 +235,7 @@ import { GetFieldsItemTypes } from "../../utils/operation/GetFieldsItemTypes";
 import StaticButtonInput from "../form-container/inputs/StaticButtonInput";
 import RequestSchemaActions from "../../Schemas/MenuSchema/RequsetTimeSchemaActions.json";
 import RequsetTimeSchema from "../../Schemas/MenuSchema/RequsetTimeSchema.json";
+import RequestActionsButtons from "./uiComponent/RequestActionsButtons";
 
 interface RequestCardProps {
   itemPackage: any;
@@ -356,46 +357,7 @@ const RequestCard: React.FC<RequestCardProps> = ({
                 />
               )}
             </View>
-            <HStack
-              alignItems="center"
-              justifyContent="center"
-              style={{
-                width: "100%",
-                gap: 12, // 🔥 spacing between items (in px)
-              }}
-            >
-              <TouchableOpacity
-                style={{
-                  backgroundColor: theme.accent,
-                  padding: 8,
-                  borderRadius: 999,
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <AntDesign name="wechat" size={22} color={theme.body} />
-              </TouchableOpacity>
-
-              {ownSchemaWithButtonOnlyParameters.dashboardFormSchemaParameters
-                .filter(
-                  (column: any) =>
-                    !column.isIDField &&
-                    column.isEnable &&
-                    !column.parameterType.startsWith("hidden"),
-                )
-                .map((param: any) => (
-                  <View key={param.parameterField} style={{ flexShrink: 1 }}>
-                    <StaticButtonInput
-                      withLabel={true}
-                      fieldName={param.parameterField}
-                      schema={RequsetTimeSchema}
-                      rowDetails={item}
-                      _schemaActions={RequestSchemaActions}
-                      {...CreateInputProps(param, {})}
-                    />
-                  </View>
-                ))}
-            </HStack>
+            <RequestActionsButtons item={item} styleType="scroll" />
           </View>
         </View>
       </Card>

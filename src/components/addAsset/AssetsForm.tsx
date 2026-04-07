@@ -13,7 +13,7 @@ import AddAssetsSchemaActions from "../../Schemas/MenuSchema/AddAssetsSchemaActi
 import AddAsset from "./AddAsset";
 import { buildApiUrl } from "../../../components/hooks/APIsFunctions/BuildApiUrl";
 import { MaterialIcons } from "@expo/vector-icons";
-import EmptyAssets from "../../utils/component/EmptyAssets";
+import EmptyMessage from "../../utils/component/EmptyMessage";
 
 const AssetsForm = () => {
   const { menuItemsState } = useSchemas();
@@ -42,7 +42,7 @@ const AssetsForm = () => {
   });
   if (!loading && rows.length === 0) {
     return (
-      <EmptyAssets
+      <EmptyMessage
         message={localization.Hum_screens.ownAsset.noAsset}
         actionComponent={<AddAsset />}
       />

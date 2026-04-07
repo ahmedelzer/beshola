@@ -16,27 +16,31 @@ const ExpandableText = ({
   initLimit = 100,
   className = "",
   expandClass = "text-md text-accentHover font-bold",
+  fontSize = 14
 }: {
   text: string;
   initLimit?: number;
   className?: string;
   expandClass?: string;
+  fontSize?: number;
 }) => {
   const [isOpen, setOpen] = useState(false);
 
   const openModal = () => setOpen(true);
   const closeModal = () => setOpen(false);
 
+  // Apply fontSize to the short version
   if (text.length <= initLimit)
-    return <Text className={className}>{text}</Text>;
+    return <Text style={{ fontSize }} className={className}>{text}</Text>;
 
   return (
     <View>
-      <Text className={className} numberOfLines={1}>
+      <Text style={{ fontSize }} className={className} numberOfLines={1}>
         {text.substring(0, initLimit)}
         <Text
           onPress={openModal}
-          style={{ textDecorationLine: "underline" }} // Added the underline here
+          // Combined the underline with the dynamic fontSize
+          style={{ textDecorationLine: "underline", fontSize }} 
           className={expandClass}
         >
           ...#
@@ -50,7 +54,8 @@ const ExpandableText = ({
             <Text className="text-lg font-bold">Details</Text>
           </ModalHeader>
           <ModalBody>
-            <Text className="text-base">{text}</Text>
+            {/* Applied fontSize to the full text inside the modal as well */}
+            <Text style={{ fontSize }} className="text-base">{text}</Text>
           </ModalBody>
           <ModalFooter>
             <Button onPress={closeModal}>

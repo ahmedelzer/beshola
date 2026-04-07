@@ -31,6 +31,8 @@ import AddressComponent from "./AddressComponent";
 import { addAlpha } from "../../utils/operation/addAlpha";
 import { onApply } from "../form-container/OnApply";
 import AccountInfo from "./AccountInfo";
+import AddReqButton from "./uiComponent/AddReqButton";
+import AssetActionButton from "./uiComponent/AssetActionButton";
 
 interface CompanyCardProps {
   itemPackage: any;
@@ -172,37 +174,10 @@ const CompanyCard: React.FC<CompanyCardProps> = ({
               style={{ width: "15%" }}
               className="items-center justify-center"
             >
-              <TouchableOpacity
-                className="p-2 rounded-full items-center justify-center"
-                style={{ backgroundColor: theme.accent }}
-                onPress={async () => {
-                  if (item?.[fieldsType.isRequested]) return;
-                  const postAction = {
-                    projectProxyRoute: "BrandingMartAssets",
-                    dashboardFormSchemaActionID:
-                      "46ac8869-4745-41c8-8839-d02dfe9999f0",
-                    dashboardFormActionMethodType: "Post",
-                    routeAdderss: "Asset/CustomerNewOnlineAssetRequest",
-                    body: "",
-                    returnPropertyName: "",
-                    dashboardFormSchemaActionQueryParams: [],
-                  };
-                  const apply = await onApply(
-                    item,
-                    "",
-                    true,
-                    postAction,
-                    postAction.projectProxyRoute,
-                  );
-                  console.log("apply", apply);
-                }}
-              >
-                <AntDesign
-                  name={item?.[fieldsType.isRequested] ? "checkcircle" : "form"}
-                  size={22}
-                  color={theme.body}
-                />
-              </TouchableOpacity>
+              <AssetActionButton
+                isRequested={item?.[fieldsType.isRequested]}
+                item={item}
+              />
             </View>
           </View>
         </View>

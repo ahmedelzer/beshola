@@ -6,6 +6,7 @@ import { useTab } from "../../../context/TabsProvider";
 import SchemaTabs from "../../utils/component/SchemaTabs";
 import { usePreloadList } from "../Pagination/usePreloadList";
 import { buildApiUrl } from "../../../components/hooks/APIsFunctions/BuildApiUrl";
+import { scale } from "react-native-size-matters";
 const testSchemaGetAction = {
   projectProxyRoute: "BrandingMartAssets",
   dashboardFormSchemaActionID: "46ac8869-4745-41c8-8839-d02dfe9999f0",
@@ -83,14 +84,12 @@ const testSchema = {
   ],
 };
 export default function CompanyProjectCard({ item }) {
-  const { activeTab } = useTab();
   const [activeAreaTab, setActiveAreaTab] = useState(0);
   const addAssetDataSourceAPI = (query, skip, take) => {
     return buildApiUrl(query, {
       pageIndex: skip + 1,
       pageSize: take,
       ...item,
-      ...activeTab,
     });
   };
 
@@ -113,12 +112,15 @@ export default function CompanyProjectCard({ item }) {
         params={rows}
       />
       <SuggestCardContainer
+      imageScale={scale(150)}
+      variant=""
         schemaActions={AssetsSchemaActions}
-        row={{
-          ...item,
-          ...activeTab,
-          ...{ areaIDs: [rows?.[activeAreaTab]?.testSchema?.idField] },
-        }}
+       row={{
+  ...item,
+  ...(rows?.[activeAreaTab]?.testSchema?.idField && {
+    areaIDs: [rows[activeAreaTab].testSchema.idField],
+  }),
+}}
         suggestContainerType={0}
       />
     </View>

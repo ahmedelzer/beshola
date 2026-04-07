@@ -80,6 +80,13 @@
       "indexNumber": 10
     },
     {
+      "parameterType": "areaName",
+      "parameterField": "areaName",
+      "parameterTitel": "Zone",
+      "isIDField": false,
+      "indexNumber": 11
+    },
+     {
       "parameterType": "zoneName",
       "parameterField": "zoneName",
       "parameterTitel": "Zone",

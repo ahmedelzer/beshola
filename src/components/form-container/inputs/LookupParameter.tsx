@@ -196,6 +196,7 @@ function LookupParameter({
 
       // 🔥 log the value and type of setwatch
 
+props?.setwatch?.(lookupReturnField, firstRow?.[lookupReturnField] || "");
       // Call it if it exists
       props?.setValue?.(lookupReturnField, firstRow?.[lookupReturnField] || "");
     }
