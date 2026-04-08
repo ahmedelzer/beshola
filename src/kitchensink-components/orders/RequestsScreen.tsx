@@ -50,21 +50,8 @@ export default function RequestsScreen({}) {
 
   const [reqError, setReqError] = useState(null);
   const [disable, setDisable] = useState(null);
-  const [row, setRow] = useState(null);
+  const [row, setRow] = useState({});
   const [col, setCol] = useState({});
-  const getAction =
-    orderState.actions &&
-    orderState.actions.find(
-      (action) => action.dashboardFormActionMethodType === "Get",
-    );
-  const dataSourceAPI = (query, skip, take) => {
-    return buildApiUrl(query, {
-      pageIndex: skip + 1,
-      pageSize: take,
-
-      ...row,
-    });
-  };
   const {
     rows,
     totalCount,
@@ -73,8 +60,10 @@ export default function RequestsScreen({}) {
     // dispatch: reducerDispatch,
   } = usePreloadList({
     idField: orderState.schema?.idField,
-    getAction: getAction,
-    dataSourceAPI: dataSourceAPI,
+    schemaActions: orderState.actions,
+    row: {
+      ...row,
+    },
     deps: [],
   });
   // const [state, reducerDispatch] = useReducer(

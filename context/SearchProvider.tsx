@@ -32,6 +32,7 @@ import AssetsSchemaActions from "../src/Schemas/MenuSchema/AssetsSchemaActions.j
 
 import { useShopNode } from "./ShopNodeProvider";
 import { useTab } from "./TabsProvider";
+import { useManageRealtimeDataWithWS } from "../src/utils/WS/useManageRealtimeDataWithWS";
 
 export const SearchContext = createContext(null);
 
@@ -121,64 +122,15 @@ export const SearchProvider = ({ children }) => {
 
     return () => controller.abort();
   }, [menuItemRow, currentSkip]);
-
-  /**
-   * Reset websocket when node changes
-   */
-  useEffect(() => {
-    setWS_Connected(false);
-  }, [selectedNode]);
-
-  /**
-   * Setup websocket
-   */
-  useEffect(() => {
-    if (WS_Connected) return;
-
-    let cleanup;
-
-    ConnectToWS(
-      setWSMessageMenuItem,
-      setWS_Connected,
-      fieldsType.dataSourceName,
-    )
-      .then(() => console.log("🔌 WebSocket connected"))
-      .catch(() => {});
-
-    return () => {
-      if (cleanup) cleanup();
-    };
-  }, [WS_Connected]);
-
-  /**
-   * Websocket update rows
-   */
-  const callbackReducerUpdate = async (ws_updatedRows) => {
-    await reducerDispatch({
-      type: "WS_OPE_ROW",
-      payload: {
-        rows: ws_updatedRows.rows,
-        totalCount: ws_updatedRows.totalCount,
-      },
-    });
-  };
-
-  /**
-   * Handle websocket message
-   */
-  useEffect(() => {
-    if (!_wsMessageMenuItem) return;
-
-    const handler = new WSMessageHandler({
-      _WSsetMessage: _wsMessageMenuItem,
-      fieldsType,
-      rows,
-      totalCount,
-      callbackReducerUpdate,
-    });
-
-    handler.process();
-  }, [_wsMessageMenuItem]);
+  useManageRealtimeDataWithWS({
+    wsMessage: _wsMessageMenuItem,
+    setWSMessage: setWSMessageMenuItem,
+    fieldsType,
+    rows,
+    totalCount,
+    reducerDispatch,
+    deps: [selectedNode],
+  });
 
   /**
    * Detect filter change

@@ -1,27 +1,13 @@
-import React, { useEffect, useMemo, useReducer, useState } from "react";
-import { Button, View, Text, TouchableOpacity } from "react-native";
+import React, { useEffect, useState } from "react";
+import { Text, TouchableOpacity, View } from "react-native";
 
-import useFetch from "../../../../components/hooks/APIsFunctions/useFetch";
-import GetSchemaActionsUrl from "../../../../components/hooks/DashboardAPIs/GetSchemaActionsUrl";
-import GetSchemaUrl from "../../../../components/hooks/DashboardAPIs/GetSchemaUrl";
-import { defaultProjectProxyRouteWithoutBaseURL } from "../../../../request";
-
-import reducer from "../../Pagination/reducer";
-import { initialState, VIRTUAL_PAGE_SIZE } from "../../Pagination/initialState";
-import { createRowCache } from "../../Pagination/createRowCache";
-import { buildApiUrl } from "../../../../components/hooks/APIsFunctions/BuildApiUrl";
-import LoadData from "../../../../components/hooks/APIsFunctions/LoadData";
-import { updateRows } from "../../Pagination/updateRows";
-import PopupModal from "../../../utils/component/PopupModal";
-import { set, useForm } from "react-hook-form";
-import { handleSubmitWithCallback } from "../../../utils/operation/handleSubmitWithCallback";
-import { addAlpha } from "../../../utils/operation/addAlpha";
 import { FontAwesome5 } from "@expo/vector-icons";
+import { useForm } from "react-hook-form";
 import { theme } from "../../../Theme";
+import PopupModal from "../../../utils/component/PopupModal";
 import { iconMap } from "../../../utils/operation/getIconWithID";
-import FileContainer from "./CustomInputs/FileContainer";
-import DisplayFilesServerSchema from "./../../../Schemas/MenuSchema/DisplayFilesServerSchema.json";
-import { cleanObject } from "../../../utils/operation/cleanObject";
+import { handleSubmitWithCallback } from "../../../utils/operation/handleSubmitWithCallback";
+import { usePreloadList } from "../../Pagination/usePreloadList";
 const StaticButtonInput = (props) => {
   const {
     title = "Open",
@@ -42,47 +28,26 @@ const StaticButtonInput = (props) => {
   const [dependenceRow, setDependenceRow] = useState({});
   const [disable, setDisable] = useState(false);
   const [reqError, setReqError] = useState(false);
-  const [currentSkip, setCurrentSkip] = useState(0);
-
-  const getAction =
-    _schemaActions?.find(
-      (action) => action.dashboardFormActionMethodType === "Get",
-    ) || null;
   const postAction =
     _schemaActions?.find(
       (action) => action.dashboardFormActionMethodType === "Post",
     ) || null;
-
-  // ✅ Pagination state
-  const [state, dispatch] = useReducer(
-    reducer,
-    initialState(VIRTUAL_PAGE_SIZE, fieldName),
-  );
-
-  const cache = useMemo(() => createRowCache(VIRTUAL_PAGE_SIZE), []);
-
-  // ✅ API builder
-  const dataSourceAPI = (query, skip, take) =>
-    buildApiUrl(query, {
-      pageIndex: skip + 1,
-      pageSize: take,
-      ...rootRow,
-      ...dependenceRow,
-    });
-
-  // ✅ Load data
-  useEffect(() => {
-    if (!getAction) return;
-
-    LoadData(
-      state,
-      dataSourceAPI,
-      getAction,
-      cache,
-      updateRows(dispatch, cache, state),
-      dispatch,
-    );
-  }, [getAction, currentSkip]);
+  const {
+    rows,
+    totalCount,
+    handleScroll,
+    // dispatch: reducerDispatch,
+    state,
+    dispatch,
+    setCurrentSkip,
+  } = usePreloadList({
+    idField: fieldName,
+    schemaActions: isModalVisible ? _schemaActions || [] : [],
+    row: {
+      ...rowDetails,
+    },
+    deps: [rowDetails, isModalVisible],
+  });
   useEffect(() => {
     // if (rootRow[fieldName]) {
     dispatch({

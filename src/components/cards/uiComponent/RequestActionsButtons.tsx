@@ -13,7 +13,7 @@ import StaticButtonInput from "../../form-container/inputs/StaticButtonInput";
 import { CreateInputProps } from "../../form-container/CreateInputProps";
 import RequestSchema from "../../../Schemas/MenuSchema/RequestSchema.json";
 import RequsetTimeSchema from "../../../Schemas/MenuSchema/RequsetTimeSchema.json";
-import RequestSchemaActions from "../../../Schemas/MenuSchema/RequestSchemaActions.json";
+import RequsetTimeSchemaActions from "../../../Schemas/MenuSchema/RequsetTimeSchemaActions.json";
 import { HStack } from "../../../../components/ui";
 import { theme } from "../../../Theme";
 import { AntDesign, Entypo } from "@expo/vector-icons";
@@ -79,7 +79,7 @@ export default function RequestActionsButtons({
             fieldName={param.parameterField}
             schema={RequsetTimeSchema}
             rowDetails={item}
-            _schemaActions={RequestSchemaActions}
+            _schemaActions={RequsetTimeSchemaActions}
             {...CreateInputProps(param, {})}
           />
         </View>

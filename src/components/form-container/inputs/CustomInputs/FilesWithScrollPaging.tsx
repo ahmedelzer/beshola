@@ -1,30 +1,26 @@
-import React, { useEffect, useReducer, useState, useCallback } from "react";
-import { View, FlatList, Pressable } from "react-native";
+import React, { useEffect, useState } from "react";
+import { FlatList, Pressable, View } from "react-native";
 import { Circle } from "react-native-animated-spinkit";
 
 import { publicImageURL } from "../../../../../request";
 
-import TypeFile from "./TypeFile";
+import { MaterialIcons } from "@expo/vector-icons";
+import { useForm } from "react-hook-form";
+import { Platform, Text } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
+import { useSelector } from "react-redux";
 import {
   Checkbox,
   CheckboxIcon,
   CheckboxIndicator,
   CheckIcon,
 } from "../../../../../components/ui";
-import { buildApiUrl } from "../../../../../components/hooks/APIsFunctions/BuildApiUrl";
-import LoadData from "../../../../../components/hooks/APIsFunctions/LoadData";
-import { usePreloadList } from "../../../Pagination/usePreloadList";
-import { MaterialIcons } from "@expo/vector-icons";
-import { Platform } from "react-native";
-import ImageParameterWithPanelActions from "../ImagePathParameter";
-import { useForm } from "react-hook-form";
-import convertImageToBase64 from "../InputActions/ConvertImageToBase64";
-import { Text } from "react-native";
-import { useSelector } from "react-redux";
+import { buildFileUrl } from "../../../../utils/operation/buildFileUrl";
 import { cleanObject } from "../../../../utils/operation/cleanObject";
 import { getFileTypeFromUrl } from "../../../../utils/operation/getFileTypeFromUrl";
-import { ScrollView } from "react-native-gesture-handler";
-import { buildFileUrl } from "../../../../utils/operation/buildFileUrl";
+import { usePreloadList } from "../../../Pagination/usePreloadList";
+import ImageParameterWithPanelActions from "../ImagePathParameter";
+import TypeFile from "./TypeFile";
 
 function FilesWithScrollPaging({
   title,
@@ -44,19 +40,14 @@ function FilesWithScrollPaging({
   const [files, setFiles] = useState([]);
 
   const { [fileFieldName]: _, ...rowWithoutFieldName } = row;
-  const dataSourceAPI = (query, skip, take) => {
-    return buildApiUrl(query, {
-      pageIndex: skip + 1,
-      pageSize: take,
-      ...row,
-    });
-  };
   const { rows, totalCount, loading, lastQuery, handleScroll } = usePreloadList(
     {
       idField: idField,
-      getAction: getAction,
-      dataSourceAPI: dataSourceAPI,
       cacheTime: 4,
+      schemaActions: [getAction],
+      row: {
+        ...row,
+      },
       deps: [],
     },
   );
@@ -84,25 +75,24 @@ function FilesWithScrollPaging({
         buildFileUrl(publicImageURL, item[fileFieldName]),
       ),
       id: item[idField],
-      status :item?.[fileStatuesFieldName]
+      status: item?.[fileStatuesFieldName],
     };
 
     const isSelected = selectedServerFiles.some((f) => f.id === photo.id);
-    
+
     return (
       <View className="me-4">
         {/* Card */}
         <View className="w-40 bg-body rounded-2xl shadow overflow-hidden">
           {/* Image */}
-          <View
-            className={
-              "h-40 w-full !border-3" 
-              
-            }
-          >
-            <TypeFile file={photo.file} title={title} type={photo.type} 
-            haveFileStatuesFieldName={photo.status?true:false} 
-            fileStatuesFieldNameValue={photo.status} />
+          <View className={"h-40 w-full !border-3"}>
+            <TypeFile
+              file={photo.file}
+              title={title}
+              type={photo.type}
+              haveFileStatuesFieldName={photo.status ? true : false}
+              fileStatuesFieldNameValue={photo.status}
+            />
           </View>
 
           {/* Checkbox Overlay */}

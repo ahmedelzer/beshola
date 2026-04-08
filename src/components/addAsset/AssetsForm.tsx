@@ -22,22 +22,11 @@ const AssetsForm = () => {
   const fieldsType = useSelector((state: any) => state.menuItem.fieldsType);
   const navigation = useNavigation();
   const localization = useSelector((state) => state.localization.localization);
-  const addAssetDataSourceAPI = (query, skip, take) => {
-    return buildApiUrl(query, {
-      pageIndex: skip + 1,
-      pageSize: take,
-      projectRout: AddAssetsSchema.projectProxyRoute,
-    });
-  };
-  const getAddAssetsSchemaAction =
-    AddAssetsSchemaActions &&
-    AddAssetsSchemaActions.find(
-      (action) => action.dashboardFormActionMethodType === "Get",
-    );
+
   const { rows, totalCount, loading, handleScroll } = usePreloadList({
     idField: AddAssetsSchema.idField,
-    getAction: getAddAssetsSchemaAction,
-    dataSourceAPI: addAssetDataSourceAPI,
+    schemaActions: AddAssetsSchemaActions,
+    row: {},
     deps: [],
   });
   if (!loading && rows.length === 0) {

@@ -85,18 +85,13 @@ const testSchema = {
 };
 export default function CompanyProjectCard({ item }) {
   const [activeAreaTab, setActiveAreaTab] = useState(0);
-  const addAssetDataSourceAPI = (query, skip, take) => {
-    return buildApiUrl(query, {
-      pageIndex: skip + 1,
-      pageSize: take,
-      ...item,
-    });
-  };
 
   const { rows, totalCount, loading, handleScroll } = usePreloadList({
     idField: testSchema.idField,
-    getAction: testSchemaGetAction,
-    dataSourceAPI: addAssetDataSourceAPI,
+    schemaActions: [testSchemaGetAction],
+    row: {
+      ...item,
+    },
     deps: [],
   });
 
@@ -112,15 +107,15 @@ export default function CompanyProjectCard({ item }) {
         params={rows}
       />
       <SuggestCardContainer
-      imageScale={scale(150)}
-      variant=""
+        imageScale={scale(150)}
+        variant=""
         schemaActions={AssetsSchemaActions}
-       row={{
-  ...item,
-  ...(rows?.[activeAreaTab]?.testSchema?.idField && {
-    areaIDs: [rows[activeAreaTab].testSchema.idField],
-  }),
-}}
+        row={{
+          ...item,
+          ...(rows?.[activeAreaTab]?.testSchema?.idField && {
+            areaIDs: [rows[activeAreaTab].testSchema.idField],
+          }),
+        }}
         suggestContainerType={0}
       />
     </View>

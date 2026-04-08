@@ -1,49 +1,42 @@
-import React, { useEffect, useReducer, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Platform, View } from "react-native";
 
 import {
-  CheckboxGroup,
   Checkbox,
+  CheckboxGroup,
+  CheckboxIcon,
   CheckboxIndicator,
   CheckboxLabel,
-  CheckboxIcon,
-  VStack,
+  CheckIcon,
   Input,
   InputField,
-  CheckIcon,
+  VStack,
 } from "../../../../components/ui";
 
+import { MaterialIcons } from "@expo/vector-icons";
 import { Controller } from "react-hook-form";
 import useFetch from "../../../../components/hooks/APIsFunctions/useFetch";
-import { defaultProjectProxyRouteWithoutBaseURL } from "../../../../request";
 import GetSchemaActionsUrl from "../../../../components/hooks/DashboardAPIs/GetSchemaActionsUrl";
+import { defaultProjectProxyRouteWithoutBaseURL } from "../../../../request";
 import LoadingScreen from "../../../kitchensink-components/loading/LoadingScreen";
-import { initialState } from "../../Pagination/initialState";
-import reducer from "../../Pagination/reducer";
-import { createRowCache } from "../../Pagination/createRowCache";
-import { buildApiUrl } from "../../../../components/hooks/APIsFunctions/BuildApiUrl";
-import LoadData from "../../../../components/hooks/APIsFunctions/LoadData";
-import { updateRows } from "../../Pagination/updateRows";
-import { MaterialIcons } from "@expo/vector-icons";
-
+import { usePreloadList } from "../../Pagination/usePreloadList";
 
 // ---------------- Schema Loader ----------------
 const CheckBoxParameterSchemaLoader = ({ lookupID, children }) => {
   const { data: schema, isLoading } = useFetch(
     `/Dashboard/GetDashboardFormSchemaBySchemaID?DashboardFormSchemaID=${lookupID}`,
-    defaultProjectProxyRouteWithoutBaseURL
+    defaultProjectProxyRouteWithoutBaseURL,
   );
 
   const { data: schemaActions } = useFetch(
     GetSchemaActionsUrl(lookupID),
-    defaultProjectProxyRouteWithoutBaseURL
+    defaultProjectProxyRouteWithoutBaseURL,
   );
 
   if (isLoading) return <LoadingScreen />;
 
   return children({ schema, schemaActions });
 };
-
 
 // ---------------- State Manager ----------------
 const CheckBoxParameterState = ({
@@ -56,44 +49,21 @@ const CheckBoxParameterState = ({
   lookupDisplayField,
   lookupReturnField,
 }) => {
-  const getAction =
-    schemaActions &&
-    schemaActions.find(
-      (action) => action.dashboardFormActionMethodType === "Get",
-    );
-  const VIRTUAL_PAGE_SIZE = 5000;
-
-  const [state, dispatch] = useReducer(
-    reducer,
-    initialState(VIRTUAL_PAGE_SIZE, schema?.idField)
-  );
-
-  const cache = createRowCache(VIRTUAL_PAGE_SIZE);
-
+  const {
+    rows,
+    totalCount,
+    handleScroll,
+    // dispatch: reducerDispatch,
+    state,
+  } = usePreloadList({
+    idField: schema?.idField,
+    schemaActions: schemaActions,
+    row: {},
+    cacheTime: 5000,
+    deps: [],
+  });
   const [values, setValues] = useState([]);
   const [selectedValues, setSelectedValues] = useState(value[fieldName] || []);
-
-  const dataSourceAPI = (query, skip, take) =>
-    buildApiUrl(query, {
-      pageIndex: skip + 1,
-      pageSize: take,
-    });
-
-  // Load data
-  useEffect(() => {
-    if (!getAction) return;
-
-    dispatch({ type: "RESET_ROWS" });
-
-    LoadData(
-      state,
-      dataSourceAPI,
-      getAction,
-      cache,
-      updateRows(dispatch, cache, state),
-      dispatch
-    );
-  }, [getAction]);
 
   useEffect(() => {
     if (state.rows?.length) {
@@ -115,7 +85,6 @@ const CheckBoxParameterState = ({
       name={fieldName}
       render={({ field: { onChange: formOnChange } }) => (
         <View>
-
           <CheckboxGroup
             value={selectedValues}
             onChange={(selectedKeys) =>
@@ -124,7 +93,6 @@ const CheckBoxParameterState = ({
             isDisabled={!enable}
           >
             <VStack space="xl">
-
               {values.map((item) => {
                 const display = item[lookupDisplayField];
                 const val = item[lookupReturnField];
@@ -132,27 +100,27 @@ const CheckBoxParameterState = ({
                 return (
                   <Checkbox key={val} value={val}>
                     <CheckboxIndicator>
-                      <CheckboxIcon as={ Platform.OS == "web"
-                          ? () => (
-                              <MaterialIcons
-                                name="check"
-                                size={20}
-                                color="white"
-                              />
-                            )
-                          : CheckIcon} />
+                      <CheckboxIcon
+                        as={
+                          Platform.OS == "web"
+                            ? () => (
+                                <MaterialIcons
+                                  name="check"
+                                  size={20}
+                                  color="white"
+                                />
+                              )
+                            : CheckIcon
+                        }
+                      />
                     </CheckboxIndicator>
 
-                    <CheckboxLabel>
-                      {display}
-                    </CheckboxLabel>
+                    <CheckboxLabel>{display}</CheckboxLabel>
                   </Checkbox>
                 );
               })}
-
             </VStack>
           </CheckboxGroup>
-
 
           {/* Hidden field to submit values */}
           <Input
@@ -169,13 +137,11 @@ const CheckBoxParameterState = ({
               defaultValue={JSON.stringify(selectedValues)}
             />
           </Input>
-
         </View>
       )}
     />
   );
 };
-
 
 // ---------------- Main Export ----------------
 const CheckBoxParameter = (props) => {

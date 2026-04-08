@@ -41,10 +41,12 @@ const PolygonMapEmbed = ({
   ],
   haveRadius = true,
   clickAction = "pin",
-  // host = "http://localhost:3001",
-  host = "https://ihs-solutions.com:7552",
+  host = "http://localhost:3001",
+  // host = "https://ihs-solutions.com:7552",
   onLocationChange,
   setNewPolygon,
+  showSuggestsCard = true,
+  locations = [],
 }) => {
   const webRef = useRef(null);
   const iframeRef = useRef(null);
@@ -56,14 +58,17 @@ const PolygonMapEmbed = ({
   const [minimizeDrawer, setMinimizeDrawer] = useState(true);
   // New Loading State
   const [isLoading, setIsLoading] = useState(true);
+
   const drawerComponent = (_polygonObj) => {
-    return (
-      <DrawerComponent
-        polygonObj={_polygonObj}
-        minimizeDrawer={minimizeDrawer}
-        setMinimizeDrawer={setMinimizeDrawer}
-      />
-    );
+    if (showSuggestsCard)
+      return (
+        <DrawerComponent
+          polygonObj={_polygonObj}
+          minimizeDrawer={minimizeDrawer}
+          setMinimizeDrawer={setMinimizeDrawer}
+        />
+      );
+    return <></>;
   };
 
   useEffect(() => {
@@ -94,6 +99,7 @@ const PolygonMapEmbed = ({
           findServerContainer: JSON.stringify(schema),
           clickAction,
           polygonClickable,
+          locations: JSON.stringify(locations),
         });
         iframeRef.current.src = `${host}/displayMap?${updatedParams.toString()}`;
       }
@@ -118,10 +124,10 @@ const PolygonMapEmbed = ({
     findServerContainer: JSON.stringify(schema),
     clickAction,
     polygonClickable,
+    locations: JSON.stringify(locations),
   });
 
   const url = `${host}/displayMap?${params.toString()}`;
-
   const switchFun = (data) => {
     if (canClickPolygon)
       return windowMessageSwitch(

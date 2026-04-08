@@ -4,7 +4,8 @@ import MapDrawer from "./MapDrawer";
 import { useTab } from "../../../context/TabsProvider";
 
 const DrawerComponent = ({ polygonObj, setMinimizeDrawer, minimizeDrawer }) => {
-  const { activeTab } = useTab();
+  const tab = useTab() || {};
+  const { activeTab } = tab;
 
   const row = {
     areaIDs: [polygonObj?.areaID],
@@ -20,7 +21,7 @@ const DrawerComponent = ({ polygonObj, setMinimizeDrawer, minimizeDrawer }) => {
         right: 0,
         zIndex: 10,
         pointerEvents: "auto",
-        alignItems :"flex-start"
+        alignItems: "flex-start",
       }}
     >
       <MapDrawer

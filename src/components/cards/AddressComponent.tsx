@@ -6,6 +6,7 @@ import ExpandableText from "../../utils/component/ExpandableText";
 import PopupModal from "../../utils/component/PopupModal";
 import { getDynamicWidth } from "../../utils/operation/getDynamicWidth";
 import PolygonMapEmbed from "../maps/DrawSmoothPolygon";
+import { TabsProvider } from "../../../context/TabsProvider";
 
 const AddressComponent = ({ addressText, item, fieldsType }) => {
   const [labelWidth, setLabelWidth] = useState(0);
@@ -37,16 +38,21 @@ const AddressComponent = ({ addressText, item, fieldsType }) => {
         headerTitle={addressText}
         row={{}}
       >
-        <PolygonMapEmbed
-          location={{
-            [fieldsType.latitude]: item[fieldsType.latitude],
-            [fieldsType.longitude]: item[fieldsType.longitude],
-          }}
-          fields={fieldsType.parameters}
-          onLocationChange={() => {}}
-          setNewPolygon={() => {}}
-          canClickPolygon={false}
-        ></PolygonMapEmbed>
+        {/* <TabsProvider> */}
+        <View className="w-full mb-4" style={{ height: 400 }}>
+          <PolygonMapEmbed
+            location={{
+              [fieldsType.latitude]: item[fieldsType.latitude],
+              [fieldsType.longitude]: item[fieldsType.longitude],
+            }}
+            fields={fieldsType.parameters}
+            onLocationChange={() => {}}
+            setNewPolygon={() => {}}
+            canClickPolygon={false}
+            showSuggestsCard={false}
+          ></PolygonMapEmbed>
+        </View>
+        {/* </TabsProvider> */}
       </PopupModal>
       <TouchableOpacity
         onPress={() => {

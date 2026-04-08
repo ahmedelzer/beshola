@@ -1,145 +1,24 @@
-// import { Controller, useForm } from "react-hook-form";
-// import { useSelector } from "react-redux";
-// import React, { useEffect, useMemo, useReducer, useRef, useState } from "react";
-// import { Text, View } from "react-native";
-// import useFetch from "../../../../components/hooks/APIsFunctions/useFetch";
-// import GetSchemaActionsUrl from "../../../../components/hooks/DashboardAPIs/GetSchemaActionsUrl";
-// import { defaultProjectProxyRouteWithoutBaseURL } from "../../../../request";
-// import { initialState, VIRTUAL_PAGE_SIZE } from "../../Pagination/initialState";
-// import reducer from "../../Pagination/reducer";
-// import { createRowCache } from "../../Pagination/createRowCache";
-// import { buildApiUrl } from "../../../../components/hooks/APIsFunctions/BuildApiUrl";
-// import LoadData from "../../../../components/hooks/APIsFunctions/LoadData";
-// import { updateRows } from "../../Pagination/updateRows";
-// import SelectParameter from "./SelectParameter";
-// import { cleanObject } from "../../../utils/operation/cleanObject";
-// import BaseRange from "../../../utils/component/BaseRange";
-
-// function LookupParameter({
-//   fieldName,
-//   lookupID,
-//   lookupReturnField,
-//   lookupDisplayField,
-//   control,
-//   ...props
-// }) {
-//   const { data: _schemaActions } = useFetch(
-//     GetSchemaActionsUrl(props?.selectParam?.lookupID||lookupID),
-//     defaultProjectProxyRouteWithoutBaseURL,
-//   );
-
-//   const getAction =
-//     _schemaActions?.find(
-//       (action) => action.dashboardFormActionMethodType === "Get",
-//     ) || null;
-
-//   const [state, dispatch] = useReducer(
-//     reducer,
-//     initialState(VIRTUAL_PAGE_SIZE, fieldName),
-//   );
-
-//   const cache = useMemo(() => createRowCache(VIRTUAL_PAGE_SIZE), []);
-
-//   const dataSourceAPI = (query, skip, take) =>
-//     buildApiUrl(query, {
-//       pageIndex: skip + 1,
-//       pageSize: take,
-//       ...props?.rowDetails,
-//     });
-
-//   useEffect(() => {
-//     console.log("lookup getAction",getAction)
-//     if (!getAction) return;
-
-//     LoadData(
-//       state,
-//       dataSourceAPI,
-//       getAction,
-//       cache,
-//       updateRows(dispatch, cache, state),
-//       dispatch,
-//     );
-//   }, [getAction, dataSourceAPI]);
-
-//   // ✅ Auto-select the first row when rows load
-//   // useEffect(() => {
-//   //   if (!selectedRow && state.rows?.length > 0) {
-
-//   //     setSelectedRow(state.rows[0]);
-
-//   //   }
-//   // }, [state.rows]);
-//   const selectedRow = useRef({});
-//  const [selectedValue,setSelectedValue] = useState(selectedRow.current)
-//   useEffect(() => {
-//      console.log("lookup0",state.rows?.length)
-//     if (
-//       Object.keys(selectedRow.current).length === 0 &&
-//       state.rows?.length > 0
-//     ) {
-//       selectedRow.current = state.rows[0];
-//       setSelectedValue(state.rows[0])
-//       console.log("lookup1",state.rows?.length)
-//     }
-
-//   }, [state.rows]);
-
-//   const localization = useSelector((state) => state.localization.localization);
-
-//   return (
-
-//     <View key={`${fieldName}-${selectedValue?.[lookupReturnField] || "none"}`}>
-//       <SelectParameter
-//         onValueChange={(selectedItem) => props?.setwatch(selectedItem)}
-//         fieldName={fieldName}
-//         values={state.rows || []}
-//         lookupReturnField={lookupReturnField}
-//         lookupDisplayField={lookupDisplayField}
-//         value={selectedValue}
-//         selectTheFirst={true}
-//         customKey={`${fieldName}-${selectedValue?.[lookupReturnField] || "none"}`}
-//         // onValueChange={(val) => {
-//         //   console.log("val", val);
-
-//         //   props?.setRowDetails({ ...props?.rowDetails, ...val });
-//         //   setSelectedRow(val);
-//         //   // onChange(val);
-//         // }}
-//         placeholder={localization?.inputs?.select?.placeholder || "Select"}
-//         {...props}
-//       />
-//     </View>
-//   );
-// }
-
-// export default LookupParameter;
-import { Controller, useForm } from "react-hook-form";
-import { useSelector } from "react-redux";
-import React, { useEffect, useMemo, useReducer, useRef, useState } from "react";
-import { Text, View } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
+import React, { useEffect, useState } from "react";
+import { View } from "react-native";
+import { useSelector } from "react-redux";
 import useFetch from "../../../../components/hooks/APIsFunctions/useFetch";
 import GetSchemaActionsUrl from "../../../../components/hooks/DashboardAPIs/GetSchemaActionsUrl";
 import { defaultProjectProxyRouteWithoutBaseURL } from "../../../../request";
-import { initialState, VIRTUAL_PAGE_SIZE } from "../../Pagination/initialState";
-import reducer from "../../Pagination/reducer";
-import { createRowCache } from "../../Pagination/createRowCache";
-import { buildApiUrl } from "../../../../components/hooks/APIsFunctions/BuildApiUrl";
-import LoadData from "../../../../components/hooks/APIsFunctions/LoadData";
-import { updateRows } from "../../Pagination/updateRows";
 
 import {
   Select,
-  SelectTrigger,
-  SelectInput,
-  SelectIcon,
-  SelectPortal,
   SelectBackdrop,
   SelectContent,
   SelectDragIndicator,
   SelectDragIndicatorWrapper,
+  SelectIcon,
+  SelectInput,
   SelectItem,
+  SelectPortal,
+  SelectTrigger,
 } from "../../../../components/ui";
+import { usePreloadList } from "../../Pagination/usePreloadList";
 
 function LookupParameter({
   fieldName,
@@ -153,39 +32,19 @@ function LookupParameter({
     GetSchemaActionsUrl(props?.selectParam?.lookupID || lookupID),
     defaultProjectProxyRouteWithoutBaseURL,
   );
-
-  const getAction =
-    _schemaActions?.find(
-      (action) => action.dashboardFormActionMethodType === "Get",
-    ) || null;
-
-  const [state, dispatch] = useReducer(
-    reducer,
-    initialState(VIRTUAL_PAGE_SIZE, fieldName),
-  );
-
-  const cache = useMemo(() => createRowCache(VIRTUAL_PAGE_SIZE), []);
-
-  const dataSourceAPI = (query, skip, take) =>
-    buildApiUrl(query, {
-      pageIndex: skip + 1,
-      pageSize: take,
-      ...props?.row,
-    });
-
-  useEffect(() => {
-    if (!getAction) return;
-
-    LoadData(
-      state,
-      dataSourceAPI,
-      getAction,
-      cache,
-      updateRows(dispatch, cache, state),
-      dispatch,
-    );
-  }, [getAction, dataSourceAPI]);
-
+  const {
+    rows,
+    totalCount,
+    handleScroll,
+    // dispatch: reducerDispatch,
+    state,
+  } = usePreloadList({
+    idField: fieldName,
+    schemaActions: _schemaActions || [],
+    row: { ...props?.row },
+    cacheTime: 5000,
+    deps: [],
+  });
   const [selectedValue, setSelectedValue] = useState({});
 
   // Auto-select the first row once rows load
@@ -196,7 +55,7 @@ function LookupParameter({
 
       // 🔥 log the value and type of setwatch
 
-props?.setwatch?.(lookupReturnField, firstRow?.[lookupReturnField] || "");
+      props?.setwatch?.(lookupReturnField, firstRow?.[lookupReturnField] || "");
       // Call it if it exists
       props?.setValue?.(lookupReturnField, firstRow?.[lookupReturnField] || "");
     }

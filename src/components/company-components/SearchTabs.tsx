@@ -1,23 +1,12 @@
-import React, { useEffect, useReducer, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React from "react";
 import { Box, HStack, Pressable, Text } from "../../../components/ui";
-import { initialState, VIRTUAL_PAGE_SIZE } from "../Pagination/initialState";
-import reducer from "../Pagination/reducer";
 // import { createRowCache } from "@devexpress/dx-react-grid";
 // import { createRowCache } from "../Pagination/createRowCache";
 import { Flow } from "react-native-animated-spinkit";
 import { ScrollView } from "react-native-gesture-handler";
-import { buildApiUrl } from "../../../components/hooks/APIsFunctions/BuildApiUrl";
-import LoadData from "../../../components/hooks/APIsFunctions/LoadData";
-import { useSearch } from "../../../context/SearchProvider";
-import { useSchemas } from "../../../context/SchemaProvider";
+import { useTab } from "../../../context/TabsProvider";
 import LoadingScreen from "../../kitchensink-components/loading/LoadingScreen";
 import { isRTL } from "../../utils/operation/isRTL";
-import { createRowCache } from "../Pagination/createRowCache";
-import { getRemoteRows } from "../Pagination/getRemoteRows";
-import { updateRows } from "../Pagination/updateRows";
-import { ScreenWidth } from "../shared";
-import { useTab } from "../../../context/TabsProvider";
 export const SearchTabs = ({}: any) => {
   // Shop/GetMenuCategories?PageSize=11&PageNumber=1
   const {

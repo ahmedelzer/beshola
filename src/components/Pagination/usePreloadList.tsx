@@ -8,13 +8,27 @@ import {
 import { prepareLoad } from "../../utils/operation/loadHelpers";
 import { createRowCache } from "./createRowCache";
 import { getRemoteRows } from "./getRemoteRows";
+import { buildApiUrl } from "../../../components/hooks/APIsFunctions/BuildApiUrl";
 
 export const usePreloadList = ({
   idField,
-  getAction,
-  dataSourceAPI,
+  schemaActions,
+  row,
   cacheTime = VIRTUAL_PAGE_SIZE,
+  pageIndex,
+  PrepareLoadValidation = () => true,
   deps = [],
+}: {
+  idField: string;
+  schemaActions: Array<{
+    dashboardFormActionMethodType: string;
+    [key: string]: any;
+  }>;
+  row: any;
+  pageIndex?: number;
+  PrepareLoadValidation?: Function;
+  cacheTime?: number;
+  deps?: any[];
 }) => {
   const [state, dispatch] = useReducer(
     reducer,
@@ -25,9 +39,21 @@ export const usePreloadList = ({
   const [reloadKey, setReloadKey] = useState(0);
 
   const reload = () => setReloadKey((prev) => prev + 1);
+  const getAction =
+    schemaActions &&
+    schemaActions.find(
+      (action) => action.dashboardFormActionMethodType === "Get",
+    );
+  const dataSourceAPI = (query: any, skip: number, take: number) => {
+    return buildApiUrl(query, {
+      pageIndex: pageIndex || skip + 1,
+      pageSize: take,
+      ...row,
+    });
+  };
 
   useEffect(() => {
-    if (!getAction) return;
+    if (!PrepareLoadValidation() && !getAction) return;
 
     prepareLoad({
       state,
@@ -39,7 +65,7 @@ export const usePreloadList = ({
       reRequest: true,
     });
   }, [reloadKey, currentSkip, ...deps]);
-  const handleScroll = (event) => {
+  const handleScroll = (event: any) => {
     const { rows, totalCount, loading } = state;
 
     const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
@@ -64,5 +90,6 @@ export const usePreloadList = ({
     reload,
     dispatch,
     handleScroll,
+    setCurrentSkip,
   };
 };

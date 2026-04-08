@@ -21,7 +21,8 @@ function FilesWithButtonPaging({
   getAction,
   deleteAction,
   handleToDelete,
-  fileFieldName,fileStatuesFieldNameValue
+  fileFieldName,
+  fileStatuesFieldNameValue,
 }) {
   const [modalDeleteIsOpen, setModalDeleteIsOpen] = useState(false);
   const [deleteID, setDeleteID] = useState(false);
@@ -34,19 +35,15 @@ function FilesWithButtonPaging({
   const [files, setFiles] = useState([]);
 
   const { [fileFieldName]: _, ...rowWithoutFieldName } = row;
-  const dataSourceAPI = (query, skip, take) => {
-    return buildApiUrl(query, {
-      pageIndex: currentPage,
-      pageSize: take,
-      ...row,
-    });
-  };
   const { rows, totalCount, loading, state, handleScroll, dispatch } =
     usePreloadList({
       idField: idField,
-      getAction: getAction,
-      dataSourceAPI: dataSourceAPI,
       cacheTime: 4,
+      schemaActions: [getAction],
+      row: {
+        ...row,
+      },
+      pageIndex: currentPage,
       deps: [currentPage],
     });
 
@@ -117,7 +114,7 @@ function FilesWithButtonPaging({
       displayFile: buildFileUrl(publicImageURL, row[fileFieldName]),
       fileCodeNumber: row.fileCodeNumber === 0 ? "image" : "video",
       id: row[idField],
-      status:row?.[fileStatuesFieldNameValue]
+      status: row?.[fileStatuesFieldNameValue],
     })) || [];
 
   return (
@@ -144,10 +141,9 @@ function FilesWithButtonPaging({
               file={item.displayFile}
               title={title}
               type={item.fileCodeNumber}
-               haveFileStatuesFieldName={item.status?true:false} 
-            fileStatuesFieldNameValue={item.status}
+              haveFileStatuesFieldName={item.status ? true : false}
+              fileStatuesFieldNameValue={item.status}
             />
-           
           </View>
         )}
       />

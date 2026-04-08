@@ -28,6 +28,7 @@ import { handleSubmitWithCallback } from "../../../../utils/operation/handleSubm
 import { getField } from "../../../../utils/operation/getField";
 import { combineDateTime } from "../../../../utils/operation/timeOperations";
 import { theme } from "../../../../Theme";
+import { usePreloadList } from "../../../Pagination/usePreloadList";
 const testSchema = {
   dashboardFormSchemaID: "937cdd0e-3303-447b-bd7c-f0f027e8ce78",
   schemaType: "Table",
@@ -124,45 +125,25 @@ const CalendarParameterState = ({
   );
   const [reqError, setReqError] = useState(null);
   const [disable, setDisable] = useState(false);
-  const getAction =
-    schemaActions &&
-    schemaActions.find(
-      (action) => action.dashboardFormActionMethodType === "Get",
-    );
-
-  const [state, dispatch] = useReducer(
-    reducer,
-    initialState(VIRTUAL_PAGE_SIZE, schema?.idField),
-  );
-  const [currentSkip, setCurrentSkip] = useState(0);
-
-  const cache = createRowCache(VIRTUAL_PAGE_SIZE);
-
-  const [values, setValues] = useState([]);
-
-  const dataSourceAPI = (query, skip, take) =>
-    buildApiUrl(query, {
-      pageIndex: skip + 1,
-      pageSize: take,
+  const {
+    rows,
+    totalCount,
+    handleScroll,
+    // dispatch: reducerDispatch,
+    state,
+    dispatch,
+    setCurrentSkip,
+  } = usePreloadList({
+    idField: schema?.idField,
+    schemaActions: schemaActions,
+    row: {
       date: selectedDate,
       ...parentRow,
-    });
+    },
+    deps: [],
+  });
 
-  // Load data
-  useEffect(() => {
-    if (!getAction) return;
-
-    // dispatch({ type: "RESET_ROWS" });
-
-    LoadData(
-      state,
-      dataSourceAPI,
-      getAction,
-      cache,
-      updateRows(dispatch, cache, state),
-      dispatch,
-    );
-  }, [getAction, currentSkip]);
+  const [values, setValues] = useState([]);
 
   const handleChange = (selectedKeys, formOnChange) => {
     setSelectedValues(selectedKeys);
