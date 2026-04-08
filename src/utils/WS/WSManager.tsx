@@ -15,8 +15,11 @@ export function getWSInstance(baseUrl, url, onMessageCallback) {
   }
 
   const wsInstances = store.getState().ws?.wsInstances || [];
-  let instance = wsInstances.find((inst) => inst.key === baseUrl);
 
+  let instance = wsInstances.find((inst) => inst.key === baseUrl);
+  let closedInstance = wsInstances
+    .filter((inst) => inst.key === baseUrl)
+    .find((inst) => inst.url !== url);
   const isClosed =
     !instance ||
     instance.ws.readyState === WebSocket.CLOSING ||
@@ -28,10 +31,12 @@ export function getWSInstance(baseUrl, url, onMessageCallback) {
   // -------------------------
   if (isClosed) {
     if (instance && instance.url !== url) {
+      console.log("clear", baseUrl);
       disconnectWS(baseUrl, true);
     }
 
     const wsInstance = new WSclass(url);
+    console.log(`[${new Date().toISOString()}] wsInstance`, baseUrl);
 
     const removeHandler = wsInstance.connect(() => {
       if (typeof onMessageCallback === "function") {
