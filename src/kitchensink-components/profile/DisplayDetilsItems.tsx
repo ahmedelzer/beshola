@@ -19,7 +19,7 @@ import {
   VIRTUAL_PAGE_SIZE,
 } from "../../components/Pagination/initialState";
 import reducer from "../../components/Pagination/reducer";
-import ScratchVoucherCard from "../../Schemas/MenuSchema/AssetsSchema.json";
+import ScratchVoucherCard from "../../Schemas/MenuSchema/OnlineAssetsSchema.json";
 import CustomerSaleInvoicesActions from "../../Schemas/Profile/CustomerSaleInvoicesActions.json";
 import SaleInvoiceSchema from "../../Schemas/Profile/SaleInvoiceSchema.json";
 import { prepareLoad } from "../../utils/operation/loadHelpers";

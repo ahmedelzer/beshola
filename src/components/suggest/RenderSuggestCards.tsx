@@ -7,13 +7,15 @@ import SuggestCard from "../cards/SuggestCard";
 import { useCart } from "../../../context/CartProvider";
 import SuggestCardSchema from "../../Schemas/MenuSchema/SuggestCardSchema.json";
 import { getItemPackage } from "../company-components/getItemPackage";
+import AssetDetailsAction from "../company-components/AssetDetailsAction";
+import { getUniqueKey } from "../../utils/operation/getUniqueKey";
 export function RenderSuggestCards({
   suggestContainerType,
   items,
   schemaActions,
   suggestFieldsType,
   imageScale = scale(150),
-  variant="small"
+  variant = "small",
 }) {
   const chunkArray = (arr, size) => {
     return Array.from({ length: Math.ceil(arr.length / size) }, (_, i) =>
@@ -28,14 +30,23 @@ export function RenderSuggestCards({
       return (
         <>
           {items.map((item) => (
-            <SuggestCard
-              key={item[suggestFieldsType.idField]}
-              schemaActions={schemaActions}
-              fieldsType={suggestFieldsType}
-              item={item}
-              imageScale={imageScale} // ✅ Add this
-              variant={variant}
-            />
+            <AssetDetailsAction
+              itemPackage={item}
+              key={getUniqueKey(
+                item[suggestFieldsType.idField],
+                suggestFieldsType.attributes,
+                JSON.stringify(item),
+              )}
+            >
+              <SuggestCard
+                key={item[suggestFieldsType.idField]}
+                schemaActions={schemaActions}
+                fieldsType={suggestFieldsType}
+                item={item}
+                imageScale={imageScale} // ✅ Add this
+                variant={variant}
+              />
+            </AssetDetailsAction>
           ))}
         </>
       );
@@ -52,7 +63,8 @@ export function RenderSuggestCards({
                 backgroundColor: theme.body,
                 borderRadius: scale(8),
                 padding: scale(8),
-                marginRight: groupIndex < chunkedItems.length - 1 ? scale(8) : 0,
+                marginRight:
+                  groupIndex < chunkedItems.length - 1 ? scale(8) : 0,
                 flexDirection: "row",
                 flexWrap: "wrap",
                 justifyContent: "space-between",

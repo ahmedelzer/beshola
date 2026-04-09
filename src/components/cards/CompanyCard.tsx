@@ -33,6 +33,7 @@ import { onApply } from "../form-container/OnApply";
 import AccountInfo from "./AccountInfo";
 import AddReqButton from "./uiComponent/AddReqButton";
 import AssetActionButton from "./uiComponent/AssetActionButton";
+import { getUniqueKey } from "../../utils/operation/getUniqueKey";
 
 interface CompanyCardProps {
   itemPackage: any;
@@ -124,7 +125,14 @@ const CompanyCard: React.FC<CompanyCardProps> = ({
                 <AccountInfo fieldsType={fieldsType} item={item} />
                 {/* Row 2: Attributes (full width) */}
                 {fieldsType.attributes && item[fieldsType.attributes] && (
-                  <View className="w-full">
+                  <View
+                    className="w-full"
+                    key={getUniqueKey(
+                      item[fieldsType.idField],
+                      fieldsType.attributes,
+                      item[fieldsType.attributes],
+                    )}
+                  >
                     <Attributes attributes={item[fieldsType.attributes]} />
                   </View>
                 )}
@@ -135,50 +143,72 @@ const CompanyCard: React.FC<CompanyCardProps> = ({
           {/* Bottom Actions */}
           <View className="flex-row items-center mt-2 px-2 w-full">
             {/* Address Section - 50% width */}
-            <View
-              style={{ width: "50%" }}
-              className="items-center justify-center"
-            >
-              {fieldsType.address && item[fieldsType.address] && (
+            {fieldsType.address && item[fieldsType.address] && (
+              <View
+                style={{ width: "50%" }}
+                className="items-center justify-center"
+                key={getUniqueKey(
+                  item[fieldsType.idField],
+                  fieldsType.address,
+                  item[fieldsType.address],
+                )}
+              >
                 <AddressComponent
                   addressText={item[fieldsType.address]}
                   fieldsType={fieldsType}
                   item={item}
                 />
-              )}
-            </View>
-
+              </View>
+            )}
             {/* Viewers Section - 35% width */}
             <View
               style={{ width: "35%" }}
               className="flex-row items-center justify-center px-2 py-1 rounded"
             >
-              <View
-                className="flex-row items-center justify-center px-2 py-1 rounded"
-                style={{ backgroundColor: addAlpha(theme.body, 0.1) }}
-              >
-                <MaterialCommunityIcons
-                  name="eye-outline"
-                  size={18}
-                  color={theme.accent}
-                />
-                <Text className="text-text text-xs ml-1">
-                  {item[fieldsType.onlineAssetViews] || 0}{" "}
-                  {localization.menu.viewing || "Viewing"}
-                </Text>
-              </View>
+              {fieldsType.onlineAssetViews && (
+                <View
+                  className="flex-row items-center justify-center px-2 py-1 border rounded"
+                  style={{ backgroundColor: addAlpha(theme.body, 0.1) }}
+                  key={getUniqueKey(
+                    item[fieldsType.idField],
+                    fieldsType.onlineAssetViews,
+                    item[fieldsType.onlineAssetViews],
+                  )}
+                >
+                  <MaterialCommunityIcons
+                    name="eye-outline"
+                    size={18}
+                    color={theme.accent}
+                  />
+                  <Text
+                    className="text-text text-xs ml-1"
+                    key={` ${item[fieldsType.idField]}-
+                        ${fieldsType.onlineAssetViews}-
+                        ${item[fieldsType.onlineAssetViews]}`}
+                  >
+                    {item[fieldsType.onlineAssetViews] || 0}{" "}
+                    {localization.menu.viewing || "Viewing"}
+                  </Text>
+                </View>
+              )}
             </View>
-
             {/* Chat Section - 15% width */}
+            {/* {fieldsType.isRequested&&( */}
             <View
               style={{ width: "15%" }}
               className="items-center justify-center"
+              key={getUniqueKey(
+                item[fieldsType.idField],
+                fieldsType.isRequested,
+                item[fieldsType.isRequested],
+              )}
             >
               <AssetActionButton
                 isRequested={item?.[fieldsType.isRequested]}
                 item={item}
               />
             </View>
+            ,{/* )} */}
           </View>
         </View>
       </Card>
@@ -196,7 +226,14 @@ export const MemoizedImageCard = React.memo(
 
     const imageHeight = width < 640 ? 160 : width < 1024 ? 208 : 224;
     return (
-      <Box className="w-full flex justify-center items-center overflow-hidden rounded-0">
+      <Box
+        className="w-full flex justify-center items-center overflow-hidden rounded-0"
+        key={getUniqueKey(
+          item[fieldsType.idField],
+          fieldsType.imageView,
+          item[fieldsType.imageView],
+        )}
+      >
         <ImageCardActions
           fieldsType={fieldsType}
           item={item}

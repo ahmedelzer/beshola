@@ -43,7 +43,7 @@ function LookupParameter({
     schemaActions: _schemaActions || [],
     row: { ...props?.row },
     cacheTime: 5000,
-    deps: [],
+    deps: [_schemaActions],
   });
   const [selectedValue, setSelectedValue] = useState({});
 
@@ -65,7 +65,6 @@ function LookupParameter({
   //     props?.setwatch?.(selectedValue);
   //   }, [selectedValue]);
   const localization = useSelector((state) => state.localization.localization);
-
   return (
     <View key={`${fieldName}-${selectedValue?.[lookupReturnField] || "none"}`}>
       <Select

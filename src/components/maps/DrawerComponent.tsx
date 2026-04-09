@@ -3,7 +3,12 @@ import React from "react";
 import MapDrawer from "./MapDrawer";
 import { useTab } from "../../../context/TabsProvider";
 
-const DrawerComponent = ({ polygonObj, setMinimizeDrawer, minimizeDrawer }) => {
+const DrawerComponent = ({
+  polygonObj,
+  setMinimizeDrawer,
+  minimizeDrawer,
+  setLocations,
+}) => {
   const tab = useTab() || {};
   const { activeTab } = tab;
 
@@ -28,6 +33,7 @@ const DrawerComponent = ({ polygonObj, setMinimizeDrawer, minimizeDrawer }) => {
         row={row}
         onMinimize={() => setMinimizeDrawer(!minimizeDrawer)}
         minimize={minimizeDrawer}
+        setLocations={setLocations}
       />
     </View>
   );

@@ -23,6 +23,9 @@ function reducer(state, { type, payload }) {
         totalCount: payload.totalCount,
         loading: false,
       };
+      console.log("====================================");
+      console.log(result, "result ws");
+      console.log("====================================");
 
       return result;
     case "START_LOADING":

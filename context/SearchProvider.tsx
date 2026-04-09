@@ -27,7 +27,7 @@ import { prepareLoad } from "../src/utils/operation/loadHelpers";
 import { createRowCache } from "../src/components/Pagination/createRowCache";
 import { getRemoteRows } from "../src/components/Pagination/getRemoteRows";
 
-import AssetsSchema from "../src/Schemas/MenuSchema/AssetsSchema.json";
+import OnlineAssetsSchema from "../src/Schemas/MenuSchema/OnlineAssetsSchema.json";
 import AssetsSchemaActions from "../src/Schemas/MenuSchema/AssetsSchemaActions.json";
 
 import { useShopNode } from "./ShopNodeProvider";
@@ -55,7 +55,7 @@ export const SearchProvider = ({ children }) => {
 
   const [state, reducerDispatch] = useReducer(
     reducer,
-    initialState(VIRTUAL_PAGE_SIZE, AssetsSchema.idField),
+    initialState(VIRTUAL_PAGE_SIZE, OnlineAssetsSchema.idField),
   );
 
   const [currentSkip, setCurrentSkip] = useState(0);

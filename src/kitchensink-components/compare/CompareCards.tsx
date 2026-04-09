@@ -10,6 +10,9 @@ import { isRTL } from "../../utils/operation/isRTL";
 import SheetCard from "./SheetCard";
 import { Box, Input, InputField, InputSlot } from "../../../components/ui";
 import { FontAwesome } from "@expo/vector-icons";
+import ImageRoute from "../../utils/component/ImageRoute";
+import AccountInfo from "../../components/cards/AccountInfo";
+import Attributes from "../../components/cards/Attributes";
 
 export default function CompareCards() {
   const [openSearchPage, setOpenSearchPage] = useState(false);
@@ -17,18 +20,18 @@ export default function CompareCards() {
   const { compareItems, isCompareItem, handleCompareToggle } =
     useContext(CompareContext);
   const features = [
-    { key: [fieldsType.propertyType], label: "Type" },
+    { key: [fieldsType.serviceName], label: "Type" },
     {
       key: [fieldsType.priceAfterDiscount],
       label: "Price",
       format: (v: any) => `EGP ${v}`,
     },
-    { key: [fieldsType.location], label: "Location" },
+    { key: [fieldsType.city], label: "City" },
+    { key: [fieldsType.address], label: "Location" },
     {
       key: [fieldsType.attributes],
       label: "Details",
-      format: (v: any[]) =>
-        v?.length ? v.map((a) => a.value).join(" • ") : "-",
+      Component: (value) => <Attributes attributes={value} />,
     },
     { key: [fieldsType.rate], label: "Rating ⭐" },
     {
@@ -57,7 +60,7 @@ export default function CompareCards() {
           {features.map((f) => (
             <View
               key={f.label}
-              className="h-14 justify-center px-3 border-t"
+              className="h-16 max-h-28 justify-center px-3 border-t"
               style={{ borderColor: theme.border }}
             >
               <Text
@@ -84,17 +87,12 @@ export default function CompareCards() {
             >
               {/* HEADER */}
               <View className="h-32 p-3 items-center justify-center relative">
-                <Image
-                  source={{ uri: item.companyItemImage }}
-                  className="w-full h-20 rounded-lg"
-                  style={{ backgroundColor: theme.body }}
-                  resizeMode="cover"
-                />
-                <Text className="text-xs font-bold text-text text-center mt-2">
-                  {item.menuItemName}
-                </Text>
-                <Text className="text-[10px] text-text opacity-60">
-                  {item.companyName}
+                <ImageRoute item={item} />
+                <Text
+                  className="text-xs font-bold text-center mt-2"
+                  style={{ color: theme.secondary }}
+                >
+                  {item[fieldsType.companyName] || "B-Souhool"}
                 </Text>
 
                 {/* DELETE BUTTON */}
@@ -122,18 +120,22 @@ export default function CompareCards() {
               {features.map((f) => (
                 <View
                   key={f.label}
-                  className="h-14 justify-center items-center border-t px-2"
+                  className="h-16 max-h-28 justify-center items-center border-t px-2"
                   style={{ borderColor: theme.border }}
                 >
-                  <Text
-                    className={`text-xs font-medium text-center ${
-                      f.key === fieldsType.priceAfterDiscount
-                        ? "text-error font-bold"
-                        : "text-text"
-                    }`}
-                  >
-                    {f.format ? f.format(item[f.key]) : (item[f.key] ?? "-")}
-                  </Text>
+                  {!f.Component ? (
+                    <Text
+                      className={`text-xs font-medium text-center ${
+                        f.key === fieldsType.priceAfterDiscount
+                          ? "text-error font-bold"
+                          : "text-text"
+                      }`}
+                    >
+                      {f.format ? f.format(item[f.key]) : (item[f.key] ?? "-")}
+                    </Text>
+                  ) : (
+                    <>{f.Component(item[f.key])}</>
+                  )}
                 </View>
               ))}
             </View>

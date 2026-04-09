@@ -39,6 +39,34 @@ const PolygonMapEmbed = ({
       indexNumber: 0,
     },
   ],
+  locationFields = [
+    {
+      dashboardFormSchemaParameterID: "bbc47b3c-baba-4c80-8a8e-50d9875a15d6",
+      dashboardFormSchemaID: "270f513b-1788-4c01-879e-4526c990f898",
+      isEnable: true,
+      parameterType: "areaMapLatitudePoint",
+      parameterField: "latitude",
+      parameterTitel: "locationLatitudePoint",
+      isIDField: false,
+      lookupID: null,
+      lookupReturnField: null,
+      lookupDisplayField: null,
+      indexNumber: 0,
+    },
+    {
+      dashboardFormSchemaParameterID: "bbc47b3c-baba-4c80-8a8e-50d9875a15d6",
+      dashboardFormSchemaID: "270f513b-1788-4c01-879e-4526c990f898",
+      isEnable: true,
+      parameterType: "areaMapLongitudePoint",
+      parameterField: "longitude",
+      parameterTitel: "locationLongitudePoint",
+      isIDField: false,
+      lookupID: null,
+      lookupReturnField: null,
+      lookupDisplayField: null,
+      indexNumber: 0,
+    },
+  ],
   haveRadius = true,
   clickAction = "pin",
   host = "http://localhost:3001",
@@ -46,7 +74,7 @@ const PolygonMapEmbed = ({
   onLocationChange,
   setNewPolygon,
   showSuggestsCard = true,
-  locations = [],
+  areaLocations = [],
 }) => {
   const webRef = useRef(null);
   const iframeRef = useRef(null);
@@ -55,6 +83,7 @@ const PolygonMapEmbed = ({
   );
   const locationRef = useRef(JSON.stringify(coords));
   const [polygonObj, setPolygonObj] = useState({});
+  const [locations, setLocations] = useState(areaLocations);
   const [minimizeDrawer, setMinimizeDrawer] = useState(true);
   // New Loading State
   const [isLoading, setIsLoading] = useState(true);
@@ -66,6 +95,7 @@ const PolygonMapEmbed = ({
           polygonObj={_polygonObj}
           minimizeDrawer={minimizeDrawer}
           setMinimizeDrawer={setMinimizeDrawer}
+          setLocations={setLocations}
         />
       );
     return <></>;
@@ -95,11 +125,12 @@ const PolygonMapEmbed = ({
           location: locationRef.current,
           clickable,
           fields: JSON.stringify(fields),
+          locationsFields: JSON.stringify(locationFields),
           haveRadius,
           findServerContainer: JSON.stringify(schema),
           clickAction,
           polygonClickable,
-          locations: JSON.stringify(locations),
+          locations: JSON.stringify(areaLocations),
         });
         iframeRef.current.src = `${host}/displayMap?${updatedParams.toString()}`;
       }
@@ -120,11 +151,12 @@ const PolygonMapEmbed = ({
     location: locationRef.current,
     clickable,
     fields: JSON.stringify(fields),
+    locationsFields: JSON.stringify(locationFields),
     haveRadius,
     findServerContainer: JSON.stringify(schema),
     clickAction,
     polygonClickable,
-    locations: JSON.stringify(locations),
+    locations: JSON.stringify(areaLocations),
   });
 
   const url = `${host}/displayMap?${params.toString()}`;

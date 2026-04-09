@@ -196,7 +196,7 @@
   ],
   "projectProxyRoute": "BrandingMartAssets",
   "isMainSchema": true,
-  "dataSourceName": "nodeMenuItemID",
+  "dataSourceName": "ownOnlineAsset",
   "propertyName": null,
   "indexNumber": 0
 }

@@ -10,7 +10,7 @@ import FastWaySchemaActions from "../Schemas/MenuSchema/FastWaySchemaActions.jso
 import FilterSchema from "../Schemas/MenuSchema/FilterSchema.json";
 import ServiceTypesSchema from "../Schemas/MenuSchema/ServiceTypesSchema.json";
 import ServiceTypesSchemaActions from "../Schemas/MenuSchema/ServiceTypesSchemaActions.json";
-import AssetsSchema from "../Schemas/MenuSchema/AssetsSchema.json";
+import OnlineAssetsSchema from "../Schemas/MenuSchema/OnlineAssetsSchema.json";
 import NodeMenuItemsSchemaActions from "../Schemas/MenuSchema/AssetsSchemaActions.json";
 import FavoriteMenuItemsSchema from "../Schemas/MenuSchema/FavoriteMenuItemsSchema.json";
 import FavoriteMenuItemsSchemaActions from "../Schemas/MenuSchema/FavoriteMenuItemsSchemaActions.json";
@@ -89,7 +89,7 @@ export const schemasSlice = createSlice({
       actions: ServiceTypesSchemaActions,
     },
     menuItems: {
-      schema: AssetsSchema,
+      schema: OnlineAssetsSchema,
       actions: NodeMenuItemsSchemaActions,
     },
     fav: {

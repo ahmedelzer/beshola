@@ -35,11 +35,11 @@ export default function SuggestCardContainer({
   row = {},
   schemaActions,
   suggestContainerType = 1,
-imageScale=scale(120),
+  imageScale = scale(120),
   header = "",
-  variant="small"
+  variant = "small",
+  setRows,
 }) {
-
   const { status, isOnline } = useNetwork();
   const [WS_Connected, setWS_Connected] = useState(false);
   const [currentSkip, setCurrentSkip] = useState(1);
@@ -52,8 +52,7 @@ imageScale=scale(120),
   );
   const itemsLoadingCount = useMemo(() => getItemsLoadingCount(), []);
 
-  const parameters =
-    SuggestCardSchema?.dashboardFormSchemaParameters ?? [];
+  const parameters = SuggestCardSchema?.dashboardFormSchemaParameters ?? [];
   const getSuggestAction =
     schemaActions &&
     schemaActions.find(
@@ -77,7 +76,11 @@ imageScale=scale(120),
     totalCount: suggestTotalCount,
     loading: suggestLoading,
   } = suggestState;
-
+  useEffect(() => {
+    if (suggestRows.length > 0 && !suggestLoading) {
+      setRows(suggestRows);
+    }
+  }, [suggestRows, suggestLoading]);
   const handleScroll = (event) => {
     const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
 
@@ -99,14 +102,14 @@ imageScale=scale(120),
       pageIndex: skip + 1,
       pageSize: take,
       projectRout: SuggestCardSchema?.projectProxyRoute,
-      ...row
+      ...row,
     });
   };
 
   useEffect(() => {
     //if (!selectedNode) return;
     setWS_Connected(false);
-  }, [ isOnline]);
+  }, [isOnline]);
   // 🌐 Setup WebSocket connection on mount or WS_Connected change
   useEffect(() => {
     if (WS_Connected) return;
@@ -153,7 +156,6 @@ imageScale=scale(120),
 
   const rowRef = useRef({});
   useEffect(() => {
-   
     if (rowRef.current !== row) {
       rowRef.current = row;
       suggestReducerDispatch({
@@ -162,14 +164,10 @@ imageScale=scale(120),
       });
       setNewItems((prev) => prev + 1);
     }
-  }, [
-
-  row
-  ]);
+  }, [row]);
 
   useEffect(() => {
-  
-    if(!getSuggestAction) return;
+    if (!getSuggestAction) return;
     prepareLoad({
       state: suggestState,
       dataSourceAPI: suggestDataSourceAPI,
@@ -180,7 +178,7 @@ imageScale=scale(120),
       reRequest: true,
     });
   }, [row]);
- 
+
   return suggestTotalCount > 0 ? (
     <View className="flex-col">
       <Heading className="text-text font-bold text-xl">{header}</Heading>

@@ -11,6 +11,7 @@ export const WSProvider = ({ children }) => {
   const [_wsMessageMenuItem, setWSMessageMenuItem] = useState("{}");
   const [_wsMessageSuggest, setWSMessageSuggest] = useState("{}");
   const [_wsMessageOrders, setWSMessageOrders] = useState("{}");
+  const [_wsMessageRequests, setWSMessageRequests] = useState("{}");
   const [_wsMessageFav, setWSMessageFav] = useState("{}");
   const [_wsMessageNode, setWSMessageNode] = useState("{}");
   const [_wsMessageAccounting, setWSMessageAccounting] = useState("{}");
@@ -25,6 +26,8 @@ export const WSProvider = ({ children }) => {
         _wsMessageSuggest,
         _wsMessageOrders,
         setWSMessageOrders,
+        _wsMessageRequests,
+        setWSMessageRequests,
         setWSMessageSuggest,
         _wsMessageAccounting,
         setWSMessageAccounting,

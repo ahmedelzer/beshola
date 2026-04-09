@@ -38,7 +38,6 @@ const PopupModal = ({
   children,
   ...props
 }) => {
-  
   const localization = useSelector((state) => state.localization.localization);
   const [scrollY, setScrollY] = useState(0);
   const [isSmallScreen, setIsSmallScreen] = useState(false);
@@ -86,7 +85,7 @@ const PopupModal = ({
       isOpen={isOpen}
       onClose={onClose}
       size={size || isSmallScreen ? "full" : "md"}
-      style={{ overflow: "visible" }}
+      style={{ overflow: "visible", zIndex: 9999 }}
     >
       <ModalContent
         style={[

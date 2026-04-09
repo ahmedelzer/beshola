@@ -30,6 +30,7 @@ import { useSearch } from "../../../context/SearchProvider";
 import RequestCard from "../../components/cards/RequestCard";
 import { initCompanyRows } from "../../components/company-components/tabsData";
 import { usePreloadList } from "../../components/Pagination/usePreloadList";
+import { useManageRealtimeDataWithWS } from "../../utils/WS/useManageRealtimeDataWithWS";
 export default function RequestsScreen({}) {
   const {
     status: { isConnected: isOnline },
@@ -38,7 +39,7 @@ export default function RequestsScreen({}) {
 
   const { orderState } = useSchemas();
   const localization = useSelector((state) => state.localization.localization);
-  const { _wsMessageOrders, setWSMessageOrders } = useWS();
+  const { _wsMessageRequests, setWSMessageRequests } = useWS();
   const [WS_Connected, setWS_Connected] = useState(false);
   const {
     control,
@@ -57,7 +58,7 @@ export default function RequestsScreen({}) {
     totalCount,
     loading,
     handleScroll,
-    // dispatch: reducerDispatch,
+    dispatch: reducerDispatch,
   } = usePreloadList({
     idField: orderState.schema?.idField,
     schemaActions: orderState.actions,
@@ -99,56 +100,20 @@ export default function RequestsScreen({}) {
   //   // Call LoadData with the controller
   // }, [currentSkip]);
   //WS
-  useEffect(() => {
-    setWS_Connected(false);
-  }, [isOnline]);
-  // 🌐 Setup WebSocket connection on mount or WS_Connected change
-  useEffect(() => {
-    if (WS_Connected) return;
-    let cleanup;
-    ConnectToWS(
-      setWSMessageOrders,
-      setWS_Connected,
-      cartFieldsType.dataSourceName,
-    )
-      .then(() => console.log("🔌 WebSocket setup done"))
-      .catch((e) => {
-        console.error("❌ Cart WebSocket error", e);
-      });
-    return () => {
-      if (cleanup) cleanup(); // Clean up when component unmounts or deps change
-      console.log("🧹 Cleaned up WebSocket handler");
-    };
-  }, [WS_Connected]);
-
-  // 🧠 Reducer callback to update rows
-  const callbackReducerUpdate = async (ws_updatedRows) => {
-    await reducerDispatch({
-      type: "WS_OPE_ROW",
-      payload: {
-        rows: ws_updatedRows.rows,
-        totalCount: ws_updatedRows.totalCount,
-      },
-    });
-  };
   const fieldsType = {
     idField: orderState.schema.idField,
     dataSourceName: orderState.schema.dataSourceName,
   };
+  useManageRealtimeDataWithWS({
+    wsMessage: _wsMessageRequests,
+    setWSMessage: setWSMessageRequests,
+    fieldsType,
+    rows,
+    totalCount,
+    reducerDispatch,
+    deps: [],
+  });
 
-  // 📨 React to WebSocket messages only when valid
-  useEffect(() => {
-    if (!_wsMessageOrders) return;
-    const _handleWSMessage = new WSMessageHandler({
-      _WSsetMessage: _wsMessageOrders,
-      fieldsType,
-      rows,
-      totalCount,
-      callbackReducerUpdate,
-    });
-    _handleWSMessage.process();
-    //setWSMessageMenuItem(_wsMessageMenuItem);
-  }, [_wsMessageOrders]);
   // const handleScroll = (event) => {
   //   const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
 

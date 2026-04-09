@@ -164,7 +164,7 @@ import { theme } from "../../Theme";
 import { scale } from "react-native-size-matters";
 import { AntDesign } from "@expo/vector-icons";
 
-const MapDrawer = ({ row, onMinimize, minimize }) => {
+const MapDrawer = ({ row, onMinimize, minimize, setLocations }) => {
   const MIN_HEIGHT = 80;
   const MAX_HEIGHT = 600;
   const drawerHeight = useRef(
@@ -270,6 +270,7 @@ const MapDrawer = ({ row, onMinimize, minimize }) => {
           <View style={styles.body}>
             <SuggestCardContainer
               row={row}
+              setRows={setLocations}
               suggestContainerType={0}
               schemaActions={AssetsSchemaActions}
               // Dynamically scaled image

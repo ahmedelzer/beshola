@@ -14,7 +14,7 @@ import NearestBranchesSchema from "../src/Schemas/AddressLocation/NearestBranche
 import NearestBranchesActions from "../src/Schemas/AddressLocation/NearestBranchesActions.json";
 import WorkingHoursSchemaActions from "../src/Schemas/AddressLocation/WorkingHoursSchemaActions.json";
 import CurrencyTypesSchemaActions from "../src/Schemas/MenuSchema/CurrencyTypesSchemaActions.json";
-import AssetsSchema from "../src/Schemas/MenuSchema/AssetsSchema.json";
+import OnlineAssetsSchema from "../src/Schemas/MenuSchema/OnlineAssetsSchema.json";
 import AdditionInformationSchema from "../src/Schemas/LoginSchema/AdditionInformationSchema.json";
 import { createRowCache } from "../src/components/Pagination/createRowCache";
 import {
@@ -146,7 +146,7 @@ export const PreparingApp: React.FC<{ children: ReactNode }> = ({
   );
   const [nodeMenuItemState, nodeMenuItemReducerDispatch] = useReducer(
     reducer,
-    initialState(10, AssetsSchema.idField),
+    initialState(10, OnlineAssetsSchema.idField),
   );
   const nodeDataSourceAPI = (query: any, skip: number, take: number) => {
     return buildApiUrl(query, {

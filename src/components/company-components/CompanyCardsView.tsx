@@ -19,6 +19,7 @@ import CompanyCard from "../cards/CompanyCard";
 import CompanyCardView from "./CompanyCardView";
 import { initCompanyRows } from "./tabsData";
 import PolygonMapEmbed from "../maps/DrawSmoothPolygon";
+import OnlineAssetsSchema from "../../Schemas/MenuSchema/OnlineAssetsSchema.json";
 const CompanyCardsView = ({}: any) => {
   const { cartState, cartFieldsType } = useCart();
   const { menuItemsState } = useSchemas();
@@ -72,6 +73,7 @@ const CompanyCardsView = ({}: any) => {
         <View className=" w-full" style={{ height: 500, overflow: "hidden" }}>
           <PolygonMapEmbed
             clickable={false}
+            locationFields={OnlineAssetsSchema.dashboardFormSchemaParameters}
             onLocationChange={(loc) => console.log(loc)}
             setNewPolygon={(poly) => console.log(poly)}
           />

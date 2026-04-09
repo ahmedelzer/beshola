@@ -236,6 +236,8 @@ import StaticButtonInput from "../form-container/inputs/StaticButtonInput";
 import RequestSchemaActions from "../../Schemas/MenuSchema/RequsetTimeSchemaActions.json";
 import RequsetTimeSchema from "../../Schemas/MenuSchema/RequsetTimeSchema.json";
 import RequestActionsButtons from "./uiComponent/RequestActionsButtons";
+import AssetDetailsAction from "../company-components/AssetDetailsAction";
+import { getUniqueKey } from "../../utils/operation/getUniqueKey";
 
 interface RequestCardProps {
   itemPackage: any;
@@ -278,93 +280,126 @@ const RequestCard: React.FC<RequestCardProps> = ({
   };
   const isWeb = Platform.OS === "web";
   return (
-    <View className="mb-3">
-      {/* Top Buttons */}
-      <PropertyCardButtonsActions
-        item={item}
-        fieldsType={fieldsType}
-        widthBorder={true}
-      />
+    <AssetDetailsAction
+      itemPackage={item}
+      key={getUniqueKey(
+        itemPackage[fieldsType.idField],
+        fieldsType.attributes,
+        JSON.stringify(itemPackage),
+      )}
+    >
+      <View className="mb-3">
+        {/* Top Buttons */}
+        <PropertyCardButtonsActions
+          item={item}
+          fieldsType={fieldsType}
+          widthBorder={true}
+        />
 
-      {/* Main Card */}
-      {/*
-       */}
-      <Card
-        className={`items-center rounded-xl overflow-hidden border relative ${
-          selected ? "border-2 border-green-500" : ""
-        } !rounded-none`}
-        style={{
-          // Using your theme accent with 30% opacity as requested
-          backgroundColor: selected
-            ? theme.accentHover
-            : addAlpha(theme.body, 0.15),
-          borderColor: selected ? theme.accentHover : addAlpha(theme.body, 0.5),
-        }}
-      >
-        <View className="w-full flex flex-col">
-          {/* Image + Info Section */}
-          <View
-            style={!isWeb ? { flexDirection: "row", width: "100%" } : undefined}
-            className={isWeb ? "grid grid-cols-2 w-full" : undefined}
-          >
-            {/* Image */}
-            <View
-              style={!isWeb ? { width: "50%" } : undefined}
-              className="w-full flex flex-col relative"
-            >
-              <MemoizedImageCard
-                item={item}
-                fieldsType={fieldsType}
-                imageSize={imageSize}
-                schemaActions={schemaActions}
-              />
-            </View>
-
-            {/* Content */}
+        {/* Main Card */}
+        {/*
+         */}
+        <Card
+          className={`items-center rounded-xl overflow-hidden border relative ${
+            selected ? "border-2 border-green-500" : ""
+          } !rounded-none`}
+          style={{
+            // Using your theme accent with 30% opacity as requested
+            backgroundColor: selected
+              ? theme.accentHover
+              : addAlpha(theme.body, 0.15),
+            borderColor: selected
+              ? theme.accentHover
+              : addAlpha(theme.body, 0.5),
+          }}
+        >
+          <View className="w-full flex flex-col">
+            {/* Image + Info Section */}
             <View
               style={
-                !isWeb
-                  ? { width: "50%", justifyContent: "space-between" }
-                  : undefined
+                !isWeb ? { flexDirection: "row", width: "100%" } : undefined
               }
-              className="w-full flex flex-col justify-between ps-2"
+              className={isWeb ? "grid grid-cols-2 w-full" : undefined}
             >
-              <VStack className="space-y-2 w-full">
-                {/* Row 1: Account Info */}
-                <AccountInfo fieldsType={fieldsType} item={item} />
-                {/* Row 2: Attributes (full width) */}
-                {fieldsType.attributes && item[fieldsType.attributes] && (
-                  <View className="w-full">
-                    <Attributes attributes={item[fieldsType.attributes]} />
-                  </View>
-                )}
-              </VStack>
-            </View>
-          </View>
-
-          {/* Bottom Actions */}
-          <View className="flex-row items-center mt-2 px-2 w-full">
-            {/* Address Section - 50% width */}
-            <View
-              style={{ width: "50%" }}
-              className="items-center justify-center"
-            >
-              {fieldsType.address && item[fieldsType.address] && (
-                <AddressComponent
-                  addressText={item[fieldsType.address]}
-                  fieldsType={fieldsType}
+              {/* Image */}
+              <View
+                style={!isWeb ? { width: "50%" } : undefined}
+                className="w-full flex flex-col relative"
+              >
+                <MemoizedImageCard
                   item={item}
+                  fieldsType={fieldsType}
+                  imageSize={imageSize}
+                  schemaActions={schemaActions}
                 />
-              )}
-            </View>
-            <RequestActionsButtons item={item} styleType="scroll" />
-          </View>
-        </View>
-      </Card>
+              </View>
 
-      {/* Price Plans */}
-      <PricePlansSection item={item} />
-    </View>
+              {/* Content */}
+              <View
+                style={
+                  !isWeb
+                    ? { width: "50%", justifyContent: "space-between" }
+                    : undefined
+                }
+                className="w-full flex flex-col justify-between ps-2"
+              >
+                <VStack className="space-y-2 w-full">
+                  {/* Row 1: Account Info */}
+                  <AccountInfo fieldsType={fieldsType} item={item} />
+                  {/* Row 2: Attributes (full width) */}
+                  {fieldsType.attributes && item[fieldsType.attributes] && (
+                    <View
+                      className="w-full"
+                      key={getUniqueKey(
+                        item[fieldsType.idField],
+                        fieldsType.attributes,
+                        item[fieldsType.attributes],
+                      )}
+                    >
+                      <Attributes attributes={item[fieldsType.attributes]} />
+                    </View>
+                  )}
+                </VStack>
+              </View>
+            </View>
+
+            {/* Bottom Actions */}
+            <View className="flex-row items-center mt-2 px-2 w-full">
+              {/* Address Section - 50% width */}
+              {fieldsType.address && item[fieldsType.address] && (
+                <View
+                  style={{ width: "50%" }}
+                  className="items-center justify-center"
+                  key={getUniqueKey(
+                    item[fieldsType.idField],
+                    fieldsType.address,
+                    item[fieldsType.address],
+                  )}
+                >
+                  <AddressComponent
+                    addressText={item[fieldsType.address]}
+                    fieldsType={fieldsType}
+                    item={item}
+                  />
+                </View>
+              )}
+              <RequestActionsButtons
+                key={getUniqueKey(
+                  item[fieldsType.idField],
+                  fieldsType.isRequested,
+                  item[fieldsType.isRequested],
+                )}
+                item={item}
+                styleType="scroll"
+              />
+            </View>
+          </View>
+        </Card>
+
+        {/* Price Plans */}
+        <PricePlansSection item={item} />
+      </View>
+    </AssetDetailsAction>
   );
 };
 
@@ -375,7 +410,14 @@ export const MemoizedImageCard = React.memo(
 
     const imageHeight = width < 640 ? 160 : width < 1024 ? 208 : 224;
     return (
-      <Box className="w-full flex justify-center items-center overflow-hidden rounded-0">
+      <Box
+        className="w-full flex justify-center items-center overflow-hidden rounded-0"
+        key={getUniqueKey(
+          item[fieldsType.idField],
+          fieldsType.imageView,
+          item[fieldsType.imageView],
+        )}
+      >
         <ImageCardActions
           fieldsType={fieldsType}
           item={item}

@@ -17,7 +17,6 @@
       "indexNumber": 1
     },
     {
-      
       "parameterType": "isRequested",
       "parameterField": "isRequested",
       "parameterTitel": "isRequested",
@@ -25,7 +24,6 @@
       "indexNumber": 1
     },
     {
-      
       "parameterType": "onlineAssetViews",
       "parameterField": "onlineAssetViews",
       "parameterTitel": "onlineAssetViews",
@@ -182,7 +180,7 @@
   ],
   "projectProxyRoute": "BrandingMartAssets",
   "isMainSchema": true,
-  "dataSourceName": "nodeMenuItemID",
+  "dataSourceName": "onlineAsset",
   "propertyName": null,
   "indexNumber": 0
 }

@@ -1,7 +1,5 @@
-import React, { useContext } from "react";
-import { View, Text, ScrollView, StyleSheet, Dimensions } from "react-native";
-// import { GetIconContact } from "./GetIconContact"; // Ensure this returns a RN component
-// import BranchesByLocationMap from "./BranchesByLocationMap"; // Ensure this is a RN MapView
+import React from "react";
+import { View, Text, StyleSheet, Dimensions } from "react-native";
 import {
   MaterialCommunityIcons,
   Ionicons,
@@ -14,12 +12,16 @@ import PolygonMapEmbed from "../../maps/DrawSmoothPolygon";
 
 const { width } = Dimensions.get("window");
 
-function CompanyInfo({ branches, masterBranch }) {
-  const localization = useSelector((state) => state.localization.localization); // Assuming you have a LocalizationContext
+function CompanyInfo({ branches }) {
+  const localization = useSelector((state) => state.localization.localization);
   const fieldsType = useSelector((s) => s.menuItem?.fieldsType);
 
-  // --- Logic Helpers (Kept from your original code) ---
-  const convertUTCToLocalTime = (timeString: string) => {
+  // Define masterBranch as the primary location for contact/hours
+  const masterBranch = branches && branches.length > 0 ? branches[0] : null;
+
+  // --- Logic Helpers ---
+  const convertUTCToLocalTime = (timeString) => {
+    if (!timeString) return "";
     const [hours, minutes] = timeString.split(":").map(Number);
     let totalMinutes = hours * 60 + minutes;
     const timezoneOffset = -new Date().getTimezoneOffset();
@@ -29,12 +31,7 @@ function CompanyInfo({ branches, masterBranch }) {
     return `${localHours}:${localMinutes}`;
   };
 
-  const getMinutesFromTime = (timeString: string) => {
-    const [hours, minutes] = timeString.split(":").map(Number);
-    return hours * 60 + minutes;
-  };
-
-  const getWorkStatus = (workHour: any) => {
+  const getWorkStatus = (workHour) => {
     const today = new Date().getDay();
     const currentTime = new Date();
     const isToday = today === workHour.dayIndex;
@@ -44,43 +41,32 @@ function CompanyInfo({ branches, masterBranch }) {
     const localEndTime = convertUTCToLocalTime(workHour.endTime);
 
     const nowMinutes = currentTime.getHours() * 60 + currentTime.getMinutes();
-    const startMinutes = getMinutesFromTime(localStartTime);
-    const endMinutes = getMinutesFromTime(localEndTime);
+    const [sH, sM] = localStartTime.split(":").map(Number);
+    const [eH, eM] = localEndTime.split(":").map(Number);
+
+    const startMinutes = sH * 60 + sM;
+    const endMinutes = eH * 60 + eM;
 
     let statusLabel = localization.about.companyInfo.Closed;
-    const SOON_THRESHOLD = 30;
-
     if (nowMinutes >= startMinutes && nowMinutes <= endMinutes) {
       statusLabel =
-        endMinutes - nowMinutes <= SOON_THRESHOLD
+        endMinutes - nowMinutes <= 30
           ? localization.about.companyInfo.NearClosed
           : localization.about.companyInfo.OpenedNow;
-    } else if (
-      nowMinutes < startMinutes &&
-      startMinutes - nowMinutes <= SOON_THRESHOLD
-    ) {
-      statusLabel = "";
     }
-
     return { isToday: true, label: statusLabel };
   };
 
   return (
-    <ScrollView
-      style={styles.container}
-      contentContainerStyle={{ width: "100%" }}
-    >
-      {/* MAP SECTION */}
-      {branches.length > 0 && (
-        <View className="w-full mb-4" style={{ height: 400 }}>
-          {/* <BranchesByLocationMap branches={branches} /> */}
+    <View style={styles.outerWrapper}>
+      {/* MAP SECTION - Centered by outerWrapper */}
+      {branches && branches.length > 0 && (
+        <View style={styles.mapCard}>
           <PolygonMapEmbed
-            locations={branches.map((branch) => {
-              return {
-                [fieldsType.latitude]: branch[fieldsType.latitude],
-                [fieldsType.longitude]: branch[fieldsType.longitude],
-              };
-            })}
+            locations={branches.map((branch) => ({
+              [fieldsType.latitude]: branch[fieldsType.latitude],
+              [fieldsType.longitude]: branch[fieldsType.longitude],
+            }))}
             fields={fieldsType.parameters}
             onLocationChange={() => {}}
             setNewPolygon={() => {}}
@@ -89,188 +75,201 @@ function CompanyInfo({ branches, masterBranch }) {
           />
         </View>
       )}
-    </ScrollView>
+
+      {/* INFO SECTIONS CONTAINER */}
+      <View style={styles.infoContainer}>
+        {/* ADDRESS */}
+        {branches && branches.length > 0 && (
+          <View style={styles.listItem}>
+            <View style={styles.iconContainer}>
+              <Ionicons
+                name="location-outline"
+                size={26}
+                color={theme.primary}
+              />
+            </View>
+            <View style={styles.itemContent}>
+              <Text style={styles.title}>
+                {localization.about.companyInfo.ourAddress}
+              </Text>
+              {branches.map((branch, index) => (
+                <Text key={index} style={styles.text}>
+                  {branch.address}
+                </Text>
+              ))}
+            </View>
+          </View>
+        )}
+
+        {/* CONTACTS */}
+        {masterBranch && masterBranch.companyBranchContacts?.length > 0 && (
+          <View style={styles.listItem}>
+            <View style={styles.iconContainer}>
+              <MaterialCommunityIcons
+                name="card-account-details-outline"
+                size={26}
+                color={theme.primary}
+              />
+            </View>
+            <View style={styles.itemContent}>
+              <Text style={styles.title}>
+                {localization.about.companyInfo.contactText}
+              </Text>
+              <View style={styles.contactIconsRow}>
+                {masterBranch.companyBranchContacts.map((c) => (
+                  <View
+                    key={c.companyBranchContactID}
+                    style={styles.contactCircle}
+                  >
+                    {GetIconContact(c.codeNumber, 20, c.contact)}
+                  </View>
+                ))}
+              </View>
+            </View>
+          </View>
+        )}
+
+        {/* WORKING HOURS */}
+        {masterBranch?.companyBranchWorkHours && (
+          <View style={styles.listItem}>
+            <View style={styles.iconContainer}>
+              <FontAwesome5 name="clock" size={22} color={theme.primary} />
+            </View>
+            <View style={styles.itemContent}>
+              <Text style={styles.title}>
+                {localization.about.companyInfo.workingHours}
+              </Text>
+              <View style={styles.hoursList}>
+                {masterBranch.companyBranchWorkHours.map((workHour) => {
+                  const status = getWorkStatus(workHour);
+                  return (
+                    <View
+                      key={workHour.companyBranchDayWorkHoursID}
+                      style={[
+                        styles.hourRow,
+                        status.isToday && styles.todayHighlight,
+                      ]}
+                    >
+                      <View style={styles.hourData}>
+                        <Text style={styles.dayText}>{workHour.dayName}</Text>
+                        <Text style={styles.timeText}>
+                          {convertUTCToLocalTime(workHour.startTime)} -{" "}
+                          {convertUTCToLocalTime(workHour.endTime)}
+                        </Text>
+                      </View>
+                      {status.isToday && status.label !== "" && (
+                        <Text style={styles.statusLabel}>{status.label}</Text>
+                      )}
+                    </View>
+                  );
+                })}
+              </View>
+            </View>
+          </View>
+        )}
+      </View>
+    </View>
   );
 }
-// <View style={styles.contentWrapper}>
-//   <View style={styles.listItem}>
-//     <View style={styles.iconContainer}>
-//       <Ionicons name="location-outline" size={30} color={theme.primary} />
-//     </View>
-//     <View style={styles.itemContent}>
-//       <Text style={styles.title}>
-//         {localization.about.companyInfo.ourAddress}
-//       </Text>
-//       {branches.map((branch) => (
-//         <Text key={branch.addressLocationID} style={styles.text}>
-//           {branch.address}
-//         </Text>
-//       ))}
-//     </View>
-//   </View>
 
-//   {masterBranch && masterBranch.companyBranchContacts.length > 0 && (
-//     <View style={styles.listItem}>
-//       <View style={styles.iconContainer}>
-//         <MaterialCommunityIcons
-//           name="card-account-details-outline"
-//           size={30}
-//           color={theme.primary}
-//         />
-//       </View>
-//       <View style={styles.itemContent}>
-//         <Text style={styles.title}>
-//           {localization.about.companyInfo.contactText}
-//         </Text>
-//         <View style={styles.contactIconsRow}>
-//           {masterBranch.companyBranchContacts?.map((c) => (
-//             <View
-//               key={c.companyBranchContactID}
-//               style={styles.contactCircle}
-//             >
-//               {GetIconContact(c.codeNumber, 22, c.contact)}
-//             </View>
-//           ))}
-//         </View>
-//       </View>
-//     </View>
-//   )}
-
-//   {/* WORKING HOURS SECTION */}
-//   {masterBranch && Array.isArray(masterBranch.companyBranchWorkHours) && (
-//     <View style={styles.listItem}>
-//       <View style={styles.iconContainer}>
-//         <FontAwesome5 name="clock" size={25} color={theme.primary} />
-//       </View>
-//       <View style={styles.itemContent}>
-//         <Text style={styles.title}>
-//           {localization.about.companyInfo.workingHours}
-//         </Text>
-//         <View style={styles.hoursList}>
-//           {masterBranch.companyBranchWorkHours.map((workHour) => {
-//             const status = getWorkStatus(workHour);
-//             return (
-//               <View
-//                 key={workHour.companyBranchDayWorkHoursID}
-//                 style={[
-//                   styles.hourRow,
-//                   status.isToday && styles.todayHighlight,
-//                 ]}
-//               >
-//                 <View style={styles.hourData}>
-//                   <Text style={styles.dayText}>{workHour.dayName}</Text>
-//                   <Text style={styles.timeText}>
-//                     {convertUTCToLocalTime(workHour.startTime)} -{" "}
-//                     {convertUTCToLocalTime(workHour.endTime)}
-//                   </Text>
-//                 </View>
-//                 {status.isToday && status.label !== "" && (
-//                   <Text style={styles.statusLabel}>({status.label})</Text>
-//                 )}
-//               </View>
-//             );
-//           })}
-//         </View>
-//       </View>
-//     </View>
-//   )}
-// </View>
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: theme.body,
+  outerWrapper: {
     width: "100%",
+    alignItems: "center", // Centers the Map and the Info Container
+    paddingVertical: 10,
   },
-  contentWrapper: {
-    padding: 16,
+  mapCard: {
+    width: "94%", // Slightly less than full width for a "card" look
+    height: 280,
+    borderRadius: 12,
+    overflow: "hidden",
+    marginBottom: 20,
+    backgroundColor: "#e1e1e1",
+  },
+  infoContainer: {
+    width: "94%", // Matches Map width for alignment
   },
   listItem: {
     flexDirection: "row",
-    marginBottom: 24,
-    alignItems: "flex-start",
+    marginBottom: 22,
+    width: "100%",
   },
   iconContainer: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    backgroundColor: theme.body,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: "#fff",
     justifyContent: "center",
     alignItems: "center",
-    marginRight: 15,
+    marginRight: 12,
+    elevation: 2,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
   },
   itemContent: {
     flex: 1,
   },
   title: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: "bold",
     color: "#333",
-    marginBottom: 8,
+    marginBottom: 4,
   },
   text: {
     fontSize: 14,
     color: theme.text,
-    marginBottom: 4,
+    lineHeight: 20,
   },
   contactIconsRow: {
     flexDirection: "row",
     flexWrap: "wrap",
-    gap: 10,
     marginTop: 8,
   },
   contactCircle: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: theme.body,
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    backgroundColor: "#fff",
     justifyContent: "center",
     alignItems: "center",
+    marginRight: 10,
+    marginBottom: 8,
     elevation: 3,
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
-    shadowRadius: 4,
+    shadowRadius: 3,
   },
   hoursList: {
-    marginTop: 8,
+    marginTop: 4,
   },
   hourRow: {
-    paddingVertical: 8,
-    paddingHorizontal: 10,
+    paddingVertical: 5,
+    paddingHorizontal: 8,
     borderRadius: 6,
-    marginBottom: 4,
   },
   todayHighlight: {
-    backgroundColor: theme.overlay,
+    backgroundColor: theme.overlay || "#f0f0f0",
   },
   hourData: {
     flexDirection: "row",
     justifyContent: "space-between",
   },
   dayText: {
-    fontSize: 14,
-    color: theme.text,
-    fontWeight: "500",
+    fontSize: 13,
+    color: "#555",
   },
   timeText: {
-    fontSize: 14,
+    fontSize: 13,
+    fontWeight: "600",
     color: theme.primary,
   },
   statusLabel: {
-    fontSize: 12,
+    fontSize: 11,
     fontWeight: "bold",
-    textAlign: "center",
-    color: theme.accent, // Replace with your primary color
-    marginTop: 2,
-  },
-  mapCard: {
-    width: width - 32,
-    height: 300,
-    marginHorizontal: 16,
-    borderRadius: 12,
-    overflow: "hidden",
-    marginBottom: 40,
-    backgroundColor: theme.body,
+    color: theme.accent,
+    textAlign: "right",
   },
 });
 

@@ -38,7 +38,6 @@ const CompanyCardsFlatList: React.FC<CompanyCardsFlatListProps> = ({
 }) => {
   const { width } = useWindowDimensions();
 
-
   const numColumns = useMemo(() => {
     if (width >= 1280) return 3;
     if (width >= 768) return 2;
@@ -83,12 +82,13 @@ const CompanyCardsFlatList: React.FC<CompanyCardsFlatListProps> = ({
               style={{ width: numColumns === 1 ? "100%" : cellWidth }}
             >
               <CardComponent
-                itemPackage={getItemPackage(
-                  rowItem,
-                  cartState.rows,
-                  menuItemsState.schema,
-                  fieldsType,
-                )}
+                // itemPackage={getItemPackage(
+                //   rowItem,
+                //   cartState.rows,
+                //   menuItemsState.schema,
+                //   fieldsType,
+                // )}
+                itemPackage={rowItem}
                 schemaActions={menuItemsState.actions}
                 setSelectedItems={setSelectedItems}
                 selectedItems={selectedItems}

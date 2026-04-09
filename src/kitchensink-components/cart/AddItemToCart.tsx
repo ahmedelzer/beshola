@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { onApply } from "../../components/form-container/OnApply";
 import { addToCart, setItemQuantity } from "../../reducers/CartReducer";
-import AssetsSchema from "../../Schemas/MenuSchema/AssetsSchema.json";
+import OnlineAssetsSchema from "../../Schemas/MenuSchema/OnlineAssetsSchema.json";
 import DeleteItem from "../../utils/operation/DeleteItem";
 
 export const AddItemToCart = async (
@@ -25,7 +25,7 @@ export const AddItemToCart = async (
           //dispatch(addToCart({ item: item, fieldsType: fieldsType })),
           true,
           deleteAction,
-          AssetsSchema.projectProxyRoute,
+          OnlineAssetsSchema.projectProxyRoute,
         )
       ) {
         // dispatch(setItemQuantity(-1));
@@ -46,7 +46,7 @@ export const AddItemToCart = async (
         "",
         true,
         postAction,
-        AssetsSchema.projectProxyRoute,
+        OnlineAssetsSchema.projectProxyRoute,
       );
 
       if (apply?.success) {
