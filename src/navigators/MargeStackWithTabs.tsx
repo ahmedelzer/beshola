@@ -23,6 +23,7 @@ import DetailsScreen from "../components/company-components/DetailsScreen";
 import ErrorScreen from "../components/privacy/ErrorScreen";
 import LoadingScreen from "../kitchensink-components/loading/LoadingScreen";
 import CompareScreen from "../kitchensink-components/compare/CompareScreen";
+import VerifyScreen from "../kitchensink-components/auth/verfiy";
 
 const Stack =
   Platform.OS === "web" ? createStackNavigator() : createNativeStackNavigator();
@@ -56,6 +57,7 @@ export const MargeStackWithTabs = (tabItem) => {
       <Stack.Screen name="SignIn" component={SignIn} />
       <Stack.Screen name="SignUp" component={SignUp} />
       <Stack.Screen name="ForgetPassword" component={ForgotPassword} />
+      <Stack.Screen name="Verify" component={VerifyScreen} />
       <Stack.Screen
         name="MenuFilter"
         component={() => SetResponsiveContainer(<MenuFilter />, true)}

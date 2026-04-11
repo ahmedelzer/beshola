@@ -24,11 +24,10 @@ import { getField } from "../../utils/operation/getField";
 import { isRTL } from "../../utils/operation/isRTL";
 import PricePlansInput from "./PricePlansInput";
 
-
 const PricePlansSection = ({ item, openingList = false, variant = "" }) => {
   const localization = useSelector((state) => state.localization.localization);
   const [openModal, setOpenModal] = useState(openingList);
-  
+
   const getAction = PricePlanSchemaActions?.find(
     (action) => action.dashboardFormActionMethodType === "Get",
   );
@@ -108,8 +107,8 @@ const PricePlansSection = ({ item, openingList = false, variant = "" }) => {
     <Box className="items-center h-[120px]">
       {!openingList && (
         <TouchableOpacity
-          className={`w-full flex-row items-center justify-between ${
-            variant === "small" ? "h-[60px]" : "h-[80px]"
+          className={`w-full items-center justify-between ${
+            variant === "small" ? "h-[60px]" : "h-[80px] flex-row"
           } px-3 py-2 rounded-b-xl rounded-t-none shadow-md`}
           style={{ backgroundColor: theme.accent }}
           onPress={() => setOpenModal(true)}
@@ -129,14 +128,19 @@ const PricePlansSection = ({ item, openingList = false, variant = "" }) => {
                 fontWeight: "bold",
                 fontSize: variant === "small" ? 10 : 16,
                 textAlign: "center", // Ensures text is centered within its box
-                width: '100%'
+                width: "100%",
               }}
             >
               {localization.menu.exploerMore || "Explore more plans"}
             </Text>
 
             {/* Row 2: Discount */}
-            <View style={{ marginTop: variant === "small" ? 0 : 4, alignItems: 'center' }}>
+            <View
+              style={{
+                marginTop: variant === "small" ? 0 : 4,
+                alignItems: "center",
+              }}
+            >
               <CardPriceDiscount
                 fieldsType={pricePlanFieldsType}
                 item={item}

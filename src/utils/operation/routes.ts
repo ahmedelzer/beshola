@@ -1,7 +1,9 @@
 import { useSelector } from "react-redux";
 
-export function selectedRoutes(userGust) {
-  const localization = useSelector((state) => state.localization.localization);
+export function selectedRoutes(userGust: boolean) {
+  const localization = useSelector(
+    (state: any) => state.localization.localization,
+  );
 
   const routes = [
     { routePath: "Home" },
@@ -10,24 +12,22 @@ export function selectedRoutes(userGust) {
     { routePath: "MyAssets" },
     { routePath: "Profile" },
   ];
+  const staticTabs = [
+    { routePath: "Home", icon: "home" },
+    { routePath: "Search", icon: "menu" },
+    { routePath: "Requests", icon: "receipt" },
+    { routePath: "MyAssets", icon: "inventory-2" }, // extra ثابت
+    { routePath: "Profile", icon: "person" },
+  ];
   // Create new mapped tabs with routePath added
-  const tabs =
-    [
-      ...localization.tabs,
-      { name: "MyAssets", routePath: "MyAssets", icon: "inventory-2" },
-    ]?.map((tab) => {
-      if (tab.icon === "home") {
-        return { ...tab, routePath: "Home" };
-      } else if (tab.icon === "menu") {
-        return { ...tab, routePath: "Search" };
-      } else if (tab.icon === "receipt") {
-        return { ...tab, routePath: "Requests" };
-      } else if (tab.icon === "person") {
-        return { ...tab, routePath: "Profile" };
-      }
-      return tab; // keep unchanged if no match
-    }) ?? [];
+  const tabs = staticTabs.map((tab) => {
+    const localized = localization.tabs?.find((t: any) => t.icon === tab.icon);
 
+    return {
+      ...tab,
+      name: localized?.name || tab.routePath, // fallback if missing
+    };
+  });
   const routesForGuests = routes.filter(
     (item) =>
       item.routePath !== "Profile" &&

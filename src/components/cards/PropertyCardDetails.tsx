@@ -159,14 +159,17 @@ const PropertyCardDetails: React.FC<PropertyCardDetailsProps> = ({
         {fieldsType.address && item[fieldsType.address] && (
           <View className="w-full mb-4" style={{ height: 400 }}>
             <PolygonMapEmbed
-              location={{
-                [fieldsType.latitude]: item[fieldsType.latitude],
-                [fieldsType.longitude]: item[fieldsType.longitude],
-              }}
-              fields={fieldsType.parameters}
+              areaLocations={[
+              {
+              [fieldsType.latitude]: item[fieldsType.latitude],
+              [fieldsType.longitude]: item[fieldsType.longitude],
+            }
+            ]}
+            locationFields={fieldsType.parameters}
               onLocationChange={() => {}}
               setNewPolygon={() => {}}
               canClickPolygon={false}
+              showSuggestsCard={false}
             />
           </View>
         )}

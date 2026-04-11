@@ -161,13 +161,10 @@ const CompanyCard: React.FC<CompanyCardProps> = ({
               </View>
             )}
             {/* Viewers Section - 35% width */}
-            <View
-              style={{ width: "35%" }}
-              className="flex-row items-center justify-center px-2 py-1 rounded"
-            >
+            <View style={{ width: "31%" }}>
               {fieldsType.onlineAssetViews && (
                 <View
-                  className="flex-row items-center justify-center px-2 py-1 border rounded"
+                  className="flex-row items-center justify-center px-2 !w-fit me-2 py-1 border rounded"
                   style={{ backgroundColor: addAlpha(theme.body, 0.1) }}
                   key={getUniqueKey(
                     item[fieldsType.idField],
@@ -181,7 +178,7 @@ const CompanyCard: React.FC<CompanyCardProps> = ({
                     color={theme.accent}
                   />
                   <Text
-                    className="text-text text-xs ml-1"
+                    className="text-text text-xs ms-1"
                     key={` ${item[fieldsType.idField]}-
                         ${fieldsType.onlineAssetViews}-
                         ${item[fieldsType.onlineAssetViews]}`}
@@ -195,7 +192,7 @@ const CompanyCard: React.FC<CompanyCardProps> = ({
             {/* Chat Section - 15% width */}
             {/* {fieldsType.isRequested&&( */}
             <View
-              style={{ width: "15%" }}
+              style={{ width: "23%" }}
               className="items-center justify-center"
               key={getUniqueKey(
                 item[fieldsType.idField],
@@ -238,7 +235,7 @@ export const MemoizedImageCard = React.memo(
           fieldsType={fieldsType}
           item={item}
           showFaovertIcon={fieldsType.isFav}
-          style={{ width: imageSize, height: imageSize, borderRadius: 0 }}
+          style={{ width: imageSize, height: imageSize }}
           //className={isWeb ? "!w-[100%] !h-40 sm:!h-52 lg:!h-56" : "!size-40"}
         >
           <></>

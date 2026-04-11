@@ -1,4 +1,10 @@
-import React, { useRef, useEffect, useState, Children } from "react";
+import React, {
+  useRef,
+  useEffect,
+  useState,
+  Children,
+  useCallback,
+} from "react";
 import { Platform, View, ActivityIndicator, Text } from "react-native"; // Added Text/ActivityIndicator
 import WebView from "react-native-webview";
 import schema from "../../Schemas/Map/PolygonSchema.json";
@@ -45,7 +51,7 @@ const PolygonMapEmbed = ({
       dashboardFormSchemaID: "270f513b-1788-4c01-879e-4526c990f898",
       isEnable: true,
       parameterType: "areaMapLatitudePoint",
-      parameterField: "latitude",
+      parameterField: "locationLatitudePoint",
       parameterTitel: "locationLatitudePoint",
       isIDField: false,
       lookupID: null,
@@ -58,7 +64,7 @@ const PolygonMapEmbed = ({
       dashboardFormSchemaID: "270f513b-1788-4c01-879e-4526c990f898",
       isEnable: true,
       parameterType: "areaMapLongitudePoint",
-      parameterField: "longitude",
+      parameterField: "locationLongitudePoint",
       parameterTitel: "locationLongitudePoint",
       isIDField: false,
       lookupID: null,
@@ -69,135 +75,125 @@ const PolygonMapEmbed = ({
   ],
   haveRadius = true,
   clickAction = "pin",
-  host = "http://localhost:3001",
-  // host = "https://ihs-solutions.com:7552",
+  //host = "http://localhost:3001",
+  host = "https://ihs-solutions.com:7552",
   onLocationChange,
   setNewPolygon,
   showSuggestsCard = true,
   areaLocations = [],
 }) => {
+  console;
   const webRef = useRef(null);
   const iframeRef = useRef(null);
-  const [coords, setCoords] = useState(
+  const locationsRef = useRef(areaLocations);
+  const [coords] = useState(
     location || selectCurrentLocation(store.getState()),
   );
-  const locationRef = useRef(JSON.stringify(coords));
   const [polygonObj, setPolygonObj] = useState({});
-  const [locations, setLocations] = useState(areaLocations);
   const [minimizeDrawer, setMinimizeDrawer] = useState(true);
-  // New Loading State
   const [isLoading, setIsLoading] = useState(true);
+  const setLocationsCallback = useCallback((newLocations) => {
+    locationsRef.current = newLocations;
 
-  const drawerComponent = (_polygonObj) => {
-    if (showSuggestsCard)
-      return (
-        <DrawerComponent
-          polygonObj={_polygonObj}
-          minimizeDrawer={minimizeDrawer}
-          setMinimizeDrawer={setMinimizeDrawer}
-          setLocations={setLocations}
-        />
-      );
-    return <></>;
-  };
+    sendLocationsToMap();
+  }, []);
+  // 1. Stable function to send locations
+  const sendLocationsToMap = useCallback(() => {
+    const payload = {
+      type: "UPDATE_LOCATIONS",
+      payload: [...locationsRef.current, ...areaLocations],
+    };
 
-  useEffect(() => {
-    if (Object.keys(polygonObj).length > 0 && !clickable) {
-      setMinimizeDrawer(false); // Auto-open drawer when polygon is clicked and clickable is false
-      console.log("polygonObj", polygonObj);
+    if (Platform.OS === "web") {
+      if (iframeRef.current?.contentWindow) {
+        iframeRef.current.contentWindow.postMessage(payload, "*");
+      }
+    } else {
+      if (webRef.current) {
+        webRef.current.postMessage(JSON.stringify(payload));
+      }
     }
-  }, [polygonObj]);
+  }, [areaLocations]);
+
+  // 2. CRITICAL: Re-send locations whenever they change
+  const lastSentLocationsRef = useRef("");
+
   useEffect(() => {
-    const interval = setInterval(() => {
-      const newCoords = selectCurrentLocation(store.getState()); // get latest coords
-      const newCoordsStr = JSON.stringify(newCoords);
+    if (isLoading) return;
 
-      if (!location || coords === newCoordsStr) return; // no change
+    const currentLocations = [...locationsRef.current, ...areaLocations];
+    const currentStr = JSON.stringify(currentLocations);
 
-      locationRef.current = JSON.stringify(coords);
+    // 1. Only act if data is actually different
+    if (lastSentLocationsRef.current !== currentStr) {
+      // 2. Clear previous timer
+      const handler = setTimeout(() => {
+        // console.log("Debounced send to map:", currentLocations.length);
+        sendLocationsToMap();
+        lastSentLocationsRef.current = currentStr;
+      }, 500); // Wait 500ms after the last change
 
-      // reload WebView / iframe
-      if (webRef.current && Platform.OS !== "web") {
-        webRef.current.reload();
-      }
-      if (iframeRef.current && Platform.OS === "web") {
-        const updatedParams = new URLSearchParams({
-          location: locationRef.current,
-          clickable,
-          fields: JSON.stringify(fields),
-          locationsFields: JSON.stringify(locationFields),
-          haveRadius,
-          findServerContainer: JSON.stringify(schema),
-          clickAction,
-          polygonClickable,
-          locations: JSON.stringify(areaLocations),
-        });
-        iframeRef.current.src = `${host}/displayMap?${updatedParams.toString()}`;
-      }
-    }, 300000); // 5 minutes
+      return () => clearTimeout(handler);
+    }
+  }, [locationsRef.current, areaLocations, isLoading, sendLocationsToMap]);
 
-    return () => clearInterval(interval); // cleanup
-  }, [
-    host,
-    clickable,
-    fields,
-    haveRadius,
-    clickAction,
-    polygonClickable,
-    coords,
-  ]);
-
+  // 3. Clean URL (No locations here)
   const params = new URLSearchParams({
-    location: locationRef.current,
-    clickable,
+    location: JSON.stringify(coords),
+    clickable: String(clickable),
     fields: JSON.stringify(fields),
     locationsFields: JSON.stringify(locationFields),
-    haveRadius,
+    haveRadius: String(haveRadius),
     findServerContainer: JSON.stringify(schema),
-    clickAction,
-    polygonClickable,
-    locations: JSON.stringify(areaLocations),
+    clickAction: clickAction,
+    polygonClickable: String(polygonClickable),
   });
 
   const url = `${host}/displayMap?${params.toString()}`;
+
   const switchFun = (data) => {
-    if (canClickPolygon)
-      return windowMessageSwitch(
-        data,
-        onLocationChange,
-        setNewPolygon,
-        setPolygonObj,
-      );
+    if (!canClickPolygon || !data) return;
+    if (data.type === "locationChange") onLocationChange?.(data.payload);
+    else if (data.type === "newPolygonChange") setNewPolygon?.(data.payload);
+    else if (data.type === "clickedPolygon") {
+      setPolygonObj(data.payload);
+      setMinimizeDrawer(false);
+    } else if (data.type === "MAP_READY") {
+      sendLocationsToMap();
+    }
   };
 
-  // --- RENDERING EARTH OVERLAY (Shared Logic) ---
-
-  // ✅ React Native (Mobile)
+  // --- MOBILE ---
   if (Platform.OS !== "web") {
     return (
       <View style={{ width: "100%", height: "100%", position: "relative" }}>
-        {isLoading && <LoadingOverlay />}
         <WebView
           ref={webRef}
           originWhitelist={["*"]}
           source={{ uri: url }}
-          style={{ flex: 1 }}
-          javaScriptEnabled
-          domStorageEnabled
-          onLoadEnd={() => setIsLoading(false)} // Hides Earth on Mobile
-          onMessage={async (event) => {
-            if (canClickPolygon) {
-              const data = JSON.parse(event.nativeEvent.data);
-              switchFun(data);
-            }
+          onLoadEnd={() => {
+            setIsLoading(false);
+            sendLocationsToMap();
+          }}
+          onMessage={(event) => {
+            try {
+              switchFun(JSON.parse(event.nativeEvent.data));
+            } catch (e) {}
           }}
         />
-        {drawerComponent(polygonObj)}
+        {showSuggestsCard && (
+          <DrawerComponent
+            polygonObj={polygonObj}
+            minimizeDrawer={minimizeDrawer}
+            setMinimizeDrawer={setMinimizeDrawer}
+            setLocations={setLocationsCallback}
+          />
+        )}
       </View>
     );
   }
 
-  // ✅ WEB (iframe)
+  // --- WEB ---
   useEffect(() => {
     const handleMessage = (event) => {
       try {
@@ -208,7 +204,7 @@ const PolygonMapEmbed = ({
     };
     window.addEventListener("message", handleMessage);
     return () => window.removeEventListener("message", handleMessage);
-  }, [onLocationChange, setNewPolygon]);
+  }, [locationsRef.current, areaLocations, onLocationChange]);
 
   return (
     <div
@@ -216,47 +212,34 @@ const PolygonMapEmbed = ({
         width: "100%",
         height: "100%",
         position: "relative",
-        overflow: "hidden",
-        backgroundColor: "#000",
+        background: "#000",
       }}
     >
       <iframe
         ref={iframeRef}
         src={url}
-        onLoad={() => setIsLoading(false)} // Hides Earth on Web
-        title="Polygon Map"
-        scrolling="no"
+        onLoad={() => {
+          setIsLoading(false);
+          sendLocationsToMap();
+        }}
         style={{
           width: "100%",
           height: "100%",
           border: "none",
-          position: "absolute",
-          top: 0,
-          left: 0,
-          zIndex: 1,
           opacity: isLoading ? 0 : 1,
-          transition: "opacity 0.8s ease-in",
+          transition: "opacity 0.5s ease-in",
         }}
       />
-
-      {drawerComponent(polygonObj)}
+      {showSuggestsCard && (
+        <DrawerComponent
+          polygonObj={polygonObj}
+          minimizeDrawer={minimizeDrawer}
+          setMinimizeDrawer={setMinimizeDrawer}
+          setLocations={setLocationsCallback}
+        />
+      )}
     </div>
   );
-};
-
-const windowMessageSwitch = (
-  data,
-  onLocationChange,
-  setNewPolygon,
-  setClickedPolygon,
-) => {
-  if (data.type === "locationChange") {
-    onLocationChange(data.payload);
-  } else if (data.type === "newPolygonChange") {
-    setNewPolygon(data.payload);
-  } else if (data.type === "clickedPolygon") {
-    setClickedPolygon(data.payload);
-  }
 };
 
 export default PolygonMapEmbed;

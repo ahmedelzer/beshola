@@ -95,11 +95,12 @@ function ListOfKeywordsParameter({
           });
           console.log("====================================");
           const display =
-            values.find((v) => v[lookupReturnField] === item)?.[
+            values.find((v) => v[lookupReturnField] === item[lookupReturnField])?.[
               lookupDisplayField
             ] || null;
+            console.log("Rendering keyword display",display)
           const value =
-            values.find((v) => v[lookupReturnField] === item)?.[
+            values.find((v) => v[lookupReturnField] === item[lookupReturnField])?.[
               lookupReturnField
             ] || null;
           if (!display || !value) return null;

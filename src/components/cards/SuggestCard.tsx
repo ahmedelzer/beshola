@@ -8,13 +8,14 @@ import PricePlanSummary from "../../kitchensink-components/cart/InvoiceSummary";
 import PricePlansSection from "./PricePlansSection";
 import { addAlpha } from "../../utils/operation/addAlpha";
 import { theme } from "../../Theme";
+import { ScrollView } from "react-native";
 
 export default function SuggestCard({
   item,
   imageScale = scale(150),
   fieldsType,
   schemaActions,
-  variant="small"
+  variant = "small",
 }) {
   const { userGust } = useAuth();
 
@@ -28,26 +29,27 @@ export default function SuggestCard({
           imageSize={imageScale}
           schemaActions={schemaActions}
         />
-
-      
       </View>
-      <View
-  className="w-full p-2 overflow-hidden" // Added overflow-hidden to clip any stray content
-  style={{ 
-    width: imageScale, 
-    backgroundColor :theme.body,
-    height: 30, // ✅ Fixed height added here
-    justifyContent: 'center' // Centers the attributes vertically within that fixed height
-  }}
->
-  <Attributes
-    attributes={
-      item?.[fieldsType?.attributes] || item?.["attributes"] || []
-    }
-    isCompact={true}
-    variant="small"
-  />
-</View>
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={{
+          alignItems: "center", // vertical centering
+        }}
+        style={{
+          width: imageScale,
+          height: 30,
+          backgroundColor: theme.body,
+        }}
+      >
+        <Attributes
+          attributes={
+            item?.[fieldsType?.attributes] || item?.["attributes"] || []
+          }
+          isCompact={true}
+          variant="small"
+        />
+      </ScrollView>
       <View style={{ width: imageScale }}>
         <PricePlansSection item={item} variant={variant} />
       </View>

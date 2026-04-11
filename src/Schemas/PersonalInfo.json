@@ -1,6 +1,6 @@
 {
   "dashboardFormSchemaID": "270f513b-1788-4c01-879e-4526c990f899",
-  "schemaType": "sigh up",
+  "schemaType": "signup",
   "idField": "personID",
   "dashboardFormSchemaInfoDTOView": {
     "dashboardFormSchemaID": "66a8b526-4e63-49b9-ad10-b5112f6646f4",

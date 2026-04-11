@@ -30,7 +30,7 @@ import CheckoutSchema from "../Schemas/MenuSchema/CheckoutSchema.json";
 import LoginFormSchema from "../Schemas/LoginSchema/LoginFormSchema.json";
 import LoginFormSchemaActions from "../Schemas/LoginSchema/LoginFormSchemaActions.json";
 import ResendSchemaAction from "../Schemas/LoginSchema/ResendSchemaAction.json";
-import SighupSchema from "../Schemas/LoginSchema/SighupSchema.json";
+import SignupSchema from "../Schemas/LoginSchema/SignupSchema.json";
 import VerifySchema from "../Schemas/LoginSchema/VerifySchema.json";
 import VerifySchemaAction from "../Schemas/LoginSchema/VerifySchemaAction.json";
 import PersonalInfo from "../Schemas/PersonalInfo.json";
@@ -126,7 +126,7 @@ export const schemasSlice = createSlice({
     resend: { schema: {}, actions: ResendSchemaAction },
     signup: {
       schema: PersonalInfo,
-      actions: SighupSchema,
+      actions: SignupSchema,
     },
     loginVerify: {
       schema: VerifySchema,

@@ -93,7 +93,7 @@ const CreatePasswordScreen = ({ route }) => {
       />
       <VStack space="xl" className="w-full my-7">
         <LoadingButton
-          buttonText={localization.forgotPassword.sighUpButton}
+          buttonText={localization.forgotPassword.signupButton}
           loading={disable}
           onPress={async () => {
             await handleSubmit(onSubmit);

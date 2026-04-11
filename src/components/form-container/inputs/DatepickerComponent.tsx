@@ -15,8 +15,9 @@ function DatepickerComponent({
   maxDate,
   ...props
 }) {
-  const [selectedDate, setSelectedDate] = useState(value ? value : maxDate);
-
+  const [selectedDate, setSelectedDate] = useState(
+    value !== null ? value : maxDate,
+  );
   const languageRow = useSelector((state) => state.localization.languageRow);
   const localization = useSelector((state) => state.localization.localization);
   const dateTime = localization.dateTime;
@@ -37,7 +38,7 @@ function DatepickerComponent({
   useEffect(() => {
     setSelectedDate(value || maxDate);
     onChange(value || maxDate);
-  }, [value]);
+  }, []);
   // Determine language code and register
   const getLocaleObject = () => {
     registerLocale("custom", customArabicLocale);

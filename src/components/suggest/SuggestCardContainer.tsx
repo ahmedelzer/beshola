@@ -38,7 +38,7 @@ export default function SuggestCardContainer({
   imageScale = scale(120),
   header = "",
   variant = "small",
-  setRows,
+  setRows = () => {},
 }) {
   const { status, isOnline } = useNetwork();
   const [WS_Connected, setWS_Connected] = useState(false);
@@ -177,15 +177,16 @@ export default function SuggestCardContainer({
       abortController: false,
       reRequest: true,
     });
-  }, [row]);
+  }, [newItems]);
 
-  return suggestTotalCount > 0 ? (
+  // Change the condition to include suggestLoading
+  return suggestTotalCount > 0 || suggestLoading ? (
     <View className="flex-col">
       <Heading className="text-text font-bold text-xl">{header}</Heading>
       <ScrollView
         horizontal
         className="mt-2"
-        inverted={isRTL()} // ✅ RTL scroll on mobile
+        inverted={isRTL()}
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={{
           gap: 12,
@@ -193,23 +194,27 @@ export default function SuggestCardContainer({
           alignItems: "flex-start",
         }}
       >
-        <RenderSuggestCards
-          items={suggestRows}
-          schemaActions={schemaActions}
-          suggestContainerType={suggestContainerType}
-          suggestFieldsType={suggestFieldsType}
-          imageScale={imageScale}
-          variant={variant}
-        />
+        {/* 1. Render actual cards if we have them */}
+        {suggestTotalCount > 0 && (
+          <RenderSuggestCards
+            items={suggestRows}
+            schemaActions={schemaActions}
+            suggestContainerType={suggestContainerType}
+            suggestFieldsType={suggestFieldsType}
+            imageScale={imageScale}
+            variant={variant}
+          />
+        )}
+
+        {/* 2. Render skeletons if loading */}
         {suggestLoading && (
           <>
             {Array.from({ length: itemsLoadingCount }).map((_, i) => (
               <SkeletonWrapper
                 key={i}
                 isLoading={suggestLoading}
-                SkeletonComponent={SuggestCardSkeleton} // optional, if you have a custom skeleton
-                // skeletonProps={{ width: "100%", height: 200 }}
-              ></SkeletonWrapper>
+                SkeletonComponent={SuggestCardSkeleton}
+              />
             ))}
           </>
         )}

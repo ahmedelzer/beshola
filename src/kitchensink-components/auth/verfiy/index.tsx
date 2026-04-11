@@ -148,7 +148,7 @@ const VerifyScreen = ({ route }) => {
         );
       const getAction =
         schemaActionName === "login" ? getLoginAction : getForgetAction;
-      console.log(getLoginAction, "getAction");
+
 
       const constants = {
         ...data,

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
-
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useForm } from "react-hook-form";
 import { theme } from "../../../Theme";
@@ -8,6 +7,7 @@ import PopupModal from "../../../utils/component/PopupModal";
 import { iconMap } from "../../../utils/operation/getIconWithID";
 import { handleSubmitWithCallback } from "../../../utils/operation/handleSubmitWithCallback";
 import { usePreloadList } from "../../Pagination/usePreloadList";
+
 const StaticButtonInput = (props) => {
   const {
     title = "Open",
@@ -18,64 +18,44 @@ const StaticButtonInput = (props) => {
     _schemaActions,
     rowDetails = {},
     additionClassName = "",
+    setChild = null, // Received from RequestActionsButtons
   } = props;
-  const { control, handleSubmit, formState, watch, setValue } = useForm();
+
+  const { control, handleSubmit, formState, setValue } = useForm();
   const { errors } = formState;
-  // ✅ Modal State
+
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [rootRow, setRootRow] = useState(rowDetails || {});
   const [dependenceRow, setDependenceRow] = useState({});
   const [disable, setDisable] = useState(false);
   const [reqError, setReqError] = useState(false);
+
   const postAction =
     _schemaActions?.find(
       (action) => action.dashboardFormActionMethodType === "Post",
     ) || null;
-  const {
-    rows,
-    totalCount,
-    handleScroll,
-    // dispatch: reducerDispatch,
-    state,
-    dispatch,
-    setCurrentSkip,
-  } = usePreloadList({
+
+  const { dispatch, setCurrentSkip } = usePreloadList({
     idField: fieldName,
     schemaActions: isModalVisible ? _schemaActions || [] : [],
-    row: {
-      ...rowDetails,
-    },
+    row: { ...rowDetails },
     deps: [rowDetails, isModalVisible],
   });
+
   useEffect(() => {
-    // if (rootRow[fieldName]) {
     dispatch({
       type: "RESET_SERVICE_LIST",
       payload: { lastQuery: "" },
     });
-
     setCurrentSkip((prev) => prev + 1);
-    // }
   }, [dependenceRow]);
+
   function setValueCallback(name, value) {
-    setDependenceRow({ ...{ [name]: value } });
+    setDependenceRow({ [name]: value });
   }
-  // useEffect(() => {
-  //   const subscription = watch((formValues) => {
-  //     // Clean object is optional if you want to remove empty/undefined values
-  //     const cleanedValues = cleanObject(formValues);
-  // console.log("====================================");
-  // console.log(cleanedValues, state.rows, "rootRow from buttonInput1");
-  // console.log("====================================");
-  //     setRootRow({ ...rootRow, ...cleanedValues });
-  //   });
 
-  //   return () => subscription.unsubscribe();
-  // }, [watch]);
   const onSubmit = async (data) => {
-    console.log(data, "data");
-
+    setLoading(true);
     try {
       await handleSubmitWithCallback({
         data: { ...data, ...props?.rowDetails },
@@ -85,10 +65,7 @@ const StaticButtonInput = (props) => {
         setReq: setReqError,
         onSuccess: (resultData) => {
           setIsModalVisible(false);
-          // AddAddressLocation(resultData);
-          // setIsModalVisible(false);
-          // dispatch(updateSelectedLocation(resultData));
-          // setSelectedLocation(resultData);
+          if (setChild) setChild(null); // Clear the popover child on success
         },
       });
     } catch (e) {
@@ -97,27 +74,58 @@ const StaticButtonInput = (props) => {
       setLoading(false);
     }
   };
+
+  const handlePress = () => {
+    if (!enable) return;
+
+    // IF setChiled exists, we "inject" the form into the popover instead of opening a new Modal
+    if (setChild) {
+      setChild(
+        <View style={{ padding: 10, minWidth: 250 }}>
+          <Text
+            style={{ fontWeight: "bold", marginBottom: 10, color: theme.body }}
+          >
+            {title}
+          </Text>
+          <PopupModal
+            isOpen={true}
+            onClose={() => setChild(null)}
+            headerTitle={title}
+            row={rowDetails}
+            control={control}
+            schemaActions={_schemaActions}
+            parentRow={rowDetails}
+            schema={schema}
+            onSubmit={handleSubmit(onSubmit)}
+            errors={reqError || errors}
+            disable={loading}
+            setValue={setValueCallback}
+            childSchema={schema}
+            isFormModal={schema.schemaType !== "FilesContainer"}
+            // Pass a prop to PopupModal to hide its internal Modal wrapper if needed
+            embedded={true}
+          />
+        </View>,
+      );
+    } else {
+      // Fallback to standard Modal behavior
+      setIsModalVisible(true);
+    }
+  };
+
   const iconName = iconMap[props?.dashboardFormSchemaParameterID] || "circle";
+
   return (
-    <View className="w-full" style={{ width: "100%" }}>
-      {/* ✅ Button */}
-      {/* <Button
-        title={title}
-        disabled={!enable}
-        onPress={() => setIsModalVisible(true)}
-      /> */}
+    <View style={{ width: "100%" }}>
       <TouchableOpacity
         disabled={!enable}
-        onPress={() => {
-          setIsModalVisible(true);
-        }}
+        onPress={handlePress}
         className={
           "p-2 rounded-xl flex-row items-center justify-center gap-1 flex-1 " +
           additionClassName
         }
-        style={{ backgroundColor: theme.accent }}
+        style={{ backgroundColor: theme.accent, opacity: enable ? 1 : 0.5 }}
       >
-        {/* Icon */}
         {withLabel && (
           <Text className="!text-xs font-semibold text-body text-center items-center">
             {title}
@@ -126,8 +134,8 @@ const StaticButtonInput = (props) => {
         <FontAwesome5 name={iconName} size={14} color={theme.body} />
       </TouchableOpacity>
 
-      {/* ✅ Popup */}
-      {isModalVisible && (
+      {/* ✅ Standard Popup (Only used if NOT in a popover menu) */}
+      {isModalVisible && !setChild && (
         <PopupModal
           isOpen={isModalVisible}
           onClose={() => setIsModalVisible(false)}
@@ -141,19 +149,9 @@ const StaticButtonInput = (props) => {
           errors={reqError || errors}
           disable={loading}
           setValue={setValueCallback}
-          // parentSchema={parentSchema}
           childSchema={schema}
           isFormModal={schema.schemaType !== "FilesContainer"}
-        >
-          {/* {schema.schemaType === "FilesContainer" && (
-            <FileContainer
-              row={{}}
-              schema={schema}
-              serverSchema={DisplayFilesServerSchema}
-              title={title}
-            />
-          )} */}
-        </PopupModal>
+        />
       )}
     </View>
   );

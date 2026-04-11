@@ -52,8 +52,8 @@ export const useManageRealtimeDataWithWS = ({
     await reducerDispatch({
       type: "WS_OPE_ROW",
       payload: {
-        rows: ws_updatedRows.rows,
-        totalCount: ws_updatedRows.totalCount,
+        rows: ws_updatedRows?.rows||[],
+        totalCount: ws_updatedRows?.totalCount||0,
       },
     });
   };

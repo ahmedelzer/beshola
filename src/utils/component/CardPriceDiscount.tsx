@@ -9,7 +9,7 @@ export default function CardPriceDiscount({
   colorOfPriceAfterDiscount = theme.body,
   style,
   boxWidth,
-  variant = "" // Added variant to bypass width logic
+  variant = "", // Added variant to bypass width logic
 }) {
   const localization = useSelector((state) => state.localization.localization);
 
@@ -18,26 +18,27 @@ export default function CardPriceDiscount({
   const downPayment = item?.[fieldsType?.downPayment?.parameterField] || 0;
   const discountPercent = item?.[fieldsType?.discount?.parameterField] || 0;
   const hasDiscount = discountPercent > 0;
-  const currencyShortName = item?.[fieldsType?.currencyShortName?.parameterField] || "";
-  
+  const currencyShortName =
+    item?.[fieldsType?.currencyShortName?.parameterField] || "";
+
   const priceAfterDiscount = price - (price * discountPercent) / 100;
 
   // Determine if we should use small styling
-  const isSmall = variant === "small" ;
+  const isSmall = variant === "small";
 
   return (
     <View style={style}>
       {/* Row 1: Prices */}
       <View style={[styles.container, { marginTop: isSmall ? 0 : 4 }]}>
         {priceAfterDiscount >= 0 && (
-          <Text 
+          <Text
             numberOfLines={1}
             style={[
-              styles.discountedPrice, 
-              { 
+              styles.discountedPrice,
+              {
                 color: colorOfPriceAfterDiscount,
-                fontSize: isSmall ? 8 : 16 
-              }
+                fontSize: isSmall ? 8 : 16,
+              },
             ]}
           >
             {priceAfterDiscount.toFixed(2)} {currencyShortName}
@@ -47,10 +48,7 @@ export default function CardPriceDiscount({
         {hasDiscount && (
           <Text
             numberOfLines={1}
-            style={[
-              styles.originalPrice,
-              { fontSize: isSmall ? 6 : 14 },
-            ]}
+            style={[styles.originalPrice, { fontSize: isSmall ? 6 : 14 }]}
           >
             {price.toFixed(2)} {currencyShortName}
           </Text>
@@ -62,12 +60,10 @@ export default function CardPriceDiscount({
         <Text
           numberOfLines={1}
           ellipsizeMode="tail"
-          style={[
-            styles.downPayment,
-            { fontSize: isSmall ? 5 : 10 },
-          ]}
+          style={[styles.downPayment, { fontSize: isSmall ? 5 : 10 }]}
         >
-          {localization.menu.downPayment || "Down Payment"}: {downPayment.toFixed(2)} {currencyShortName}
+          {localization.menu.downPayment || "Down Payment"}:{" "}
+          {downPayment.toFixed(2)} {currencyShortName}
         </Text>
       )}
     </View>

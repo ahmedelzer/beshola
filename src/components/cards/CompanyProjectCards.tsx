@@ -7,6 +7,7 @@ import SchemaTabs from "../../utils/component/SchemaTabs";
 import { usePreloadList } from "../Pagination/usePreloadList";
 import { buildApiUrl } from "../../../components/hooks/APIsFunctions/BuildApiUrl";
 import { scale } from "react-native-size-matters";
+import { useDeviceInfo } from "../../utils/component/useDeviceInfo";
 const testSchemaGetAction = {
   projectProxyRoute: "BrandingMartAssets",
   dashboardFormSchemaActionID: "46ac8869-4745-41c8-8839-d02dfe9999f0",
@@ -85,6 +86,8 @@ const testSchema = {
 };
 export default function CompanyProjectCard({ item }) {
   const [activeAreaTab, setActiveAreaTab] = useState(0);
+  const { width } = useDeviceInfo();
+  const isSmallScreen = width < 640;
 
   const { rows, totalCount, loading, handleScroll } = usePreloadList({
     idField: testSchema.idField,
@@ -107,8 +110,8 @@ export default function CompanyProjectCard({ item }) {
         params={rows}
       />
       <SuggestCardContainer
-        imageScale={scale(150)}
-        variant=""
+        imageScale={isSmallScreen ? scale(100) : scale(130)}
+        variant={isSmallScreen ? "small" : ""}
         schemaActions={AssetsSchemaActions}
         row={{
           ...item,

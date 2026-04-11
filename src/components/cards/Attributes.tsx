@@ -87,8 +87,8 @@ const Attributes = ({
   };
 
   // Logic to render the list (used in both normal view and Modal)
-  const RenderList = ({ items }) => (
-    <View style={{ flexDirection: "column", gap: 8 }}>
+  const RenderList = ({ items,customStyle }) => (
+    <View style={customStyle}>
       {items.map((attr, index) => {
         const parts = attr.split("{,}");
         return (
@@ -122,10 +122,10 @@ const Attributes = ({
             scrollEnabled={false} // Click opens modal instead of scrolling preview
             contentContainerStyle={{ alignItems: "center", gap: 4 }}
           >
-            <RenderList items={displayedAttributes} />
+            <RenderList customStyle={{ flexDirection: "row", gap: 8 }} items={displayedAttributes} />
           </ScrollView>
         ) : (
-          <RenderList items={displayedAttributes} />
+          <RenderList customStyle={{ flexDirection: "column", gap: 8 }} items={displayedAttributes} />
         )}
       </TouchableOpacity>
 

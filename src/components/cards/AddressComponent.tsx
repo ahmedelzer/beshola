@@ -41,11 +41,13 @@ const AddressComponent = ({ addressText, item, fieldsType }) => {
         {/* <TabsProvider> */}
         <View className="w-full mb-4" style={{ height: 400 }}>
           <PolygonMapEmbed
-            location={{
+            areaLocations={[
+              {
               [fieldsType.latitude]: item[fieldsType.latitude],
               [fieldsType.longitude]: item[fieldsType.longitude],
-            }}
-            fields={fieldsType.parameters}
+            }
+            ]}
+            locationFields={fieldsType.parameters}
             onLocationChange={() => {}}
             setNewPolygon={() => {}}
             canClickPolygon={false}

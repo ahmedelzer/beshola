@@ -8,7 +8,7 @@ import {
   Pressable,
   Dimensions,
 } from "react-native";
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import StaticButtonInput from "../../form-container/inputs/StaticButtonInput";
 import { CreateInputProps } from "../../form-container/CreateInputProps";
 import RequestSchema from "../../../Schemas/MenuSchema/RequestSchema.json";
@@ -27,24 +27,28 @@ export default function RequestActionsButtons({
 }: {
   item: any;
   styleType?: string;
+  additionClassName?: string;
 }) {
   const [menuVisible, setMenuVisible] = useState(false);
-  const [popoverPos, setPopoverPos] = useState({ top: 0, right: 20 });
-  const triggerRef = useRef<View>(null);
+  const [child, setChild] = useState<React.ReactNode | null>(null);
+  const [popoverPos, setPopoverPos] = useState({ top: 0, left: 0 });
 
-  const openMenu = () => {
-    // Measure where the button is on the screen
-    triggerRef.current?.measure((x, y, width, height, pageX, pageY) => {
-      // Calculate position (showing it below the button)
-      const isBottomHalf = pageY > SCREEN_HEIGHT / 2;
+  // 1. Function receiving position directly from the click event
+  const openMenu = (event: any) => {
+    const { pageX, pageY } = event.nativeEvent;
+    setChild(null);
+    const menuWidth = 160;
+    const menuHeight = 130; // Estimated height for 2-3 buttons
+    const isBottomHalf = pageY > SCREEN_HEIGHT / 2;
 
-      setPopoverPos({
-        // If button is at the bottom of the screen, show menu above it
-        top: isBottomHalf ? pageY - 120 : pageY + height,
-        right: Dimensions.get("window").width - (pageX + width),
-      });
-      setMenuVisible(true);
+    setPopoverPos({
+      // If at the bottom, shift the menu UP by its height
+      top: isBottomHalf ? pageY - menuHeight : pageY + 5,
+      // Align right edge of menu with the touch point
+      left: pageX - menuWidth + 20,
     });
+
+    setMenuVisible(true);
   };
 
   const ownSchemaWithButtonOnlyParameters = {
@@ -71,12 +75,12 @@ export default function RequestActionsButtons({
               ? styles.menuItem
               : { width: "100%", flex: 1 }
           }
-          className="w-full"
         >
           <StaticButtonInput
             additionClassName={additionClassName}
             withLabel={true}
             fieldName={param.parameterField}
+            setChild={setChild}
             schema={RequsetTimeSchema}
             rowDetails={item}
             _schemaActions={RequsetTimeSchemaActions}
@@ -107,29 +111,38 @@ export default function RequestActionsButtons({
         </ScrollView>
       ) : (
         <>
-          {/* TRIGGER BUTTON */}
-          <View ref={triggerRef}>
-            <TouchableOpacity onPress={openMenu} style={styles.trigger}>
-              <Entypo name="dots-three-vertical" size={20} color={theme.text} />
-            </TouchableOpacity>
-          </View>
+          {/* TRIGGER BUTTON - PASSING EVENT */}
+          <TouchableOpacity
+            className={`border ${additionClassName} p-1 rounded-lg`}
+            onPress={(e) => openMenu(e)}
+            style={styles.trigger}
+          >
+            <Entypo name="dots-three-vertical" size={20} color={theme.body} />
+          </TouchableOpacity>
 
-          {/* RIGHT-CLICK STYLE POPUP */}
-          <Modal transparent visible={menuVisible} animationType="fade">
-            <Pressable
-              style={styles.overlay}
-              onPress={() => setMenuVisible(false)}
-            >
-              <View
-                style={[
-                  styles.popoverMenu,
-                  { top: popoverPos.top, right: popoverPos.right },
-                ]}
+          {/* DYNAMIC POPUP MENU */}
+          {child ? (
+            child
+          ) : (
+            <Modal transparent visible={menuVisible} animationType="fade">
+              <Pressable
+                style={styles.overlay}
+                onPress={() => setMenuVisible(false)}
               >
-                <RenderOwnAssetsButtons />
-              </View>
-            </Pressable>
-          </Modal>
+                <View
+                  style={[
+                    styles.popoverMenu,
+                    {
+                      top: popoverPos.top,
+                      left: popoverPos.left,
+                    },
+                  ]}
+                >
+                  <RenderOwnAssetsButtons />
+                </View>
+              </Pressable>
+            </Modal>
+          )}
         </>
       )}
     </HStack>
@@ -144,29 +157,32 @@ const styles = StyleSheet.create({
   },
   trigger: {
     padding: 8,
-    backgroundColor: theme.body,
+    backgroundColor: theme.accent,
     borderRadius: 8,
+    justifyContent: "center",
+    alignItems: "center",
   },
   overlay: {
     flex: 1,
-    backgroundColor: "transparent", // Keep it clear or very light dim
+    backgroundColor: "rgba(0,0,0,0.05)",
   },
   popoverMenu: {
     position: "absolute",
-    backgroundColor: theme.body,
-    borderRadius: 8,
-    padding: 8,
-    minWidth: 150,
-    // Shadow for the "floating" effect
-    elevation: 8,
-    shadowColor: theme.overlay,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4.65,
-    borderWidth: 0.5,
+    backgroundColor: "#FFFFFF",
+    borderRadius: 12,
+    padding: 6,
+    minWidth: 160,
+    // Elevation/Shadow to match your image
+    elevation: 12,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    borderWidth: 1,
+    borderColor: "rgba(0,0,0,0.05)",
   },
   menuItem: {
-    marginVertical: 2,
+    marginVertical: 4,
     width: "100%",
   },
 });

@@ -63,7 +63,7 @@ function CompanyInfo({ branches }) {
       {branches && branches.length > 0 && (
         <View style={styles.mapCard}>
           <PolygonMapEmbed
-            locations={branches.map((branch) => ({
+            areaLocations={branches.map((branch) => ({
               [fieldsType.latitude]: branch[fieldsType.latitude],
               [fieldsType.longitude]: branch[fieldsType.longitude],
             }))}
